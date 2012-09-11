@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Tue Sep 11 15:56:37 2012 thierry berger
-// Last update Tue Sep 11 15:58:19 2012 thierry berger
+// Last update Tue Sep 11 18:25:39 2012 thierry berger
 //
 
 #ifndef GAMEDATA_PHYSICS_HPP
@@ -13,7 +13,7 @@
 
 namespace GameData
 {
-  struct Physics
+  struct Physics : Information
   {
     float	x;
     float	y;

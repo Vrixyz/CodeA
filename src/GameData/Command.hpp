@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Tue Sep 11 15:03:16 2012 thierry berger
-// Last update Tue Sep 11 15:56:23 2012 thierry berger
+// Last update Tue Sep 11 18:25:04 2012 thierry berger
 //
 
 #ifndef GAME_DATA_HPP
@@ -13,7 +13,7 @@
 
 namespace GameData
 {
-  struct Command
+  struct Command : Information
   {
     Command() : x(0), y(0){}
     typedef enum e_Type

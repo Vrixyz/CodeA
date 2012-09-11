@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Tue Sep 11 15:08:47 2012 thierry berger
-// Last update Tue Sep 11 16:00:04 2012 thierry berger
+// Last update Tue Sep 11 18:25:13 2012 thierry berger
 //
 
 #ifndef GAME_DATA_ELEMENT_HPP
@@ -15,7 +15,7 @@
 
 namespace GameData
 {
-  struct Element
+  struct Element : Information
   {
     bool	walkable;
     bool	dieAtContact;

@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Tue Sep 11 14:42:32 2012 thierry berger
-// Last update Tue Sep 11 16:02:07 2012 thierry berger
+// Last update Tue Sep 11 18:25:22 2012 thierry berger
 //
 
 #ifndef GAME_DATA_UNIT_HPP
@@ -15,7 +15,7 @@
 
 namespace GameData
 {
-  struct	Unit
+  struct	Unit : Information
   {
     uint32_t	unitId;
     uint32_t	health;

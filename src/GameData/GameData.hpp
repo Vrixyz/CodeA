@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Tue Sep 11 14:10:56 2012 thierry berger
-// Last update Wed Sep 12 10:31:02 2012 thierry berger
+// Last update Wed Sep 12 16:11:25 2012 thierry berger
 //
 
 #ifndef GAME_DATA_HPP
@@ -39,6 +39,7 @@ namespace GameData
   } Type;
   struct	Command;
   struct	Element;
+  struct	Bullet;
   struct	Unit;
   struct	World;
   struct	Physics;
@@ -51,5 +52,6 @@ namespace GameData
 #include "World.hpp"
 #include "Physics.hpp"
 #include "Serializable.hpp"
+#include "Bullet.hpp"
 
 #endif

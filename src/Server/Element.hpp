@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:16:58 2012 mathieu leurquin
-// Last update Wed Sep 12 13:49:43 2012 mathieu leurquin
+// Last update Wed Sep 12 18:20:47 2012 thierry berger
 //
 
 #ifndef SERVER_ELEMENT_HPP
@@ -21,7 +21,12 @@ namespace Server
   public:
     GameData::Element _data;
     
-    const GameData::Element& getData()const {return _data};
+    Element(World& world, int id, bool walkable) :
+      Object(world, Object::Element), _data(id, walkable) {}
+    const GameData::Element& getData()const {return _data;}
+
+    virtual void* serialize(int& finalLength) const {return 0;}
+    virtual int	getClassId() const {return 0;}
   };
 }
 

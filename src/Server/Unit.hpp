@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:00:00 2012 mathieu leurquin
-// Last update Wed Sep 12 13:49:43 2012 mathieu leurquin
+// Last update Wed Sep 12 18:20:24 2012 thierry berger
 //
 
 #ifndef SERVER_UNIT_HPP
@@ -20,9 +20,10 @@ namespace Server
   {
   public:
     GameData::Unit _data;
-    
-    const GameData::Unit& getData() const {return _data}
-    
+
+    Unit(World& world, int id) : Object(world, Object::Unit), _data(id, 10) {}
+
+    const GameData::Unit& getData() const {return _data;}
     void fire(float x, float y);
     void aimTo(float x, float y);
     void moveTo(float x, float y);
@@ -36,6 +37,9 @@ namespace Server
     void stopRight();
     void stopDown();
     void stopLeft();
+
+    virtual void* serialize(int& finalLength) const {return 0;}
+    virtual int	getClassId() const {return 0;}
   };
 }
 

@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 09:55:13 2012 thierry berger
-// Last update Wed Sep 12 10:47:54 2012 thierry berger
+// Last update Wed Sep 12 18:04:05 2012 thierry berger
 //
 
 #ifndef GAME_DATA_SERIALIZABLE_HPP
@@ -16,9 +16,10 @@ namespace GameData
   class	Serializable
   {
   public:
-    void*	serialize(int& finalLength) const;
-    static Serializable* unSerialize(void* const);
-    int	getClassId() const;
+    virtual void*	serialize(int& finalLength) const = 0;
+    /// overload that function please. (unserialized should be nulled (original value will be lost))
+    static bool unSerialize(void* const serialized, void*& unserialized) {return false;}; 
+    virtual int	getClassId() const = 0;
   };
 }
 

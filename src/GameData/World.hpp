@@ -5,11 +5,13 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Tue Sep 11 15:39:26 2012 thierry berger
-// Last update Wed Sep 12 10:31:11 2012 thierry berger
+// Last update Wed Sep 12 13:58:02 2012 mathieu leurquin
 //
 
 #ifndef GAME_DATA_WORLD_HPP
 # define GAME_DATA_WORLD_HPP
+
+#include <stdint.h>
 
 namespace GameData
 {

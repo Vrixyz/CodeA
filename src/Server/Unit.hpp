@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:00:00 2012 mathieu leurquin
-// Last update Wed Sep 12 13:24:31 2012 mathieu leurquin
+// Last update Wed Sep 12 13:49:43 2012 mathieu leurquin
 //
 
 #ifndef SERVER_UNIT_HPP
@@ -21,7 +21,7 @@ namespace Server
   public:
     GameData::Unit _data;
     
-    GameData::Unit getData();
+    const GameData::Unit& getData() const {return _data}
     
     void fire(float x, float y);
     void aimTo(float x, float y);

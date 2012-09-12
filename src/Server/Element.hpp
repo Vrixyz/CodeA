@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:16:58 2012 mathieu leurquin
-// Last update Wed Sep 12 13:28:59 2012 mathieu leurquin
+// Last update Wed Sep 12 13:49:43 2012 mathieu leurquin
 //
 
 #ifndef SERVER_ELEMENT_HPP
@@ -21,7 +21,7 @@ namespace Server
   public:
     GameData::Element _data;
     
-    GameData::Element getData();
+    const GameData::Element& getData()const {return _data};
   };
 }
 

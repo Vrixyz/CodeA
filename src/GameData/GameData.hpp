@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Tue Sep 11 14:10:56 2012 thierry berger
-// Last update Wed Sep 12 09:55:07 2012 thierry berger
+// Last update Wed Sep 12 10:31:02 2012 thierry berger
 //
 
 #ifndef GAME_DATA_HPP
@@ -33,7 +33,6 @@
 
 namespace GameData
 {
-  struct Information {}; /// Empty mother class to go in a std::List<Information>
   typedef enum e_Type {
     Command,
     World

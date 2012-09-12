@@ -5,11 +5,13 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 11:04:47 2012 thierry berger
-// Last update Wed Sep 12 12:15:20 2012 thierry berger
+// Last update Wed Sep 12 13:24:31 2012 mathieu leurquin
 //
 
 #ifndef SERVER_OBJECT_HPP
 # define SERVER_OBJECT_HPP
+
+#include "World.hpp"
 
 namespace Server
 {

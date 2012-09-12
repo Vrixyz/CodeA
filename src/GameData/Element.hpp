@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Tue Sep 11 15:08:47 2012 thierry berger
-// Last update Wed Sep 12 10:31:39 2012 thierry berger
+// Last update Wed Sep 12 13:49:42 2012 mathieu leurquin
 //
 
 #ifndef GAME_DATA_ELEMENT_HPP
@@ -17,6 +17,7 @@ namespace GameData
 {
   struct Element
   {
+    int		id;
     bool	walkable;
     bool	dieAtContact;
     uint32_t	contactDamage; /// damage applied to element colliding with it.

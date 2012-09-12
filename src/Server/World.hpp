@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 10:46:49 2012 thierry berger
-// Last update Wed Sep 12 11:05:53 2012 thierry berger
+// Last update Wed Sep 12 13:14:08 2012 mathieu leurquin
 //
 
 #ifndef SERVER_WORLD_HPP

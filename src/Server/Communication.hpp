@@ -5,21 +5,34 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:24:59 2012 mathieu leurquin
-// Last update Wed Sep 12 13:28:59 2012 mathieu leurquin
+// Last update Thu Sep 13 21:49:51 2012 thierry berger
 //
 
 #ifndef SERVER_COMMUNICATION_HPP
 # define SERVER_COMMUNICATION_HPP
 
 #include "../GameData/Command.hpp"
+#include <ctime>
+#include <iostream>
+#include <string>
+#include <boost/asio.hpp>
+#include <msgpack.hpp>
+#include <map>
 
 namespace Server
 {
   class	Communication
   {
   public:
-    void sendToClient(void *serializedInformation, int lenght, int clientId);
-    Command *tryReceiveFromClient(int &clientId);
+    Communication() : acceptor(io_service, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), 4242)) {}
+    void sendToClient(const msgpack::sbuffer& packedInformation, int clientId);
+    GameData::Command* tryReceiveFromClient(int clientId);
+    /// pointer, to "force" a variable to be sent to this function, which will contain the new clientId
+    bool tryAccept(int* clientId);
+    std::map<int, boost::asio::ip::tcp::socket*> clients;
+  private:
+    boost::asio::io_service io_service;
+    boost::asio::ip::tcp::acceptor acceptor;
   };
 }
 

@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Thu Sep 13 17:18:46 2012 thierry berger
+// Last update Thu Sep 13 21:59:29 2012 thierry berger
 //
 
 #include "World.hpp"
@@ -18,7 +18,20 @@ void	Server::World::init()
 
 void	Server::World::run()
 {
-  
+  /// FIXME: ugly infinite loop
+  while (1)
+    {
+      int newClient;
+
+      communication.tryAccept(&newClient);
+      std::cout << newClient << std::endl;
+
+      msgpack::sbuffer sbuf;
+      msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+
+      serialize(packet);
+      communication.sendToClient(sbuf, newClient);
+    }  
 }
 
 Server::Player&	Server::World::createPlayer(int id)
@@ -152,7 +165,32 @@ void Server::World::destroyBullet(int id)
 
 void	Server::World::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
 {
-  packet.pack(getPhysics(*elements.begin()));
+  /// Packing GameData::World
+  packet.pack((int)units.size());
+  packet.pack((int)elements.size());
+  packet.pack((int)bullets.size());
+  Serializable const * toPack;
+  /// Packing elements
+  for (std::list<b2Body*>::const_iterator it = elements.begin(); it != elements.end(); it++)
+    {
+      toPack = static_cast<Serializable const*>((*it)->GetUserData());
+      toPack->serialize(packet);
+      packet.pack(getPhysics(*it));
+    }
+  /// Packing units
+  for (std::list<b2Body*>::const_iterator it = units.begin(); it != units.end(); it++)
+    {
+      toPack = static_cast<Serializable const*>((*it)->GetUserData());
+      toPack->serialize(packet);
+      packet.pack(getPhysics(*it));
+    }
+  /// Packing bullets
+  for (std::list<b2Body*>::const_iterator it = bullets.begin(); it != bullets.end(); it++)
+    {
+      toPack = static_cast<Serializable const*>((*it)->GetUserData());
+      toPack->serialize(packet);
+      packet.pack(getPhysics(*it));
+    }
 }
 
 bool Server::World::unSerialize(msgpack::packer<msgpack::sbuffer>& packet) {return false;}
@@ -197,7 +235,6 @@ GameData::Physics Server::World::getPhysics(const b2Body* body) const
 {
   GameData::Physics physics;
   b2Vec2 position = body->GetPosition();
-
   physics.x = position.x;
   physics.y = position.y;
 

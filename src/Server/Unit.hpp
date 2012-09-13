@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:00:00 2012 mathieu leurquin
-// Last update Thu Sep 13 15:54:07 2012 thierry berger
+// Last update Thu Sep 13 17:35:50 2012 thierry berger
 //
 
 #ifndef SERVER_UNIT_HPP
@@ -41,7 +41,7 @@ namespace Server
     void stopDown();
     void stopLeft();
 
-    virtual void serialize(msgpack::packer<msgpack::sbuffer>& packet) const {return;}
+    virtual void serialize(msgpack::packer<msgpack::sbuffer>& packet) const;
     virtual bool unSerialize(msgpack::packer<msgpack::sbuffer>& packet) {return false;}
     virtual int	getClassId() const {return 0;}
   };

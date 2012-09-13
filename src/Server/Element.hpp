@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:16:58 2012 mathieu leurquin
-// Last update Thu Sep 13 15:54:05 2012 thierry berger
+// Last update Thu Sep 13 17:56:38 2012 thierry berger
 //
 
 #ifndef SERVER_ELEMENT_HPP
@@ -25,9 +25,9 @@ namespace Server
       Object(world, Object::Element, id), _data(id, walkable) {}
     const GameData::Element& getData()const {return _data;}
 
-    virtual void serialize(msgpack::packer<msgpack::sbuffer>& packet) const {return;}
-    virtual bool unSerialize(msgpack::packer<msgpack::sbuffer>& packet) {return false;}
-    virtual int	getClassId() const {return 0;}
+    virtual void serialize(msgpack::packer<msgpack::sbuffer>& packet) const;
+    virtual bool unSerialize(msgpack::packer<msgpack::sbuffer>& packet);
+    virtual int	getClassId() const;
   };
 }
 

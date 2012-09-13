@@ -5,13 +5,14 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 10:46:49 2012 thierry berger
-// Last update Thu Sep 13 15:39:02 2012 thierry berger
+// Last update Thu Sep 13 21:27:28 2012 thierry berger
 //
 
 #ifndef SERVER_WORLD_HPP
 # define SERVER_WORLD_HPP
 
 #include <Box2D/Box2D.h>
+#include "Communication.hpp"
 #include "../GameData/World.hpp"
 #include "../GameData/Physics.hpp"
 #include "../GameData/Unit.hpp"
@@ -31,6 +32,7 @@ namespace Server
   public:
 
     /// TODO: Add a trash list to remove safely the bodies
+    Communication	communication;
     std::list<b2Body*>	elements;
     std::list<b2Body*>	units;
     std::list<b2Body*>	bullets;

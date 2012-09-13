@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Tue Sep 11 14:10:56 2012 thierry berger
-// Last update Wed Sep 12 16:11:25 2012 thierry berger
+// Last update Thu Sep 13 22:00:27 2012 thierry berger
 //
 
 #ifndef GAME_DATA_HPP
@@ -20,15 +20,18 @@
 /// 
 /// A biggest form of data to be sent would be composed of these objects :
 /// 
-/// Type
-/// World
-/// Physics (of that 'World')
-/// Unit
-/// Physics (of that 'Unit')
-/// [more Unit and Physics]
-/// Element
-/// Physics (of that 'Element')
-/// [more Element and Physics]
+/// Type (not implemented) \n
+/// World \n
+/// Physics (of that 'World') \n
+/// Unit \n
+/// Physics (of that 'Unit') \n
+/// [more Unit and Physics] \n
+/// Element \n
+/// Physics (of that 'Element') \n
+/// [more Element and Physics] \n
+/// Bullet \n
+/// Physics (of that 'Bullet') \n
+/// [more Bullet and Physics] \n
 ///
 
 namespace GameData

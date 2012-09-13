@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Tue Sep 11 15:03:16 2012 thierry berger
-// Last update Wed Sep 12 12:14:13 2012 thierry berger
+// Last update Thu Sep 13 20:01:00 2012 thierry berger
 //
 
 #ifndef GAME_DATA_HPP
@@ -13,9 +13,8 @@
 
 namespace GameData
 {
-  struct Command : Information
+  struct Command
   {
-    Command() : x(0), y(0){}
     typedef enum e_Type
       {
 	Fire,
@@ -29,9 +28,11 @@ namespace GameData
 	stopRight,
 	stopDown,
 	stopLeft
-      } Type type;
+      } Type;
+    Type type;
     float x;
     float y;
+    Command() : x(0), y(0) {}
   };
 }
 

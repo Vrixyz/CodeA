@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Tue Sep 11 14:42:32 2012 thierry berger
-// Last update Thu Sep 13 13:27:55 2012 thierry berger
+// Last update Thu Sep 13 19:39:10 2012 thierry berger
 //
 
 #ifndef GAME_DATA_UNIT_HPP
@@ -13,6 +13,7 @@
 
 #include <stdint.h>
 #include <list>
+#include <msgpack.hpp>
 
 namespace GameData
 {
@@ -24,6 +25,8 @@ namespace GameData
     uint32_t	id;
     uint32_t	health;
     float	aimRotation;
+
+    MSGPACK_DEFINE(playersId, id, health, aimRotation);
   };
 }
 

@@ -1,0 +1,286 @@
+
+			RECAPITULATIF DES CHMAMPIONS ET DE LEURS CAPACITES :
+
+	NAME		|     EPOQUE	 |     ROLE	|	SKILLS (1/2/3/4)
+ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	NAGIRREK	|   FUTURISTE	 |   DISTANCE	| Bolas (Ral./Dmg.) / Mines (Trap) / Tir Precis (Pui./Crit/Dmg.) / Appel cybernetique (Pui./Pets.)
+	RONYAR		|   FUTURISTE	 |      CAC	| Charge (Pui./Dmg.) / Brise genoux (Ral./Dmg.) / Frappe sanglante (Crit./DoT/Dmg.) / Stimpack (Pui./Crit./PV./Def.)
+	SUHCYT		|   FUTURISTE	 |     TANK	| Bouclier (R.Dmg./Def.) / Grenade incapacitante (Ral./Bli./DoT) / Coup de crosse (St./Dmg.) / Rage guerriere (Def./PV./Heal/Imm.)
+	LUTAREZ		|   FUTURISTE	 |     MAGE	|
+	EYEKWAH		|   ACTUELLE	 |   DISTANCE	|
+	RETXED		|   ACTUELLE	 |      CAC	|
+	OBMAR		|   ACTUELLE	 |     TANK	|
+	IKOL		|   ACTUELLE	 |     MAGE	|
+	SALOGEL		|   MEDIEVALE	 |   DISTANCE	|
+	NROGARA		|   MEDIEVALE	 |      CAC	|
+	ILMIG		|   MEDIEVALE	 |     TANK	|
+	FLADNAG		|   MEDIEVALE	 |     MAGE	|
+ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			RECAPITULATIF DES AMELIORATION/ALTERATIONS :
+
+     {x} - Ce modificateur influe les effets associes a une alteation/amelioration.
+     {!} - Cette alteration/amelioration ne peut pas etre influee par un modificateur.
+
+                   * Offensifs :
+     - {x}[Dmg]   : (Degats) Degats infliges par les sorts et capacites augmentes. (+5%deg * multiplicateur en plus pour tous les degats, rand[8-15] sec)
+     - {x}[Pui]   : (Puissance) Les degats que le champion inflige sont augmentes. (+10pts de degats * multiplicateur, rand(8-15) sec)
+     - {x}[Crit]  : (Critique) Augmente les chances de faire un coup critique avec les sorts et capacites. (+10%critique * multiplicateur, rand(8-15 sec)
+     - {x}[Prec]  : (Precision) Augmente les degats infliges par les coups critiques. (+10% degats par coup de critique * multiplicateur, rand(8-15) sec)
+     - {x}[Sanc]  : (Sanctuaire) Augmente les points de vie temporairement. (100PVs * multiplicateur, rand(8-15) sec)
+                   * Defensifs :
+     - {x}[Def]   : (Defense) Reduit les degats subis. (-10% degats subis sur toutes les degats subis * multiplicateur, rand(8-15) sec)
+     - {!}[R.dmg] : (Renvoie de degats) Renvoie les degats a l'ennemi. (renvoie 100% des degats pour rand(2-4) attaques)
+     - {x}[Heal]  : (Soin) Soigne le champion. (rend 100PV * multiplicateur au champion)
+     - {!}[Inv]   : (Invincible) Immortel durant un instant. (immunise a tous les degats et a toutes les alterations pour les rand(4-6) prochaines sec)
+
+
+     - {x}[Ral.]   : (Ralentissement) Ralentissement de l'ennemi. (-10%vitesse * multiplicateur)
+     - {x}[Trap]   : (Piege) Pieges au sol. (Invisibles pour les ennemis, se delenche des qu'on marche dessus, nombre de pieges posables = multiplicateur)
+     - {x}DoT      : (Degats sur la duree) Inflige des degats sur la duree. (+20pts de degats * multiplicateur, rand(5-12) sec)
+          -> [Poison]    : (Poison) Degats physiques infliges periodiquement. Cela inflige aussi une reduction de la vitesse. (-30% de vitesse durant rand(3-5) sec)
+          -> [Miasmes]   : (Miasmes) Degats magiques infliges periodiquement. Cela inflige aussi une perte de ressources (-5%PR/s durant rand(3-5) sec)
+          -> [Blood]     : (Saignement) Degats physiques infliges sur la duree. Cela inflige aussi une perte d'endurance. (-50%Def. durant rand(3-5) sec)
+          -> [Psy shock] : (Choc psychique) Degats magiques infliges sur la duree. Cela inflige aussi une perte de regeneration des ressources. (-100% regen durant rand(3-5) sec)
+     - {x}[Pets]   : (Invocations) Invoque des creatures. (Type de creature, duree, etc. a definir en fonction des champions. multiplicateur = nombre d'invocations)
+     - {x}[Blink]  : (Aveuglement) Aveugle l'ennemi. (10% chance de louper * multiplicateur pour les rand(1-3) prochaines attaques)
+     - {!}[Stun]   : (Etourdissement) Etourdi l'ennemu. (rand(2-4) sec)
+     - {!}[Fear]   : (Peur) Le champion est appeure, fuyant durant un certain temps dans un direction aleatoire. (rand(4-6) sec)
+
+
+	NIGARREK	|   FUTURISTE	 |   DISTANCE	|	CHAMPION N 01
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SKILL 1 : [Bolas] Nagirrek jete des bolas sur son ennemi ce qui ralenti ca vitesse de course (-50%) durant 4 a 6 sec et inglige des degats (50 + 1/3 agi).
+      -> {5}[Ral.](4-6)sec + !50
+      -> CD de 12sec.
+SKILL 2 : [Mines] Nagirrek pose des mines au sol (3 au maximum, sinon la premiere posee disparait) qui inflige de lourd degats si un champion ennrmi marche dessus et est pris dans l'explosion.
+      -> !300
+      -> CD de 6sec.
+SKILL 3 : [Tir precis] Nagirrek se concentre et gagne les ameliorations [Prec], [Crit] et [Dmg].
+      -> {10}[Prec] {5}[Crit] {2}[Dmg]
+      -> CD de 20sec.
+SKILL 4 : [Appel cybernetique] Nagirrek fait venir trois sondes depuis sont vaisseau qui combattent pour elle. Les sondes ont 1PV et inflige 30pts de degats par coup et.
+      -> {3}[Pets](10-15)sec -> {1}[Ral] + !30
+      -> CD de 60sec.
+
+
+	RONYAR		|   FUTURISTE	 |     CAC	|	CHAMPION N 02
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SKILL 1 : [Charge] Ronyar se rue sur son ennemi, lui infligeant des degats et gagnant de la puissance durant quelques instants.
+      -> {5}[Pui] + !200
+      -> CD de 10sec.
+SKILL 2 : [Brise genoux] Ronyar porte une attaque devastratrice au niveau des genoux de son ennemi pour le ralentir.
+      -> {7}[Ral](5-7)sec + !100
+      -> CD de 15sec.
+SKILL 3 : [Frappe sanglante] Ronyar est enrage a la vue du sang de son ennemi et porte des coup devastateurs.
+      -> {5}[Crit] + {2}[Blood] + {1}[Dmg]
+      -> CD de 8sec.
+SKILL 4 : [Stimpack] Ronyar utilise un stimpack et devient plus puissant et resiste a la douleur.
+      -> {5}[Pui] {5}[Crit] {500}[PV] {5}[Def]
+      -> CD de 40sec.
+
+
+	SUHCYT		|   FUTURISTE	 |     TANK	|	CHAMPION N 03
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SKILL 1 :
+      ->
+      ->
+SKILL 2 :
+      ->
+      ->
+SKILL 3 :
+      ->
+      ->
+SKILL 4 :
+      ->
+      ->
+
+
+      		|   	 |     	|	CHAMPION N 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SKILL 1 :
+      ->
+      ->
+SKILL 2 :
+      ->
+      ->
+SKILL 3 :
+      ->
+      ->
+SKILL 4 :
+      ->
+      ->
+
+
+      		|   	 |     	|	CHAMPION N 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SKILL 1 :
+      ->
+      ->
+SKILL 2 :
+      ->
+      ->
+SKILL 3 :
+      ->
+      ->
+SKILL 4 :
+      ->
+      ->
+
+
+      		|   	 |     	|	CHAMPION N 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SKILL 1 :
+      ->
+      ->
+SKILL 2 :
+      ->
+      ->
+SKILL 3 :
+      ->
+      ->
+SKILL 4 :
+      ->
+      ->
+
+
+      		|   	 |     	|	CHAMPION N 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SKILL 1 :
+      ->
+      ->
+SKILL 2 :
+      ->
+      ->
+SKILL 3 :
+      ->
+      ->
+SKILL 4 :
+      ->
+      ->
+
+
+      		|   	 |     	|	CHAMPION N 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SKILL 1 :
+      ->
+      ->
+SKILL 2 :
+      ->
+      ->
+SKILL 3 :
+      ->
+      ->
+SKILL 4 :
+      ->
+      ->
+
+
+      		|   	 |     	|	CHAMPION N 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SKILL 1 :
+      ->
+      ->
+SKILL 2 :
+      ->
+      ->
+SKILL 3 :
+      ->
+      ->
+SKILL 4 :
+      ->
+      ->
+
+
+      		|   	 |     	|	CHAMPION N 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SKILL 1 :
+      ->
+      ->
+SKILL 2 :
+      ->
+      ->
+SKILL 3 :
+      ->
+      ->
+SKILL 4 :
+      ->
+      ->
+
+
+      		|   	 |     	|	CHAMPION N 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SKILL 1 :
+      ->
+      ->
+SKILL 2 :
+      ->
+      ->
+SKILL 3 :
+      ->
+      ->
+SKILL 4 :
+      ->
+      ->
+
+
+      		|   	 |     	|	CHAMPION N 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SKILL 1 :
+      ->
+      ->
+SKILL 2 :
+      ->
+      ->
+SKILL 3 :
+      ->
+      ->
+SKILL 4 :
+      ->
+      ->
+
+      		|   	 |     	|	CHAMPION N 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SKILL 1 :
+      ->
+      ->
+SKILL 2 :
+      ->
+      ->
+SKILL 3 :
+      ->
+      ->
+SKILL 4 :
+      ->
+      ->
+
+      		|   	 |     	|	CHAMPION N 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SKILL 1 :
+      ->
+      ->
+SKILL 2 :
+      ->
+      ->
+SKILL 3 :
+      ->
+      ->
+SKILL 4 :
+      ->
+      ->
+
+
+      		|   	 |     	|	CHAMPION N 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SKILL 1 :
+      ->
+      ->
+SKILL 2 :
+      ->
+      ->
+SKILL 3 :
+      ->
+      ->
+SKILL 4 :
+      ->
+      ->

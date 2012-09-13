@@ -5,12 +5,13 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:00:00 2012 mathieu leurquin
-// Last update Thu Sep 13 13:57:58 2012 thierry berger
+// Last update Thu Sep 13 15:54:07 2012 thierry berger
 //
 
 #ifndef SERVER_UNIT_HPP
 # define SERVER_UNIT_HPP
 
+#include <msgpack.hpp>
 #include "../GameData/Unit.hpp"
 #include "Object.hpp"
 #include "Player.hpp"
@@ -40,7 +41,8 @@ namespace Server
     void stopDown();
     void stopLeft();
 
-    virtual void* serialize(int& finalLength) const {return 0;}
+    virtual void serialize(msgpack::packer<msgpack::sbuffer>& packet) const {return;}
+    virtual bool unSerialize(msgpack::packer<msgpack::sbuffer>& packet) {return false;}
     virtual int	getClassId() const {return 0;}
   };
 }

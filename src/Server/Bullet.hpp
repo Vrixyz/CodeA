@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 17:37:09 2012 thierry berger
-// Last update Thu Sep 13 12:38:02 2012 thierry berger
+// Last update Thu Sep 13 15:26:43 2012 thierry berger
 //
 
 #ifndef SERVER_BULLET_HPP
@@ -23,7 +23,8 @@ namespace Server
 
     Bullet(World& w, int id, int damage) : Object(w, Object::Bullet, id), _data(damage, id) {}
 
-    virtual void* serialize(int& finalLength) const {return 0;}
+    virtual void serialize(msgpack::packer<msgpack::sbuffer>& packet) const {return;}
+    virtual bool unSerialize(msgpack::packer<msgpack::sbuffer>& packet) {return false;}
     virtual int	getClassId() const {return 0;}
   };
 }

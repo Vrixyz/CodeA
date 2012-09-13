@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Thu Sep 13 13:58:01 2012 thierry berger
+// Last update Thu Sep 13 15:42:41 2012 thierry berger
 //
 
 #include "World.hpp"
@@ -150,6 +150,16 @@ void Server::World::destroyBullet(int id)
   return destroyFromList(bullets, id);
 }
 
+void	Server::World::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
+{
+  packet.pack(getPhysics(*elements.begin()));
+}
+
+bool Server::World::unSerialize(msgpack::packer<msgpack::sbuffer>& packet) {return false;}
+
+int	Server::World::getClassId() const {return 0;}
+
+
 b2Body* Server::World::getFromList(std::list<b2Body*> l, int id)
 {
   Object* obj;
@@ -181,4 +191,30 @@ void Server::World::destroyFromList(std::list<b2Body*> l, int id)
 	it++;
     }
   return;
+}
+
+GameData::Physics Server::World::getPhysics(const b2Body* body) const
+{
+  GameData::Physics physics;
+  b2Vec2 position = body->GetPosition();
+
+  physics.x = position.x;
+  physics.y = position.y;
+
+  /// assuming that shapes are only simple rectangles (real simple, centered at 0)
+  const b2PolygonShape* shape = static_cast<const b2PolygonShape*>(body->GetFixtureList()->GetShape());
+  // for (int i = 0; i < 4; ++i)
+  //   {
+  //     physics.vertices[i][0] = shape->GetVertex(i).x;
+  //     physics.vertices[i][1] = shape->GetVertex(i).y;
+  //   }
+  physics.s0x = shape->GetVertex(0).x;
+  physics.s0y = shape->GetVertex(0).y;
+  physics.s1x = shape->GetVertex(1).x;
+  physics.s1y = shape->GetVertex(1).y;
+  physics.s2x = shape->GetVertex(2).x;
+  physics.s2y = shape->GetVertex(2).y;
+  physics.s3x = shape->GetVertex(3).x;
+  physics.s3y = shape->GetVertex(3).y;
+  return physics;
 }

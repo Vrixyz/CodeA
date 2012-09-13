@@ -5,20 +5,21 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 09:55:13 2012 thierry berger
-// Last update Wed Sep 12 18:04:05 2012 thierry berger
+// Last update Thu Sep 13 15:54:06 2012 thierry berger
 //
 
 #ifndef GAME_DATA_SERIALIZABLE_HPP
 # define GAME_DATA_SERIALIZABLE_HPP
+
+#include <msgpack.hpp>
 
 namespace GameData
 {
   class	Serializable
   {
   public:
-    virtual void*	serialize(int& finalLength) const = 0;
-    /// overload that function please. (unserialized should be nulled (original value will be lost))
-    static bool unSerialize(void* const serialized, void*& unserialized) {return false;}; 
+    virtual void	serialize(msgpack::packer<msgpack::sbuffer>& packet) const = 0;
+    virtual bool unSerialize(msgpack::packer<msgpack::sbuffer>& packet) = 0;
     virtual int	getClassId() const = 0;
   };
 }

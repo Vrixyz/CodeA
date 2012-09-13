@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 11:04:47 2012 thierry berger
-// Last update Thu Sep 13 13:29:44 2012 thierry berger
+// Last update Thu Sep 13 15:54:08 2012 thierry berger
 //
 
 #ifndef SERVER_OBJECT_HPP
@@ -29,6 +29,7 @@ namespace Server
     Type getType() const {return _type;}
     // void die() = 0;
     /// do a method contact(Unit) / contact(Element) / etc...
+    
     const int id;
 
   protected:

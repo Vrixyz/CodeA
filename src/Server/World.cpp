@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Thu Sep 13 15:42:41 2012 thierry berger
+// Last update Thu Sep 13 17:18:46 2012 thierry berger
 //
 
 #include "World.hpp"
@@ -203,18 +203,11 @@ GameData::Physics Server::World::getPhysics(const b2Body* body) const
 
   /// assuming that shapes are only simple rectangles (real simple, centered at 0)
   const b2PolygonShape* shape = static_cast<const b2PolygonShape*>(body->GetFixtureList()->GetShape());
-  // for (int i = 0; i < 4; ++i)
-  //   {
-  //     physics.vertices[i][0] = shape->GetVertex(i).x;
-  //     physics.vertices[i][1] = shape->GetVertex(i).y;
-  //   }
-  physics.s0x = shape->GetVertex(0).x;
-  physics.s0y = shape->GetVertex(0).y;
-  physics.s1x = shape->GetVertex(1).x;
-  physics.s1y = shape->GetVertex(1).y;
-  physics.s2x = shape->GetVertex(2).x;
-  physics.s2y = shape->GetVertex(2).y;
-  physics.s3x = shape->GetVertex(3).x;
-  physics.s3y = shape->GetVertex(3).y;
+  for (int i = 0; i < shape->GetVertexCount(); ++i)
+    {
+      b2Vec2 vertice = shape->GetVertex(i);
+
+      physics.vertices.push_back(GameData::Physics::Coord(vertice.x, vertice.y));
+    }
   return physics;
 }

@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Tue Sep 11 15:56:37 2012 thierry berger
-// Last update Thu Sep 13 15:44:50 2012 thierry berger
+// Last update Thu Sep 13 17:18:56 2012 thierry berger
 //
 
 #ifndef GAMEDATA_PHYSICS_HPP
@@ -17,18 +17,21 @@ namespace GameData
 {
   struct Physics
   {
+    struct Coord
+    {
+      float x;
+      float y;
+
+      Coord(float _x, float _y) : x(_x), y(_y) {}
+      Coord() : x(0), y(0) {}
+
+      MSGPACK_DEFINE(x, y);
+    };
     float	x;
     float	y;
-    float	s0x;
-    float	s0y;
-    float	s1x;
-    float	s1y;
-    float	s2x;
-    float	s2y;
-    float	s3x;
-    float	s3y;
+    std::list<Coord> vertices;
 
-    MSGPACK_DEFINE(x, y, s0x, s0y, s1x, s1y, s2x, s2y,s3x, s3y);
+    MSGPACK_DEFINE(x, y, vertices);
   };
 }
 

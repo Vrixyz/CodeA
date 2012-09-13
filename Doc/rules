@@ -1,0 +1,125 @@
+
+
+     
+					############################################################################################################################################     
+					##     ______     ___     _____  _____   _______      _________          ___   ________         ______      ___     ______      ______    ##
+					##   .' ___  |  .'   `.  |_   _||_   _| |_   __ \    |  _   _  |       .'   `.|_   __  |      .' ___  |   .'   `.  |_   _ `.  .' ____ \   ##
+					##  / .'   \_| /  .-.  \   | |    | |     | |__) |   |_/ | | \_|      /  .-.  \ | |_ \_|     / .'   \_|  /  .-.  \   | | `. \ | (___ \_|  ##
+					##  | |        | |   | |   | '    ' |     |  __ /        | |          | |   | | |  _|        | |   ____  | |   | |   | |  | |  _.____`.   ##
+					##  \ `.___.'\ \  `-'  /    \ \__/ /     _| |  \ \_     _| |_         \  `-'  /_| |_         \ `.___]  | \  `-'  /  _| |_.' / | \____) |  ##
+					##   `.____ .'  `.___.'      `.__.'     |____| |___|   |_____|         `.___.'|_____|         `._____.'   `.___.'  |______.'   \______.'  ##
+					##                                                                                                                                        ##
+					############################################################################################################################################
+
+
+
+ SOMMAIRE
+
+ I - INTRODUCTION
+ II - PRINCIPE DU JEU
+ III - CHAMPIONS
+     1. Roles
+     2. Caracteristiques
+     3. Ameliorations
+     4. Alterations
+ IV - ARENES
+    1. Pieges
+
+
+ I : INTRODUCTION :
+
+ Depuis la nuit des temps sur la planete d'Esrever, perdue dans les confins d'une des galaxys les plus malefiques de l'univers, des criminels se battent pour leur vie. Depuis l'an 42 de la nouvelle Ere, cette planete fut ammenagee en prison geante pour recevoir les pires individus de tous les systemes aux alentours.
+
+ Etant peuplee initialement de puissants sorciers noirs, ces derniers firent combattre les comdamnes a mort pour se divertir. Les gagnants etaient ensuite soumis a un choix : arreter les combats pour servir les maitres de l'arene ou continuer de se battre incessament pour leur vie. D'ailleurs, beaucoup des vainqueurs esperent secretement etre choisis ... On raconte que les Dieux qui ont crees ce monde veille sur lui et choisiront chacun un champion pour defendre leurs interets. Tous les plus puissants combattants esperent donc attirer les faveurs divines, alors que les plus faibles qui ont reussi a vaincre un adversaire, vivront dans la servitude, portant des plateaux de fruits et des .jar de vins durant le reste de leur miserable existance.
+
+
+
+ II : PRINCIPE DU JEU :
+
+ Le principe du jeu est simple, deux champions parmis la liste fournie doivent s'affrontent au coeur d'une arene. Le match et les regles sont les suivantes :
+
+    	     - Un match se deroule en 3 manches, le premier des deux champions a gagner deux manches gagne le match.
+	     - Pour gagner une manche, il suffit de faire tomber les points de vie du champion ennemi a 0 ou en dessous de 0.
+	     - Tous les coups sont permis pour arriver a ses fins, seul le resultat compte.
+
+
+ III : CHAMPIONS :
+
+     1. Roles
+
+ Les champions qui se battent dans l'arene, controles par les joueurs, sont les plus puissants que le Tribunal des Dieux ait jamais connu. Ils sont divises en quatre categories :
+
+     - [Distance]      : Ces champions se battent principalement avec des armes a distance.
+     - [Corps a Corps] : Ces champions se battent avec des armes au corps a corps.
+     - [Mage]          : Ces champions utilisent la magie pour infliger des degats aux ennemis.
+     - [Tank]	       : Ces champions sont tres resistants mais infligent moins de degats que les autres.
+
+
+     2. Caracteristiques
+
+ Tous les champions sont dotes de 6 caracteristiques mais dans des proportions differentes :
+
+      	  	    Caracteristiques principales :
+     - [Force]	    	 : Sert pour les champions au corps a corps, a augmenter les degats qu'ils infligent avec les attaques et les coups critiques infligent plus de degats.
+     - [Agilite]	 : Sert pour les champions a distance, a augmenter les degats qu'ils infligent avec les attaques et les chances de faire un coup critique.
+     - [Intelligence]	 : Sert pour les champions mages, a augmenter les degats qu'ils infligent avec les attaques, les chances de faire un coup critique et les coups critiques infligent plus de degats.
+     - [Endurance]	 : Sert pour tous les champions, a augmenter leurs points de vie et leur resistance aux degats.
+     - [Regeneration]	 : Sert pour tous les champions, a augmenter leur regeneration de point de vie et ressource. (Concentration, rage, energie, etc.) 
+
+      	  	    Caracteristiques secondaires :
+     - [Points de vie]   : Ces points representent la sante des champions. Si les champions voient leur points de vie tombent a 0, ils ont perdus la manche.
+     - [Point de ress.]	 : Ces ressources permettent de lancer les sorts et capacites des champions. Si ils n'ont pas assez de ressources, les champions ne peuvent plus lancer de sorts avant d'en recuperer.
+     - [Vitesse]	 : Cette statistique represente la vitesse a laquelle peut se deplacer le champion. (100% de base pour tous les champions)
+
+     3. Ameliorations
+
+     {x} - Ce modificateur influe les effets associes a une alteation/amelioration.
+     {!} - Cette alteration/amelioration ne peut pas etre influee par un modificateur.
+
+ Les ameliorations peuvent etre obtenues par les personnages en lancant certains sorts ou capacites. Elles sont la pour augmenter les statistiques des champions afin de leur donner plus de puissance, de survavibilite, de mobilite, etc. Elles se dissipent automatiquement au bout d'un certain temps.
+
+     		   * Offensifs :
+     - {x}[Dmg]   : (Degats) Degats infliges par les sorts et capacites augmentes. (+5%deg * multiplicateur en plus pour tous les degats, rand[8-15] sec)
+     - {x}[Pui]   : (Puissance) Les degats que le champion inflige sont augmentes. (+10pts de degats * multiplicateur, rand(8-15) sec)
+     - {x}[Crit]  : (Critique) Augmente les chances de faire un coup critique avec les sorts et capacites. (+10%critique * multiplicateur, rand(8-15 sec)
+     - {x}[Prec]  : (Precision) Augmente les degats infliges par les coups critiques. (+10% degats par coup de critique * multiplicateur, rand(8-15) sec)
+     - {x}[Sanc]  : (Sanctuaire) Augmente les points de vie temporairement. (100PVs * multiplicateur, rand(8-15) sec)
+
+       	      	   * Defensifs :
+     - {x}[Def]   : (Defense) Reduit les degats subis. (-10% degats subis sur toutes les degats subis * multiplicateur, rand(8-15) sec)
+     - {!}[R.dmg] : (Renvoie de degats) Renvoie les degats a l'ennemi. (renvoie 100% des degats pour rand(2-4) attaques)
+     - {x}[Heal]  : (Soin) Soigne le champion. (rend 100PV * multiplicateur au champion)
+     - {!}[Inv]   : (Invincible) Immortel durant un instant. (immunise a tous les degats et a toutes les alterations pour les rand(4-6) prochaines sec)
+
+
+     4. Alterations
+
+ Les alterations sont des pertes de controles partielles ou totales du personnages infliger par le champion ennemi. Elles influent sur differents points commme la vitesse de deplacement, des degats sur la duree, des reductions de resistance au degats, etc. Elles se dissipent automatiquement au bout d'un certain temps.
+
+     - {x}[Ral.]   : (Ralentissement) Ralentissement de l'ennemi. (-10%vitesse * multiplicateur)
+     - {x}[Trap]   : (Piege) Pieges au sol. (Invisibles pour les ennemis, se delenche des qu'on marche dessus, nombre de pieges posables = multiplicateur)
+     - {x}DoT      : (Degats sur la duree) Inflige des degats sur la duree. (+20pts de degats * multiplicateur, rand(5-12) sec)
+       	  -> [Poison]	 : (Poison) Degats physiques infliges periodiquement. Cela inflige aussi une reduction de la vitesse. (-30% de vitesse durant rand(3-5) sec)
+       	  -> [Miasmes]	 : (Miasmes) Degats magiques infliges periodiquement. Cela inflige aussi une perte de ressources (-5%PR/s durant rand(3-5) sec)
+	  -> [Blood]	 : (Saignement) Degats physiques infliges sur la duree. Cela inflige aussi une perte d'endurance. (-50%Def. durant rand(3-5) sec)
+	  -> [Psy shock] : (Choc psychique) Degats magiques infliges sur la duree. Cela inflige aussi une perte de regeneration des ressources. (-100% regen durant rand(3-5) sec)
+     - {x}[Pets]   : (Invocations) Invoque des creatures. (Type de creature, duree, etc. a definir en fonction des champions. multiplicateur = nombre d'invocations)
+     - {x}[Blink]  : (Aveuglement) Aveugle l'ennemi. (10% chance de louper * multiplicateur pour les rand(1-3) prochaines attaques)
+     - {!}[Stun]   : (Etourdissement) Etourdi l'ennemu. (rand(2-4) sec)
+     - {!}[Fear]   : (Peur) Le champion est appeure, fuyant durant un certain temps dans un direction aleatoire. (rand(4-6) sec)
+
+
+ IV - ARENES
+
+ Les arenes sont les endroits dans lesquels se battent les champions. Elles sont toutes differentes et ont toutes leurs caracteristiques. Elles sont remplies de pieges qui ont des effets differents.
+ 
+     1. Pieges
+
+ Les pieges sont des zones cachees dans l'arene et sont actionnes des qu'un joueur marche dessus. Il existe plusieurs types de pieges :
+
+     - Fosses a piques   : Les fosses a piques sont des trous creuses dans le sol et tapi de lames/piques/pieux au fond. Si un joueur tombe dedans, il est immobilise durant un certain temps et subit des degats.
+       	      -> Effets  : {!}[Stun] et inflige {5}[Blood].
+     - Flaque de goudron : Les flaques de goudrons sont des creux dans le sol remplis d'un liquide epais qui ralenti les ennemis qui s'y aventurent.
+       	      -> Effets  : {3}[Ral.] durant toute la duree de la presence dans la flaque et rand(1-3) sec apres etre sorti de la zone du piege.
+     - Piege a loups	 : Un piege a loup est dissimule dans le sol. Le champion qui marche dedans est immobilise et subit des degats.
+       	      -> Effets  : {10}[Ral.] dg inflige {1}[Blood].

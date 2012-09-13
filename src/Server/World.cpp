@@ -5,14 +5,14 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Wed Sep 12 17:53:04 2012 thierry berger
+// Last update Thu Sep 13 13:58:01 2012 thierry berger
 //
 
 #include "World.hpp"
 
 void	Server::World::init()
 {
-  this->createPlayer(4).addUnit(this->createUnit());
+  static_cast<Unit*>(this->createUnit().GetUserData())->addPlayer(&this->createPlayer(4));
   this->createElement(true, 100, 100);
 }
 
@@ -75,7 +75,7 @@ b2Body& Server::World::createElement(bool walkable, int width, int height)
 
 b2Body&  Server::World::createBullet(int damage)
 {
-  Bullet* e = new Bullet(*this, damage);
+  Bullet* e = new Bullet(*this, (int)elements.size(), damage);
   b2BodyDef eBDef;
   b2Body* physicBody;
 
@@ -94,4 +94,91 @@ b2Body&  Server::World::createBullet(int damage)
   physicBody->CreateFixture(&fDef);
   elements.push_back(physicBody);  
   return *physicBody;
+}
+
+Server::Player* Server::World::getPlayer(int id)
+{
+  for (std::list<Player*>::iterator it = players.begin(); it != players.end(); it++)
+    {
+      if ((*it)->id == id)
+	{
+	  return *it;
+	}
+      else
+	it++;
+    }
+  return 0;
+}
+
+b2Body* Server::World::getUnit(int id)
+{
+  return getFromList(units, id);
+}
+
+b2Body* Server::World::getElement(int id)
+{
+  return getFromList(elements, id);
+}
+
+b2Body* Server::World::getBullet(int id)
+{
+  return getFromList(bullets, id);
+}
+
+void Server::World::destroyPlayer(int id)
+{
+  for (std::list<Player*>::iterator it = players.begin(); it != players.end(); it++)
+    {
+      if ((*it)->id == id)
+	{
+	  delete *it;
+	  players.erase(it);
+	  return;
+	}
+      else
+	it++;
+    }
+}
+
+void Server::World::destroyUnit(int id)
+{
+  return destroyFromList(units, id);
+}
+
+void Server::World::destroyBullet(int id)
+{
+  return destroyFromList(bullets, id);
+}
+
+b2Body* Server::World::getFromList(std::list<b2Body*> l, int id)
+{
+  Object* obj;
+
+  for (std::list<b2Body*>::iterator it = l.begin(); it != l.end(); it++)
+    {
+      obj = static_cast<Object*>((*it)->GetUserData());
+      if (obj->id == id)
+	return *it;
+    }
+  return 0;
+}
+
+void Server::World::destroyFromList(std::list<b2Body*> l, int id)
+{
+  Object* obj;
+
+  for (std::list<b2Body*>::iterator it = l.begin(); it != l.end(); it++)
+    {
+      obj = static_cast<Object*>((*it)->GetUserData());
+      if (obj->id == id)
+	{
+	  /// TODO: put that in a list to delete later (it may cause problem if deletion in timestep)
+	  _physicWorld.DestroyBody(*it);
+	  l.erase(it);
+	  return;
+	}
+      else
+	it++;
+    }
+  return;
 }

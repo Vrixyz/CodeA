@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 10:46:49 2012 thierry berger
-// Last update Wed Sep 12 18:18:09 2012 thierry berger
+// Last update Thu Sep 13 13:34:45 2012 thierry berger
 //
 
 #ifndef SERVER_WORLD_HPP
@@ -24,10 +24,12 @@
 namespace Server
 {
   class Player;
+
   class	World : GameData::Serializable
   {
   public:
 
+    /// TODO: Add a trash list to remove safely the bodies
     std::list<b2Body*>	elements;
     std::list<b2Body*>	units;
     std::list<b2Body*>	bullets;
@@ -41,13 +43,23 @@ namespace Server
     b2Body& createUnit();
     b2Body& createElement(bool walkable, int width, int height);
     b2Body& createBullet(int damage);
-    b2Body& getUnit(int id);
-    b2Body& getElement(int id);
+    Player* getPlayer(int id);
+    b2Body* getUnit(int id);
+    b2Body* getElement(int id);
+    b2Body* getBullet(int id);
+    void destroyPlayer(int id);
+    void destroyUnit(int id);
+    void destroyElement(int id);
+    void destroyBullet(int id);
 
     virtual void* serialize(int& finalLength) const {return 0;};
     virtual int	getClassId() const {return 0;};
+
   private:
     b2World _physicWorld;
+
+    b2Body* getFromList(std::list<b2Body*>, int id);
+    void destroyFromList(std::list<b2Body*>, int id);
   };
 }
 

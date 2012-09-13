@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:00:00 2012 mathieu leurquin
-// Last update Wed Sep 12 18:20:24 2012 thierry berger
+// Last update Thu Sep 13 13:57:58 2012 thierry berger
 //
 
 #ifndef SERVER_UNIT_HPP
@@ -13,6 +13,7 @@
 
 #include "../GameData/Unit.hpp"
 #include "Object.hpp"
+#include "Player.hpp"
 
 namespace Server
 {
@@ -21,9 +22,10 @@ namespace Server
   public:
     GameData::Unit _data;
 
-    Unit(World& world, int id) : Object(world, Object::Unit), _data(id, 10) {}
+    Unit(World& world, int id) : Object(world, Object::Unit, id), _data(id, 10) {}
 
     const GameData::Unit& getData() const {return _data;}
+    void addPlayer(Player* p);
     void fire(float x, float y);
     void aimTo(float x, float y);
     void moveTo(float x, float y);

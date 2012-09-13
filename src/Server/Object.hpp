@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 11:04:47 2012 thierry berger
-// Last update Wed Sep 12 18:22:45 2012 thierry berger
+// Last update Thu Sep 13 13:29:44 2012 thierry berger
 //
 
 #ifndef SERVER_OBJECT_HPP
@@ -25,14 +25,14 @@ namespace Server
 	Unit,
 	Element,
 	Bullet,
-	Player
       } Type;
     Type getType() const {return _type;}
     // void die() = 0;
     /// do a method contact(Unit) / contact(Element) / etc...
+    const int id;
 
   protected:
-    Object(World& world, Type type) : _type(type), _world(world){}
+    Object(World& world, Type type, int _id) : id(_id), _type(type), _world(world){}
     Type _type; /// put that in Serializable
     World& _world;
   };

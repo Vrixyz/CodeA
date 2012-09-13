@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 17:37:09 2012 thierry berger
-// Last update Wed Sep 12 18:22:04 2012 thierry berger
+// Last update Thu Sep 13 12:38:02 2012 thierry berger
 //
 
 #ifndef SERVER_BULLET_HPP
@@ -21,7 +21,7 @@ namespace Server
   public:
     GameData::Bullet _data;
 
-    Bullet(World& w, int damage) : Object(w, Object::Bullet), _data(damage) {}
+    Bullet(World& w, int id, int damage) : Object(w, Object::Bullet, id), _data(damage, id) {}
 
     virtual void* serialize(int& finalLength) const {return 0;}
     virtual int	getClassId() const {return 0;}

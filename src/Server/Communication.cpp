@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 19:13:12 2012 thierry berger
-// Last update Fri Sep 14 13:55:14 2012 thierry berger
+// Last update Fri Sep 14 15:08:30 2012 thierry berger
 //
 
 #include "Communication.hpp"
@@ -27,7 +27,7 @@ void Server::Communication::sendToClient(const msgpack::sbuffer& packedInformati
       /// TODO: send packed info :  boost::asio::buffer(static_cast<const void*>(&packedInformation))
       //      boost::asio::buffer b; //();
       // clients[clientId]->send(, packedInformation.size());
-      boost::asio::write(*(clients[clientId]), boost::asio::buffer(static_cast<const void*>(packedInformation.data()), packedInformation.size()), ignored_error);
+      boost::asio::write(*(clients[clientId]), boost::asio::buffer(static_cast<const void*>(packedInformation), packedInformation.size()), ignored_error);
       std::cout << "packetSize: " << packedInformation.size() << std::endl;
     }
   catch (std::exception& e)

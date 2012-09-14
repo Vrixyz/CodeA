@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:24:59 2012 mathieu leurquin
-// Last update Fri Sep 14 13:33:36 2012 thierry berger
+// Last update Fri Sep 14 18:37:15 2012 thierry berger
 //
 
 #ifndef SERVER_COMMUNICATION_HPP
@@ -24,7 +24,7 @@ namespace Server
   class	Communication
   {
   public:
-    Communication() : acceptor(io_service, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), 4242)) {}
+    Communication() : acceptor(io_service, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), 4242)), incr(0) {}
     void sendToClient(const msgpack::sbuffer& packedInformation, int clientId);
     GameData::Command* tryReceiveFromClient(int clientId);
     /// pointer, to "force" a variable to be sent to this function, which will contain the new clientId
@@ -33,6 +33,7 @@ namespace Server
   private:
     boost::asio::io_service io_service;
     boost::asio::ip::tcp::acceptor acceptor;
+    int	incr;
   };
 }
 

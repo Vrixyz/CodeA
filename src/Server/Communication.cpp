@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 19:13:12 2012 thierry berger
-// Last update Fri Sep 14 18:26:45 2012 thierry berger
+// Last update Fri Sep 14 18:38:30 2012 thierry berger
 //
 
 #include "Communication.hpp"
@@ -14,10 +14,9 @@ bool	Server::Communication::tryAccept(int* clientId)
 {
   boost::asio::ip::tcp::socket* s = new boost::asio::ip::tcp::socket(io_service);
   acceptor.accept(*s);
-  clients[0] = s;
-  *clientId = 0;
-  // clients[s->native_handle().native()] = s;
-  // *clientId = s->native_handle().native();
+  /// FIXME: maybe clilentId shouldn't be set that dirtily
+  clients[incr] = s;
+  *clientId = incr++;
   return true;
 }
 

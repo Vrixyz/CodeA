@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 10:46:49 2012 thierry berger
-// Last update Fri Sep 14 10:34:31 2012 thierry berger
+// Last update Fri Sep 14 19:15:39 2012 thierry berger
 //
 
 #ifndef SERVER_WORLD_HPP
@@ -22,6 +22,10 @@
 #include "Unit.hpp"
 
 #include <list>
+
+#define VELOCITY_ITERATION 6
+#define POSITION_ITERATION 2
+#define TIMESTEP 16.666666666667
 
 namespace Server
 {

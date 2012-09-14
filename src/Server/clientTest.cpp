@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Fri Sep 14 12:40:33 2012 thierry berger
-// Last update Fri Sep 14 15:07:12 2012 thierry berger
+// Last update Fri Sep 14 19:18:00 2012 thierry berger
 //
 
 #include <iostream>
@@ -46,17 +46,13 @@ int main(int argc, char* argv[])
 
 
 	  void* buffer = buf.data();
-	  std::cout << "OK (" << len << "): " << std::endl;
 
 	  msgpack::unpacker pac;
  
 	  // feeds the buffer.
 	  pac.reserve_buffer(len);
-	  std::cout << "segv?" << std::endl;
-	  std::cout << pac.buffer() << " " << len << std::endl;
 	  
 	  memcpy(pac.buffer(), buffer, len);
-	  std::cout << "segv?" << std::endl;
 	  pac.buffer_consumed(len);
  
 	  // now starts streaming deserialization.
@@ -64,8 +60,6 @@ int main(int argc, char* argv[])
 	  while(pac.next(&result)) {
 	    std::cout << result.get() << std::endl;
 	  }
-
-	  std::cout << std::endl;
 	}
     }
   catch (std::exception& e)

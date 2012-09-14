@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Thu Sep 13 21:59:29 2012 thierry berger
+// Last update Fri Sep 14 10:44:51 2012 thierry berger
 //
 
 #include "World.hpp"
@@ -45,67 +45,27 @@ Server::Player&	Server::World::createPlayer(int id)
 b2Body&	Server::World::createUnit()
 {
   Server::Unit* u = new Server::Unit(*this, (int)units.size());
-  b2BodyDef uBDef;
-  b2Body* physicBody;
+  b2Body* physicBody = u->setBody();
 
-  uBDef.userData = u;
-  uBDef.fixedRotation = true;
-  uBDef.type = b2_dynamicBody;
-  uBDef.gravityScale = 0;
-  physicBody = _physicWorld.CreateBody(&uBDef);
-
-  b2PolygonShape unitShape;
-  unitShape.SetAsBox(2, 2);
-
-  b2FixtureDef fDef;
-  fDef.shape = &unitShape;
-  physicBody->CreateFixture(&fDef);
   units.push_back(physicBody);
   return *physicBody;
 }
 
-b2Body& Server::World::createElement(bool walkable, int width, int height)
+b2Body& Server::World::createElement(bool walkable, float width, float height)
 {
   Element* e = new Element(*this, (int)elements.size(), walkable);
-  b2BodyDef eBDef;
-  b2Body* physicBody;
+  b2Body* physicBody = e->setBody(width, height);
 
-  eBDef.userData = e;
-  eBDef.fixedRotation = true;
-  eBDef.type = b2_dynamicBody;
-  eBDef.gravityScale = 0;
-  physicBody = _physicWorld.CreateBody(&eBDef);
-
-  b2PolygonShape elementShape;
-  elementShape.SetAsBox(width, height);
-
-  b2FixtureDef fDef;
-  fDef.shape = &elementShape;
-  physicBody->CreateFixture(&fDef);
   elements.push_back(physicBody);  
   return *physicBody;
 }
 
 b2Body&  Server::World::createBullet(int damage)
 {
-  Bullet* e = new Bullet(*this, (int)elements.size(), damage);
-  b2BodyDef eBDef;
-  b2Body* physicBody;
+  Bullet* b = new Bullet(*this, (int)elements.size(), damage);
+  b2Body* physicBody = b->setBody();
 
-  eBDef.userData = e;
-  eBDef.fixedRotation = true;
-  eBDef.bullet = true;
-  eBDef.type = b2_dynamicBody;
-  eBDef.gravityScale = 0;
-  physicBody = _physicWorld.CreateBody(&eBDef);
-
-  b2PolygonShape elementShape;
-  elementShape.SetAsBox(0.5, 0.5);
-
-  b2FixtureDef fDef;
-  fDef.shape = &elementShape;
-  physicBody->CreateFixture(&fDef);
-  elements.push_back(physicBody);  
+  bullets.push_back(physicBody);
   return *physicBody;
 }
 

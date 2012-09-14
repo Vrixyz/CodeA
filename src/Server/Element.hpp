@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:16:58 2012 mathieu leurquin
-// Last update Thu Sep 13 17:56:38 2012 thierry berger
+// Last update Fri Sep 14 10:33:57 2012 thierry berger
 //
 
 #ifndef SERVER_ELEMENT_HPP
@@ -23,6 +23,7 @@ namespace Server
     
     Element(World& world, int id, bool walkable) :
       Object(world, Object::Element, id), _data(id, walkable) {}
+    virtual b2Body* setBody(float width = 100, float height = 100);
     const GameData::Element& getData()const {return _data;}
 
     virtual void serialize(msgpack::packer<msgpack::sbuffer>& packet) const;

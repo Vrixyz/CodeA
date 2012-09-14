@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:00:00 2012 mathieu leurquin
-// Last update Thu Sep 13 17:35:50 2012 thierry berger
+// Last update Fri Sep 14 10:28:35 2012 thierry berger
 //
 
 #ifndef SERVER_UNIT_HPP
@@ -25,6 +25,7 @@ namespace Server
 
     Unit(World& world, int id) : Object(world, Object::Unit, id), _data(id, 10) {}
 
+    virtual b2Body*	setBody();
     const GameData::Unit& getData() const {return _data;}
     void addPlayer(Player* p);
     void fire(float x, float y);

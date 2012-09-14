@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 10:46:49 2012 thierry berger
-// Last update Thu Sep 13 21:27:28 2012 thierry berger
+// Last update Fri Sep 14 10:34:31 2012 thierry berger
 //
 
 #ifndef SERVER_WORLD_HPP
@@ -37,6 +37,7 @@ namespace Server
     std::list<b2Body*>	units;
     std::list<b2Body*>	bullets;
     std::list<Player*>	players;
+    b2World _physicWorld;
 
     World() : _physicWorld(b2Vec2(0, 0)) {}
     void init();
@@ -44,7 +45,7 @@ namespace Server
     void handleContact(b2Body object1, b2Body object2);
     Player& createPlayer(int id);
     b2Body& createUnit();
-    b2Body& createElement(bool walkable, int width, int height);
+    b2Body& createElement(bool walkable, float width, float height);
     b2Body& createBullet(int damage);
     Player* getPlayer(int id);
     b2Body* getUnit(int id);
@@ -60,7 +61,6 @@ namespace Server
     virtual int	getClassId() const;
 
   private:
-    b2World _physicWorld;
 
     b2Body* getFromList(std::list<b2Body*>, int id);
     void destroyFromList(std::list<b2Body*>, int id);

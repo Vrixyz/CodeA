@@ -5,11 +5,13 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 16:08:13 2012 thierry berger
-// Last update Thu Sep 13 12:20:57 2012 thierry berger
+// Last update Fri Sep 14 11:09:01 2012 thierry berger
 //
 
 #ifndef GAME_DATA_BULLET_HPP
 # define GAME_DATA_BULLET_HPP
+
+#include <msgpack.hpp>
 
 namespace GameData
 {
@@ -19,6 +21,8 @@ namespace GameData
     int damage;
     int id;
     /// ? add life (for range or destroy while alive)
+    
+    MSGPACK_DEFINE(damage, id);
   };
 }
 

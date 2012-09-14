@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:24:59 2012 mathieu leurquin
-// Last update Thu Sep 13 21:49:51 2012 thierry berger
+// Last update Fri Sep 14 13:33:36 2012 thierry berger
 //
 
 #ifndef SERVER_COMMUNICATION_HPP

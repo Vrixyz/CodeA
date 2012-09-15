@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Fri Sep 14 19:17:57 2012 thierry berger
+// Last update Sat Sep 15 13:50:47 2012 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -104,9 +104,7 @@ Server::Player* Server::World::getPlayer(int id)
   for (std::list<Player*>::iterator it = players.begin(); it != players.end(); it++)
     {
       if ((*it)->id == id)
-	{
-	  return *it;
-	}
+	return *it;
       else
 	it++;
     }

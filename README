@@ -4,10 +4,11 @@ Code A
 
 dependencies :
 
-Box2d v2.0.1
+Box2d v2.2.1
 Doxygen v1.8.2
+msgpack 0.5.7
+boost (system for asio) 1.51.0
 
 --- soon ---
-MsgPack
+
 Qt
-SFML (or something like that)

@@ -5,7 +5,7 @@
 ## Login   <berger_t@epitech.net>
 ## 
 ## Started on  Fri Sep 14 10:58:16 2012 thierry berger
-## Last update Tue Sep 18 12:43:14 2012 thierry berger
+## Last update Tue Sep 18 16:01:14 2012 Edouard Brunvarlet
 ##
 
 SRC	=	mainTest.cpp \
@@ -14,7 +14,8 @@ SRC	=	mainTest.cpp \
 		Element.cpp \
 		Unit.cpp \
 		Bullet.cpp \
-		tcp_connection.cpp
+		tcp_connection.cpp \
+		BitField.cpp
 
 NAME	=	server
 

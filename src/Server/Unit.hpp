@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:00:00 2012 mathieu leurquin
-// Last update Fri Sep 14 10:28:35 2012 thierry berger
+// Last update Tue Sep 18 11:23:55 2012 mathieu leurquin
 //
 
 #ifndef SERVER_UNIT_HPP
@@ -15,6 +15,7 @@
 #include "../GameData/Unit.hpp"
 #include "Object.hpp"
 #include "Player.hpp"
+#include "BitField.hpp"
 
 namespace Server
 {
@@ -22,8 +23,9 @@ namespace Server
   {
   public:
     GameData::Unit _data;
+    BitField direction;
 
-    Unit(World& world, int id) : Object(world, Object::Unit, id), _data(id, 10) {}
+    Unit(World& world, int id) : Object(world, Object::Unit, id), _data(id, 10), direction() {}
 
     virtual b2Body*	setBody();
     const GameData::Unit& getData() const {return _data;}
@@ -31,8 +33,6 @@ namespace Server
     void fire(float x, float y);
     void aimTo(float x, float y);
     void moveTo(float x, float y);
-    void startMoving();
-    void stopMoving();
     void goUp();
     void goRight();
     void goDown();

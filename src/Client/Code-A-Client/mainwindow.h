@@ -2,6 +2,12 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <iostream>
+#include <phonon/MediaSource>
+#include <phonon/MediaObject>
+#include <QCoreApplication>
+#include <QTcpSocket>
+#include "nm.h"
 
 namespace Ui {
 class MainWindow;
@@ -18,9 +24,11 @@ public:
     
 private slots:
     void on_pushButton_clicked();
+    void Playagain();
 
 private:
     Ui::MainWindow *ui;
+    Phonon::MediaObject *music;
 };
 
 #endif // MAINWINDOW_H

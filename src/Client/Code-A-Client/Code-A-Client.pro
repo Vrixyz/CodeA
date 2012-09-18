@@ -4,15 +4,19 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui phonon network
+
+LIBS = -lboost_system -lmsgpack
 
 TARGET = Code-A-Client
 TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    nm.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    nm.h
 
 FORMS    += mainwindow.ui

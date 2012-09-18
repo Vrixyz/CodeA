@@ -5,7 +5,7 @@
 ## Login   <berger_t@epitech.net>
 ## 
 ## Started on  Fri Sep 14 10:58:16 2012 thierry berger
-## Last update Fri Sep 14 11:09:22 2012 thierry berger
+## Last update Tue Sep 18 12:43:14 2012 thierry berger
 ##
 
 SRC	=	mainTest.cpp \
@@ -13,13 +13,14 @@ SRC	=	mainTest.cpp \
 		Communication.cpp \
 		Element.cpp \
 		Unit.cpp \
-		Bullet.cpp
+		Bullet.cpp \
+		tcp_connection.cpp
 
 NAME	=	server
 
 OBJ	=	$(SRC:.cpp=.o)
 
-LIBS	=	-lboost_system -lmsgpack -lBox2D
+LIBS	=	-lboost_system -lmsgpack -lBox2D -lboost_thread
 
 CXXFLAGS=	-W -Wall -Wextra
 

@@ -5,13 +5,14 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Fri Sep 14 12:40:33 2012 thierry berger
-// Last update Fri Sep 14 19:18:00 2012 thierry berger
+// Last update Tue Sep 18 15:53:25 2012 thierry berger
 //
 
 #include <iostream>
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
 #include <msgpack.hpp>
+#include "../GameData/World.hpp"
 
 using boost::asio::ip::tcp;
 
@@ -32,11 +33,12 @@ int main(int argc, char* argv[])
       boost::asio::connect(socket, endpoint_iterator);
       for (;;)
 	{
-	  std::cout << "reading... ";
-	  boost::array<char, 128> buf;
+	  std::cout << "reading... " << std::endl;
+	  boost::array<char, 127> buf;
 	  boost::system::error_code error;
 
 	  size_t len = socket.read_some(boost::asio::buffer(buf), error);
+	  std::cout << "len: " << len << std::endl;
 	  if (error == boost::asio::error::eof)
 	    break; // Connection closed cleanly by peer.
 	  else if (error)
@@ -45,19 +47,25 @@ int main(int argc, char* argv[])
 	  std::cout << std::endl;
 
 
-	  void* buffer = buf.data();
-
+	  
+	  
 	  msgpack::unpacker pac;
  
 	  // feeds the buffer.
 	  pac.reserve_buffer(len);
 	  
-	  memcpy(pac.buffer(), buffer, len);
+	  memcpy(pac.buffer(), buf.data(), len);
 	  pac.buffer_consumed(len);
  
 	  // now starts streaming deserialization.
 	  msgpack::unpacked result;
-	  while(pac.next(&result)) {
+	  // if (pac.next(&result))
+	  //   {
+	  //     GameData::World* woo;
+	  //     woo = (GameData::World* )&result.get();
+	  //     std::cout << "WORLD: [nbUnit: " << woo->nbUnit << ", nbElement: " << woo->nbElement << ", nbBullet: " << woo->nbBullet << "]" << std::endl;
+	  //   }
+	  while (pac.next(&result)) {
 	    std::cout << result.get() << std::endl;
 	  }
 	}

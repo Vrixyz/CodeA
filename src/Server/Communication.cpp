@@ -5,19 +5,19 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 19:13:12 2012 thierry berger
-// Last update Fri Sep 14 18:38:30 2012 thierry berger
+// Last update Tue Sep 18 15:34:04 2012 thierry berger
 //
 
 #include "Communication.hpp"
 
-bool	Server::Communication::tryAccept(int* clientId)
+void	Server::Communication::init()
 {
-  boost::asio::ip::tcp::socket* s = new boost::asio::ip::tcp::socket(io_service);
-  acceptor.accept(*s);
-  /// FIXME: maybe clilentId shouldn't be set that dirtily
-  clients[incr] = s;
-  *clientId = incr++;
-  return true;
+  this->start_accept();
+  // std::cout << "hello." << std::endl;
+  /// TODO: create a thread to manage connections
+  thread_accept = boost::thread(&Server::Communication::accept_loop, this);
+  
+  // std::cout << "hello?" << std::endl;
 }
 
 void Server::Communication::sendToClient(const msgpack::sbuffer& packedInformation, int clientId)
@@ -29,8 +29,11 @@ void Server::Communication::sendToClient(const msgpack::sbuffer& packedInformati
       /// TODO: send packed info :  boost::asio::buffer(static_cast<const void*>(&packedInformation))
       //      boost::asio::buffer b; //();
       // clients[clientId]->send(, packedInformation.size());
-      boost::asio::write(*(clients[clientId]), boost::asio::buffer(static_cast<const void*>(&packedInformation), packedInformation.size()), ignored_error);
-      std::cout << "packetSize: " << packedInformation.size() << std::endl;
+      boost::asio::write(clients[clientId]->socket(), boost::asio::buffer(packedInformation.data(), packedInformation.size()), ignored_error);
+     // boost::asio::write(clients[clientId]->socket(), boost::asio::buffer(static_cast<const void*>(&packedInformation), packedInformation.size()), ignored_error);
+      std::cout.write((packedInformation.data()), packedInformation.size());
+      std::cout << std::endl;
+      // std::cout << "packetSize: " << packedInformation.size() << std::endl;
     }
   catch (std::exception& e)
     {
@@ -38,7 +41,29 @@ void Server::Communication::sendToClient(const msgpack::sbuffer& packedInformati
     }
 }
 
-GameData::Command* Server::Communication::*tryReceiveFromClient(int clientId)
+// GameData::Command* Server::Communication::*tryReceiveFromClient(int clientId)
+// {
+//   return 0;
+// }
+
+void Server::Communication::start_accept()
 {
-  return 0;
+  tcp_connection::pointer new_connection =
+    tcp_connection::create(*this, acceptor.get_io_service());
+
+  acceptor.async_accept(new_connection->socket(),
+			boost::bind(&Server::Communication::handle_accept, this, new_connection,
+				    boost::asio::placeholders::error));
+}
+
+void Server::Communication::handle_accept(tcp_connection::pointer& new_connection,
+					  const boost::system::error_code& error)
+{
+  if (!error)
+    {
+      /// FIXME: not thread safe.
+      clients[incr++] = new_connection;
+      // new_connection->start();
+    }
+  start_accept();
 }

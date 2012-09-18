@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Sat Sep 15 13:50:47 2012 mathieu leurquin
+// Last update Tue Sep 18 15:54:11 2012 thierry berger
 //
 
 #include "World.hpp"
@@ -14,50 +14,62 @@ void	Server::World::init()
 {
   static_cast<Unit*>(this->createUnit().GetUserData())->addPlayer(&this->createPlayer(4));
   this->createElement(true, 100, 100);
+  communication.init();
 }
 
 void	Server::World::run()
 {
   /// FIXME: ugly infinite loop
   b2Timer timer;
+  float32 rest = 0;
 
   timer.Reset();
   while (1)
     {
-      if (timer.GetMilliseconds() >= TIMESTEP)
+      if (timer.GetMilliseconds() + rest >= TIMESTEP)
 	{
+	  rest = timer.GetMilliseconds() + rest - TIMESTEP;
+	  timer.Reset();
 	  _physicWorld.Step(TIMESTEP, VELOCITY_ITERATION, POSITION_ITERATION);
 
 
 
 	  // DEBUG [
 
-	  int newClient;
+	  for (std::map<int, tcp_connection::pointer>::iterator
+		 it = communication.clients.begin(); it != communication.clients.end();
+	       it++)
+	    {
+	      msgpack::sbuffer sbuf;
+	      msgpack::packer<msgpack::sbuffer> packet(&sbuf);
 
-	  msgpack::sbuffer sbuf;
-	  msgpack::packer<msgpack::sbuffer> packet(&sbuf);
-	  // communication.tryAccept(&newClient);
-	  serialize(packet);
-	  // communication.sendToClient(sbuf, newClient);
-	  // std::cout << newClient << std::endl;
-	  msgpack::unpacker pac;
+	      serialize(packet);
+	      communication.sendToClient(sbuf, it->first);
+	      // int newClient;
+
+
+	      // communication.tryAccept(&newClient);
+
+	      // communication.sendToClient(sbuf, newClient);
+	      // std::cout << newClient << std::endl;
+	      msgpack::unpacker pac;
  
-	  // feeds the buffer.
-	  pac.reserve_buffer(sbuf.size());
+	      //	  feeds the buffer.
+	      pac.reserve_buffer(sbuf.size());
 	  
-	  memcpy(pac.buffer(), sbuf.data(), sbuf.size());
-	  pac.buffer_consumed(sbuf.size());
+	      memcpy(pac.buffer(), sbuf.data(), sbuf.size());
+	      pac.buffer_consumed(sbuf.size());
  
-	  // now starts streaming deserialization.
-	  msgpack::unpacked result;
-	  while(pac.next(&result)) {
-	    std::cout << result.get() << std::endl;
-	  }
+	      //	  now starts streaming deserialization.
+	      msgpack::unpacked result;
+	      while(pac.next(&result)) {
+		std::cout << result.get() << std::endl;
+	      }
 
+	    }
 
 	  // ] DEBUG
 
-	  timer.Reset();
 	}
       // FIXME: think more about that sleep.
       usleep(500);

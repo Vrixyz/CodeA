@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 11:04:47 2012 thierry berger
-// Last update Fri Sep 14 10:36:41 2012 thierry berger
+// Last update Tue Sep 18 10:33:45 2012 mathieu leurquin
 //
 
 #ifndef SERVER_OBJECT_HPP

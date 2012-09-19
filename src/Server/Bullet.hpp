@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 17:37:09 2012 thierry berger
-// Last update Fri Sep 14 11:05:29 2012 thierry berger
+// Last update Tue Sep 18 11:12:35 2012 mathieu leurquin
 //
 
 #ifndef SERVER_BULLET_HPP

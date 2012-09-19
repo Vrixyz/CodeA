@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 19:13:12 2012 thierry berger
-// Last update Fri Sep 14 18:38:30 2012 thierry berger
+// Last update Tue Sep 18 10:42:02 2012 mathieu leurquin
 //
 
 #include "Communication.hpp"

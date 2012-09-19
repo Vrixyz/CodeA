@@ -5,7 +5,7 @@
 ## Login   <berger_t@epitech.net>
 ## 
 ## Started on  Fri Sep 14 10:58:16 2012 thierry berger
-## Last update Fri Sep 14 11:09:22 2012 thierry berger
+## Last update Tue Sep 18 11:19:18 2012 mathieu leurquin
 ##
 
 SRC	=	mainTest.cpp \
@@ -13,6 +13,7 @@ SRC	=	mainTest.cpp \
 		Communication.cpp \
 		Element.cpp \
 		Unit.cpp \
+		BitField.cpp \
 		Bullet.cpp
 
 NAME	=	server

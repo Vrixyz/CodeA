@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Tue Sep 11 14:10:56 2012 thierry berger
-// Last update Thu Sep 13 22:00:27 2012 thierry berger
+// Last update Tue Sep 18 15:06:26 2012 thierry berger
 //
 
 #ifndef GAME_DATA_HPP

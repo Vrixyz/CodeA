@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 17:53:20 2012 thierry berger
-// Last update Fri Sep 14 10:35:21 2012 thierry berger
+// Last update Sat Sep 15 18:56:14 2012 thierry berger
 //
 
 #include "Element.hpp"

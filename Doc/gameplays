@@ -1,0 +1,7 @@
+Type de gameplay (on peut imaginer des classes de heros qui heritent de ces gameplays)
+
+The Lone:
+    Le Joueur controle un seul personnage, peut eventuellement faire des invocations et peut-etre leur donner des ordres simples, mais le gameplay de 'The Lone' doit insister sur le fait d'etre seul, n'etre attaché qu'a son personnage (camera centree est une idee).
+
+The Squad:
+    Le Joueur controle plusieurs personnages, qui peuvent éventuellement construire des batiments, recolter des ressources, se multiplier, attaquer, ou se specialiser (guerre/ressource/fuite/map control/...) ou d'autres trucs..?

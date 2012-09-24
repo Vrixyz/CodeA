@@ -1,0 +1,64 @@
+@Tisseur d'esprits : Un puissant mage ouvre un portail dans le ciel qui fait apparaitre des soldats qui obeissent a ses ordres. On ne peut pas directement l'attaquer, il meurt lorsque son energie tombe a 0.
+	Energie : 10 000 / 10 000.
+	Vie : 1 / 1. (Buff invulnerable infini.)
+	Passif : Regagne de l'energie lors d'un rappel ou les unites etaient charges de materiaux.
+
+- Guerrier (150 Energie / unite) ([x] points de vie)
+Creer {x} Guerriers qui sont presents sur la map jusqu'a mourrir. Ils attaquent au corps a corps et possedent trois potions. Drop des morceaux d'armures.
+     Potion : {x}Heal pour le guerrier qui utilise la potion.
+
+- Archer (200 Energie / unite) ([x] points de vie)
+Creer {x} Archer qui sont presents sur la map jusqu'a mourrir. Ils attaquent a distance et possedent deux charges d'explosifs. Drop des restes de munitions.
+     Explosif : Tir une fleche explosive sur une zone donnnee. (!50)
+
+- A l'assaut !
+Creer {1} Commandant qui boost les troupes dans sa zone d'arrivee (Crit. Prec. Dmg. Speed.). Si il n'est pas mort au bout de 15sec, il peut relancer son cri de nouveau.
+[Sauve qui peut] n'affecte pas cette unite.
+
+- Victoire a tout prix
+Creer une puissante decharge magique qui tranforme les potions des guerriers en bombes d'acide et fait exploser les charges d'explosif sur une zone donnee.
+Tous les guerriers/archers meurent mais infligent des degats dans la zone ou ils sont morts.
+
+- Sauve qui peut
+Rapelle tous les guerriers et les archers presents sur la map. Ils sont automatiquements detruits mais leur coup est rembourse au hauteur de 100%. Si durant leur presence sur la map, les personnages on recuperer des morceaux de leurs compagnons morts, de l'energie est remboursee a la forteresse.
+
+Interface :
+
+Deux barres :
+     Une pour le vaisseur (NRJ, bouton pour pop des unites, etc)
+     Une pour les petites unites (potion, fleche, etc.)
+
+
+
+
+@Commando de Marines : Un groupe de marine bien entraine arrive sur le terrain pour se battre. Il est compose de 5 marines, 1 vehicule de combat, deux snipers, un medecin et deux ingenieurs.
+
+- Marines : Attaque a distance au fusil d'assaut. Peut passer au corps a corps avec une lame d'energie.
+  	  - Fusil d'assaut : permet d'attaquer a distance
+	  - Epee d'energie : permet d'attaquer au corps a corps
+
+- Vehicule de combat : Attaque avec un canon ou un lance flamme. Il est detruit et devient inutilisable lorsque ses PVs tombent a 0, mais il peut etre reparer.
+  	  - Obus lourd : Inflige de lourds degats dans une zone donnee.
+	  - Lance flamme : Le lance flamme inflige de lourds degats en cone devant le vehicule et applique brulure.
+
+- Snipers : Attaque a longue distance. Il est tres fragile mais tres puissant.
+  	  - Mine anti-personnel : Pose une mine au sol qui inflige des degats et etourdit l'ennemi.
+  	  - Tir critique : Tire une balle aux degats devastateur.
+	  - Coup incapacitant : Tire une balle qui ralentit l'ennemi et le rend vulnerable.
+
+- Medecin : Il n'attaque pas mais soigne les unites blessees qui sont dans sa portee.
+  	  - Soigne les unites biologiques blessees.
+
+- Ingenieurs : Ils ne peuvent pas attaquer mais peuvent constuire des batiments.
+  	  - Tranchee de combat : Creuse une tranchee pour que l'unite qui se retrouve a l'interieur gagne temporairament une nouvelle competence.
+	  - Camp de retrait : Si un medecin est place a l'interieur, il peut soigner plusieurs personnes a la fois et ne perd pas d'energie lorsqu'il soigne.
+	  - Barricade : Une barricade qui permet de proteger le vehicule est construite. Il faut casser la barricade pour pouvoir attaquer le vehicule. (Distance -75% tant que la barricade est la)
+	  - Tour de guet : Toutes les unites a l'interieur gagne de la portee.
+
+Les unites en garnison sortent automatiquement du batiment lorsque ses points de vie tombent en dessus de 15%. Il est reparable si ses points de ne tombent pas a 0.
+Si un ingenieur est tue pendant qu'il construit ou repare un batiment, la construction/reparation est stopee.
+Les batisseurs n'ont aucune ressource en debut de partie, ils doivent detruire des elements du decor pour en recuperer. (un seul type de ressource)
+
+
+
+Interface : ??

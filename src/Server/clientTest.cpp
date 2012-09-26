@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Fri Sep 14 12:40:33 2012 thierry berger
-// Last update Tue Sep 18 15:53:25 2012 thierry berger
+// Last update Wed Sep 26 10:21:03 2012 thierry berger
 //
 
 #include <iostream>
@@ -68,6 +68,8 @@ int main(int argc, char* argv[])
 	  while (pac.next(&result)) {
 	    std::cout << result.get() << std::endl;
 	  }
+	  socket.close();
+	  exit(1);
 	}
     }
   catch (std::exception& e)

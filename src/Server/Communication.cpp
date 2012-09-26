@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 19:13:12 2012 thierry berger
-// Last update Tue Sep 18 15:34:04 2012 thierry berger
+// Last update Wed Sep 26 10:45:21 2012 thierry berger
 //
 
 #include "Communication.hpp"
@@ -13,32 +13,31 @@
 void	Server::Communication::init()
 {
   this->start_accept();
-  // std::cout << "hello." << std::endl;
-  /// TODO: create a thread to manage connections
   thread_accept = boost::thread(&Server::Communication::accept_loop, this);
-  
-  // std::cout << "hello?" << std::endl;
 }
 
-void Server::Communication::sendToClient(const msgpack::sbuffer& packedInformation, int clientId)
+bool Server::Communication::sendToClient(const msgpack::sbuffer& packedInformation, int clientId)
 {
   try
     {
       boost::system::error_code ignored_error;
       
-      /// TODO: send packed info :  boost::asio::buffer(static_cast<const void*>(&packedInformation))
-      //      boost::asio::buffer b; //();
-      // clients[clientId]->send(, packedInformation.size());
-      boost::asio::write(clients[clientId]->socket(), boost::asio::buffer(packedInformation.data(), packedInformation.size()), ignored_error);
-     // boost::asio::write(clients[clientId]->socket(), boost::asio::buffer(static_cast<const void*>(&packedInformation), packedInformation.size()), ignored_error);
-      std::cout.write((packedInformation.data()), packedInformation.size());
-      std::cout << std::endl;
-      // std::cout << "packetSize: " << packedInformation.size() << std::endl;
+      std::cout << boost::asio::write(clients[clientId]->socket(), boost::asio::buffer(packedInformation.data(), packedInformation.size()), ignored_error) << std::endl;
+      if (ignored_error)
+	{
+	  /// FIXME: some errors might be more or less killing than others.
+	  boost::lock_guard<boost::mutex> _m(_m_clients);
+	  clients.erase(clientId);
+	  return false;
+	}
     }
   catch (std::exception& e)
     {
+      /// FIXME: I don't know how it could get here.
       std::cerr << e.what() << std::endl;
+      exit(1);
     }
+  return true;
 }
 
 // GameData::Command* Server::Communication::*tryReceiveFromClient(int clientId)
@@ -61,6 +60,9 @@ void Server::Communication::handle_accept(tcp_connection::pointer& new_connectio
 {
   if (!error)
     {
+      boost::unique_lock<boost::mutex> lhs_lock(    _m_clients, boost::defer_lock);
+      boost::unique_lock<boost::mutex> rhs_lock(_m_incr, boost::defer_lock);
+      boost::lock(lhs_lock, rhs_lock);
       /// FIXME: not thread safe.
       clients[incr++] = new_connection;
       // new_connection->start();

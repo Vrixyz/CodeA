@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Tue Sep 18 15:54:11 2012 thierry berger
+// Last update Wed Sep 26 10:47:35 2012 thierry berger
 //
 
 #include "World.hpp"
@@ -36,35 +36,29 @@ void	Server::World::run()
 
 	  // DEBUG [
 
-	  for (std::map<int, tcp_connection::pointer>::iterator
+	  // thread safe on communication.clients because of the const specifier (std::map is thread safe on read operations)
+	  for (std::map<int, tcp_connection::pointer>::const_iterator
 		 it = communication.clients.begin(); it != communication.clients.end();
 	       it++)
 	    {
 	      msgpack::sbuffer sbuf;
 	      msgpack::packer<msgpack::sbuffer> packet(&sbuf);
 
+	      /// TODO: sepcify type of sent data (here: World)
 	      serialize(packet);
-	      communication.sendToClient(sbuf, it->first);
-	      // int newClient;
-
-
-	      // communication.tryAccept(&newClient);
-
-	      // communication.sendToClient(sbuf, newClient);
-	      // std::cout << newClient << std::endl;
-	      msgpack::unpacker pac;
- 
-	      //	  feeds the buffer.
-	      pac.reserve_buffer(sbuf.size());
-	  
-	      memcpy(pac.buffer(), sbuf.data(), sbuf.size());
-	      pac.buffer_consumed(sbuf.size());
- 
-	      //	  now starts streaming deserialization.
-	      msgpack::unpacked result;
-	      while(pac.next(&result)) {
-		std::cout << result.get() << std::endl;
-	      }
+	      if (communication.sendToClient(sbuf, it->first))
+		{
+		  msgpack::unpacker pac;
+		  pac.reserve_buffer(sbuf.size());	  
+		  memcpy(pac.buffer(), sbuf.data(), sbuf.size());
+		  pac.buffer_consumed(sbuf.size());
+		  
+		  //	  now starts streaming deserialization.
+		  msgpack::unpacked result;
+		  while(pac.next(&result)) {
+		    std::cout << result.get() << std::endl;
+		  }
+		}
 
 	    }
 

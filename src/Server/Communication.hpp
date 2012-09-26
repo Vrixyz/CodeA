@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:24:59 2012 mathieu leurquin
-// Last update Tue Sep 18 12:45:26 2012 thierry berger
+// Last update Wed Sep 26 10:44:35 2012 thierry berger
 //
 
 #ifndef SERVER_COMMUNICATION_HPP
@@ -31,7 +31,9 @@ namespace Server
     Communication() : acceptor(io_service, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), 4242)), incr(0)
     {
     }
-    void sendToClient(const msgpack::sbuffer& packedInformation, int clientId);
+
+    /// return true to success, false if failed.
+    bool sendToClient(const msgpack::sbuffer& packedInformation, int clientId);
     // GameData::Command* tryReceiveFromClient(int clientId);
     /// pointer, to "force" a variable to be sent to this function, which will contain the new clientId
     // bool tryAccept(int* clientId);
@@ -56,6 +58,9 @@ namespace Server
     boost::thread thread_accept;
     boost::asio::io_service io_service;
     boost::asio::ip::tcp::acceptor acceptor;
+    mutable boost::mutex _m_clients;
+    mutable boost::mutex _m_incr;
+    
     int	incr;
   };
 }

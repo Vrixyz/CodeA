@@ -11,4 +11,5 @@ boost (system for asio) 1.51.0
 
 --- soon ---
 
-Qt
+Qt 4.7.4
+libphonon v >= 4

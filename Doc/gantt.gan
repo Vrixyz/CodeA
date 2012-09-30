@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project name="Code A" company="" webLink="" view-date="2012-09-30" view-index="0" gantt-divider-location="388" resource-divider-location="301" version="2.0">
+<?xml version="1.0" encoding="UTF-8"?><project name="Code A" company="" webLink="" view-date="2012-07-15" view-index="0" gantt-divider-location="388" resource-divider-location="301" version="2.0">
     <description><![CDATA[Projet de fin d'annee epitech Nancy 2013]]></description>
-    <view zooming-state="default:0" id="gantt-chart"/>
+    <view zooming-state="default:8" id="gantt-chart"/>
     <view id="resource-table">
         <field id="0" name="Name" width="55" order="0"/>
         <field id="1" name="Default role" width="44" order="1"/>
@@ -31,28 +30,32 @@
             <taskproperty id="tpd8" name="coordinator" type="default" valuetype="text"/>
             <taskproperty id="tpd9" name="predecessorsr" type="default" valuetype="text"/>
         </taskproperties>
-        <task id="0" name="Welcome page" color="#8cb6ce" meeting="false" start="2012-09-30" duration="1" complete="0" priority="1" expand="true"/>
-        <task id="1" name="Menu" color="#8cb6ce" meeting="false" start="2012-09-30" duration="1" complete="0" priority="1" expand="true"/>
-        <task id="2" name="Server choice" color="#8cb6ce" meeting="false" start="2012-09-30" duration="1" complete="0" priority="1" expand="true">
+        <task id="0" name="Welcome page" color="#8cb6ce" meeting="false" start="2012-10-01" duration="14" complete="0" priority="1" expand="true">
+            <depend id="1" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="1" name="Menu" color="#8cb6ce" meeting="false" start="2012-10-15" duration="14" complete="0" priority="1" expand="true">
+            <depend id="2" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="2" name="Server choice" color="#8cb6ce" meeting="false" start="2012-10-29" duration="14" complete="0" priority="1" expand="true">
             <depend id="3" type="2" difference="0" hardness="Strong"/>
             <depend id="8" type="2" difference="0" hardness="Strong"/>
             <depend id="19" type="2" difference="0" hardness="Strong"/>
         </task>
-        <task id="3" name="Class choice" color="#8cb6ce" meeting="false" start="2012-10-01" duration="1" complete="0" priority="1" expand="true">
+        <task id="3" name="Class choice" color="#8cb6ce" meeting="false" start="2012-10-01" duration="42" complete="0" priority="1" expand="true">
             <depend id="4" type="2" difference="0" hardness="Strong"/>
         </task>
-        <task id="4" name="Waiting for players" color="#8cb6ce" meeting="false" start="2012-10-02" duration="1" complete="0" priority="1" expand="true">
+        <task id="4" name="Waiting for players" color="#8cb6ce" meeting="false" start="2012-11-12" duration="20" complete="0" priority="1" expand="true">
             <depend id="5" type="2" difference="0" hardness="Strong"/>
         </task>
-        <task id="5" name="in game interface" color="#8cb6ce" meeting="false" start="2012-10-03" duration="1" complete="0" priority="1" expand="true">
+        <task id="5" name="in game interface" color="#8cb6ce" meeting="false" start="2012-12-02" duration="20" complete="0" priority="1" expand="true">
             <depend id="7" type="2" difference="0" hardness="Strong"/>
         </task>
-        <task id="7" name="in game controls" color="#8cb6ce" meeting="false" start="2012-10-04" duration="1" complete="0" priority="1" expand="true"/>
-        <task id="19" name="send command to server" color="#8cb6ce" meeting="false" start="2012-10-01" duration="1" complete="0" priority="1" expand="true">
+        <task id="7" name="in game controls" color="#8cb6ce" meeting="false" start="2012-12-22" duration="21" complete="0" priority="1" expand="true"/>
+        <task id="19" name="send command to server" color="#8cb6ce" meeting="false" start="2012-11-12" duration="61" complete="0" priority="1" expand="true">
             <depend id="8" type="2" difference="0" hardness="Strong"/>
             <depend id="48" type="2" difference="0" hardness="Strong"/>
         </task>
-        <task id="8" name="Player connection" color="#ff0000" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="2012-10-02" duration="1" complete="0" priority="1" expand="true">
+        <task id="8" name="Player connection" color="#ff0000" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="2013-01-12" duration="1" complete="0" priority="1" expand="true">
             <depend id="12" type="2" difference="0" hardness="Strong"/>
             <depend id="16" type="2" difference="0" hardness="Strong"/>
             <depend id="63" type="2" difference="0" hardness="Strong"/>
@@ -61,10 +64,10 @@
             <depend id="14" type="2" difference="0" hardness="Strong"/>
             <depend id="18" type="2" difference="0" hardness="Strong"/>
         </task>
-        <task id="12" name="receive client communication" color="#ff0000" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="2012-10-03" duration="1" complete="0" priority="1" expand="false">
+        <task id="12" name="receive client communication" color="#ff0000" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="2013-01-13" duration="1" complete="0" priority="1" expand="false">
             <depend id="14" type="2" difference="0" hardness="Strong"/>
         </task>
-        <task id="14" name="interpret client communication" color="#ff0000" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="2012-10-04" duration="1" complete="0" priority="1" expand="false"/>
+        <task id="14" name="interpret client communication" color="#ff0000" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="2013-01-14" duration="1" complete="0" priority="1" expand="false"/>
         <task id="18" name="world update" color="#ff0000" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="2012-10-01" duration="1" complete="0" priority="1" expand="false">
             <depend id="16" type="2" difference="0" hardness="Strong"/>
             <depend id="24" type="2" difference="0" hardness="Strong"/>
@@ -74,7 +77,7 @@
             <depend id="43" type="2" difference="0" hardness="Strong"/>
             <depend id="45" type="2" difference="0" hardness="Strong"/>
         </task>
-        <task id="16" name="send world change to client" color="#ff0000" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="2012-10-03" duration="1" complete="0" priority="1" expand="false"/>
+        <task id="16" name="send world change to client" color="#ff0000" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="2013-01-13" duration="1" complete="0" priority="1" expand="false"/>
         <task id="24" name="features Wizard" color="#ff0000" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="2012-10-02" duration="1" complete="0" priority="1" expand="false">
             <depend id="48" type="2" difference="0" hardness="Strong"/>
             <depend id="54" type="2" difference="0" hardness="Strong"/>
@@ -99,7 +102,7 @@
             <depend id="48" type="2" difference="0" hardness="Strong"/>
             <depend id="54" type="2" difference="0" hardness="Strong"/>
         </task>
-        <task id="48" name="cheating features" color="#ff0000" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="2012-10-03" duration="1" complete="0" priority="1" expand="false"/>
+        <task id="48" name="cheating features" color="#ff0000" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="2013-01-12" duration="1" complete="0" priority="1" expand="false"/>
         <task id="54" name="game analysis" color="#ff0000" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="2012-10-03" duration="1" complete="0" priority="1" expand="false">
             <depend id="51" type="2" difference="0" hardness="Strong"/>
         </task>
@@ -123,7 +126,7 @@
         <task id="61" name="player connection" color="#ff9900" meeting="false" start="2012-10-02" duration="1" complete="0" priority="1" expand="false">
             <depend id="63" type="2" difference="0" hardness="Strong"/>
         </task>
-        <task id="63" name="Redirect player to game server" color="#ff9900" meeting="false" start="2012-10-03" duration="1" complete="0" priority="1" expand="false"/>
+        <task id="63" name="Redirect player to game server" color="#ff9900" meeting="false" start="2013-01-13" duration="1" complete="0" priority="1" expand="false"/>
         <task id="71" name="get analysis from game server" color="#ff9900" meeting="false" start="2012-10-05" duration="1" complete="0" priority="1" expand="false"/>
         <task id="66" name="send successes to client" color="#ff9900" meeting="false" start="2012-10-02" duration="1" complete="0" priority="1" expand="false"/>
         <task id="68" name="send server list to client" color="#ff9900" meeting="false" start="2012-10-01" duration="1" complete="0" priority="1" expand="false"/>

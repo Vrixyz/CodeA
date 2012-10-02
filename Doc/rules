@@ -89,7 +89,7 @@
      - {x}[Def]   : (Defense) Reduit les degats subis. (-10% degats subis sur toutes les degats subis * multiplicateur, rand(8-15) sec)
      - {!}[R.dmg] : (Renvoie de degats) Renvoie les degats a l'ennemi. (renvoie 100% des degats pour rand(2-4) attaques)
      - {x}[Heal]  : (Soin) Soigne le champion. (rend 100PV * multiplicateur au champion)
-     - {!}[Inv]   : (Invincible) Immortel durant un instant. (immunise a tous les degats et a toutes les alterations pour les rand(4-6) prochaines sec)
+     - {!}[Inv]   : (Invincible) Immortel durant un instant. (immunise a tous les degats et a toutes les alterations pour les rand(4-6) prochaines sec).
 
 
      4. Alterations

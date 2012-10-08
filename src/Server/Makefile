@@ -5,10 +5,10 @@
 ## Login   <berger_t@epitech.net>
 ## 
 ## Started on  Fri Sep 14 10:58:16 2012 thierry berger
-## Last update Tue Sep 18 16:01:14 2012 Edouard Brunvarlet
+## Last update Mon Oct  8 11:09:58 2012 mathieu leurquin
 ##
 
-SRC	=	mainTest.cpp \
+SRC_SR	=	mainTest.cpp \
 		World.cpp \
 		Communication.cpp \
 		Element.cpp \
@@ -17,9 +17,15 @@ SRC	=	mainTest.cpp \
 		tcp_connection.cpp \
 		BitField.cpp
 
-NAME	=	server
+SRC_CL	=	clientTest.cpp
 
-OBJ	=	$(SRC:.cpp=.o)
+NAME_CL =	client
+
+NAME_SR =	server
+
+OBJ_CL	=	$(SRC_CL:.cpp=.o)
+
+OBJ_SR	=	$(SRC_SR:.cpp=.o)
 
 LIBS	=	-lboost_system -lmsgpack -lBox2D -lboost_thread
 
@@ -27,15 +33,21 @@ CXXFLAGS=	-W -Wall -Wextra
 
 CC	=	g++
 
-all	:	$(NAME)
+all		:	$(NAME_SR) \
+			$(NAME_CL)
 
-$(NAME)	:	$(OBJ)
-		$(CC) $(OBJ) $(LIBS) -o $(NAME)
+$(NAME_CL)	:	$(OBJ_CL)
+			$(CC) $(OBJ_CL) $(LIBS) -o $(NAME_CL)
 
-clean	:
-		rm -f $(OBJ)
+$(NAME_SR)	:	$(OBJ_SR)
+			$(CC) $(OBJ_SR) $(LIBS) -o $(NAME_SR)
 
-fclean	:	clean
-		rm -f $(NAME)
+clean		:
+			rm -f $(OBJ_SR)
+			rm -f $(OBJ_CL)
 
-re	:	fclean all
+fclean		:	clean
+			rm -f $(NAME_SR)
+			rm -f $(NAME_CL)
+
+re		:	fclean all

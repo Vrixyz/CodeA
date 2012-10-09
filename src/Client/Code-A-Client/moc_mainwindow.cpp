@@ -32,14 +32,13 @@ static const uint qt_meta_data_MainWindow[] = {
 
  // slots: signature, parameters, type, tag, flags
       12,   11,   11,   11, 0x08,
-      36,   11,   11,   11, 0x08,
+      24,   11,   11,   11, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_MainWindow[] = {
-    "MainWindow\0\0on_pushButton_clicked()\0"
-    "Playagain()\0"
+    "MainWindow\0\0Playagain()\0on_loginb_pressed()\0"
 };
 
 const QMetaObject MainWindow::staticMetaObject = {
@@ -71,8 +70,8 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
-        case 0: on_pushButton_clicked(); break;
-        case 1: Playagain(); break;
+        case 0: Playagain(); break;
+        case 1: on_loginb_pressed(); break;
         default: ;
         }
         _id -= 2;

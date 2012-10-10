@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 19:13:12 2012 thierry berger
-// Last update Tue Oct  9 13:08:04 2012 mathieu leurquin
+// Last update Wed Oct 10 10:53:58 2012 mathieu leurquin
 //
 
 #include "Communication.hpp"
@@ -99,5 +99,18 @@ void Server::Communication::handle_accept(tcp_connection::pointer& new_connectio
 
 void Server::Communication::handleRead(const boost::system::error_code& error)
 {
-    std::cout<< buf.data()<< std::endl;
+  std::string *s;
+  msgpack::unpacker pac;
+  msgpack::unpacked result;
+  
+  s = new std::string(buf.data());
+  pac.reserve_buffer(s->size());
+  memcpy(pac.buffer(), buf.data(), s->size());
+  pac.buffer_consumed(s->size());
+  if (pac.next(&result))
+    {
+      GameData::Command c;
+      msgpack::object obj = result.get();
+      obj.convert(&c);
+    }
 }

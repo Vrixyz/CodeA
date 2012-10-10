@@ -7,6 +7,9 @@
 #include <phonon/MediaObject>
 #include <QCoreApplication>
 #include <QTcpSocket>
+#include <QPixmap>
+#include <QGraphicsView>
+#include <QGraphicsItem>
 #include "nm.h"
 
 namespace Ui {
@@ -23,8 +26,9 @@ public:
     ~MainWindow();
     
 private slots:
-    void on_pushButton_clicked();
     void Playagain();
+
+    void on_loginb_pressed();
 
 private:
     Ui::MainWindow *ui;
@@ -32,3 +36,5 @@ private:
 };
 
 #endif // MAINWINDOW_H
+
+

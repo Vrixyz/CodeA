@@ -5,11 +5,13 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Tue Sep 11 15:03:16 2012 thierry berger
-// Last update Wed Sep 19 13:50:14 2012 mathieu leurquin
+// Last update Wed Oct 10 11:51:04 2012 mathieu leurquin
 //
 
 #ifndef GAME_DATA_HPP
 # define GAME_DATA_HPP
+
+#include <msgpack.hpp>
 
 namespace GameData
 {
@@ -22,10 +24,12 @@ namespace GameData
 	aimTo,
 	Move
       } Type;
-    Type type;
+    int type;
     float x;
     float y;
     Command() : x(0), y(0) {}
+    Type getType(){return (Type)type;}
+    MSGPACK_DEFINE(type, x, y);
   };
 }
 

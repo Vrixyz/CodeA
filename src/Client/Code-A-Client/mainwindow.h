@@ -10,7 +10,11 @@
 #include <QPixmap>
 #include <QGraphicsView>
 #include <QGraphicsItem>
+#include <list>
 #include "nm.h"
+#include "game.h"
+
+class Nm;
 
 namespace Ui {
 class MainWindow;
@@ -24,15 +28,16 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     void NewGame();
     ~MainWindow();
+    Ui::MainWindow *ui;
     
 private slots:
     void Playagain();
-
     void on_loginb_pressed();
 
 private:
-    Ui::MainWindow *ui;
     Phonon::MediaObject *music;
+    Nm *n;
+    Game *game;
 };
 
 #endif // MAINWINDOW_H

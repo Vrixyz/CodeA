@@ -2,11 +2,13 @@
 #include "ui_mainwindow.h"
 #include "nm.h"
 
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow) , game(new Game(this))
 {
     ui->setupUi(this);
+    ui->Gameview->hide();
     music = Phonon::createPlayer(Phonon::MusicCategory,
                                  Phonon::MediaSource("/home/edouard/proj_temp/CodeA/src/Client/Code-A-Client/Menu.mp3"));
     music->play();
@@ -28,22 +30,8 @@ void MainWindow::NewGame()
 {
     music->stop();
     std::cout << "You just started a new game" << std::endl;
-    Nm *n = new Nm("127.0.0.1", 4242);
+    n = new Nm("127.0.0.1", 4242, game);
     n->connectToServer();
-    QGraphicsItem *item;
-    QGraphicsScene *scene = new QGraphicsScene(1600, 900, 0, 0, this);
-    QPixmap grass("/home/edouard/proj_temp/CodeA/src/Client/Code-A-Client/grass.png");
-    for (int i = 0; i < 16; i++)
-    {
-        for (int j = 0; j < 9; j++)
-        {
-            item = scene->addPixmap(grass);
-            item->setPos(i * 100, j * 100);
-        }
-    }
-    QGraphicsView *vue = new QGraphicsView(scene);
-    this->setCentralWidget(vue);
-    vue->show();
 }
 
 void MainWindow::on_loginb_pressed()
@@ -56,5 +44,4 @@ void MainWindow::on_loginb_pressed()
     }
     else
         std::cout << "login ko !" << std::endl;
-
 }

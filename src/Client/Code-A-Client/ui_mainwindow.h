@@ -16,6 +16,7 @@
 #include <QtGui/QButtonGroup>
 #include <QtGui/QCheckBox>
 #include <QtGui/QFormLayout>
+#include <QtGui/QGraphicsView>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
@@ -30,7 +31,7 @@ class Ui_MainWindow
 {
 public:
     QWidget *Main;
-    QWidget *widget;
+    QWidget *Loginpage;
     QWidget *formLayoutWidget;
     QFormLayout *Login;
     QLabel *login;
@@ -44,6 +45,7 @@ public:
     QSpacerItem *verticalSpacer;
     QPushButton *create;
     QLabel *Title;
+    QGraphicsView *Gameview;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -60,12 +62,12 @@ public:
         Main->setEnabled(true);
         sizePolicy.setHeightForWidth(Main->sizePolicy().hasHeightForWidth());
         Main->setSizePolicy(sizePolicy);
-        widget = new QWidget(Main);
-        widget->setObjectName(QString::fromUtf8("widget"));
-        widget->setGeometry(QRect(150, 110, 480, 320));
-        sizePolicy.setHeightForWidth(widget->sizePolicy().hasHeightForWidth());
-        widget->setSizePolicy(sizePolicy);
-        formLayoutWidget = new QWidget(widget);
+        Loginpage = new QWidget(Main);
+        Loginpage->setObjectName(QString::fromUtf8("Loginpage"));
+        Loginpage->setGeometry(QRect(150, 110, 480, 320));
+        sizePolicy.setHeightForWidth(Loginpage->sizePolicy().hasHeightForWidth());
+        Loginpage->setSizePolicy(sizePolicy);
+        formLayoutWidget = new QWidget(Loginpage);
         formLayoutWidget->setObjectName(QString::fromUtf8("formLayoutWidget"));
         formLayoutWidget->setGeometry(QRect(30, 10, 434, 301));
         Login = new QFormLayout(formLayoutWidget);
@@ -139,10 +141,10 @@ public:
         Title->setTextFormat(Qt::AutoText);
         Title->setScaledContents(false);
         Title->setAlignment(Qt::AlignCenter);
+        Gameview = new QGraphicsView(Main);
+        Gameview->setObjectName(QString::fromUtf8("Gameview"));
+        Gameview->setGeometry(QRect(0, 0, 800, 600));
         MainWindow->setCentralWidget(Main);
-        widget->raise();
-        Title->raise();
-        Title->raise();
         QWidget::setTabOrder(logini, passwordi);
         QWidget::setTabOrder(passwordi, Remember);
         QWidget::setTabOrder(Remember, loginb);

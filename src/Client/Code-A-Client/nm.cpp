@@ -1,10 +1,11 @@
-#include "nm.h"
+#include "mainwindow.h"
 
-Nm::Nm(QString h, int p)
+Nm::Nm(QString h, int p, Game *g)
 {
+    game = g;
     host = h;
     port = p;
-    QObject::connect(&soc, SIGNAL(readyRead()), this, SLOT(tryReceiveFromServer()));
+    QObject::connect(&soc, SIGNAL(readyRead()), this, SLOT(ReceiveFromServer()));
 }
 
 Nm::~Nm()
@@ -12,11 +13,10 @@ Nm::~Nm()
 
 }
 
-//void    Nm::sendToServer()
-//{
-//QTextStream texte(&soc);
-//texte << t <<endl;
-//}
+void    Nm::sendToServer()
+{
+    std::cout << "send" << std::endl;
+}
 
 void    Nm::connectToServer()
 {
@@ -24,30 +24,72 @@ void    Nm::connectToServer()
     std::cout << "connected" << std::endl;
 }
 
-void    Nm::tryReceiveFromServer()
+void    Nm::ReceiveFromServer()
 {
-    int i = 0;
     std::cout << "founded" << std::endl;
     QByteArray ligne;
-    i = soc.bytesAvailable();
     ligne = soc.readAll();
-    std::cout << i << " " << ligne.length() << std::endl;
-    write(1, ligne.data(), 127);
-    std::cout << std::endl;
     try
     {
-        msgpack::unpacker pac;
-        pac.reserve_buffer(i);
-        memcpy(pac.buffer(), ligne.data(), i);
-        pac.buffer_consumed(i);
-        msgpack::unpacked result;
-        while(pac.next(&result)) {
-            std::cout << "unpacked : " << result.get() << std::endl;
-        }
-        std::cout << "done" << std::endl;
+        this->updateWorld(ligne);
     }
     catch (std::exception& e)
     {
-        std::cerr << e.what() << std::endl;
+        std::cerr << std::endl << e.what() << std::endl;
+    }
+}
+
+void    Nm::updateWorld(QByteArray ligne) {
+    msgpack::unpacker pac;
+    pac.reserve_buffer(ligne.length());
+    memcpy(pac.buffer(), ligne.data(), ligne.length());
+    pac.buffer_consumed(ligne.length());
+    u_int32_t i;
+    GameData::World woo;
+    msgpack::unpacked result;
+    GameData::Physics p;
+    GameData::Bullet b(0, 0);
+    GameData::Unit u(0, 0);
+    GameData::Element e(0, false);
+    if (pac.next(&result)) {
+        std::cout << result.get() << std::endl;
+        result.get().convert(&woo);
+        game->setWorld(woo);
+        std::cout << "WORLD: [nbUnit: " << woo.nbUnit << ", nbElement: " << woo.nbElement << ", nbBullet: " << woo.nbBullet << "]" << std::endl;
+        game->unit.clear();
+        game->punit.clear();
+        game->elem.clear();
+        game->pelem.clear();
+        game->bullet.clear();
+        game->pbullet.clear();
+        for (i = 0; i < woo.nbElement; i++)
+        {
+            pac.next(&result);
+            result.get().convert(&e);
+            pac.next(&result);
+            result.get().convert(&p);
+            game->elem.push_back(e);
+            game->pelem.push_back(p);
+        }
+        for (i = 0; i < woo.nbUnit; i++)
+        {
+            pac.next(&result);
+            result.get().convert(&u);
+            pac.next(&result);
+            result.get().convert(&p);
+            game->unit.push_back(u);
+            game->punit.push_back(p);
+        }
+        for (i = 0; i < woo.nbBullet; i++)
+        {
+            pac.next(&result);
+            result.get().convert(&b);
+            pac.next(&result);
+            result.get().convert(&p);
+            game->bullet.push_back(b);
+            game->pbullet.push_back(p);
+        }
+        std::cout << "done" << std::endl;
+        game->drawWorld();
     }
 }

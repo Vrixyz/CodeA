@@ -29,7 +29,7 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <widget class="QWidget" name="widget" native="true">
+   <widget class="QWidget" name="Loginpage" native="true">
     <property name="geometry">
      <rect>
       <x>150</x>
@@ -202,9 +202,16 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <zorder>widget</zorder>
-   <zorder>Title</zorder>
-   <zorder>Title</zorder>
+   <widget class="QGraphicsView" name="Gameview">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>800</width>
+      <height>600</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

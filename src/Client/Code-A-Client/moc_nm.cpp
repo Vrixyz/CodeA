@@ -37,7 +37,7 @@ static const uint qt_meta_data_Nm[] = {
 };
 
 static const char qt_meta_stringdata_Nm[] = {
-    "Nm\0\0tryReceiveFromServer()\0"
+    "Nm\0\0ReceiveFromServer()\0"
 };
 
 const QMetaObject Nm::staticMetaObject = {
@@ -69,7 +69,7 @@ int Nm::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
-        case 0: tryReceiveFromServer(); break;
+        case 0: ReceiveFromServer(); break;
         default: ;
         }
         _id -= 1;

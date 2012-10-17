@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:24:59 2012 mathieu leurquin
-// Last update Wed Sep 26 10:44:35 2012 thierry berger
+// Last update Tue Oct  9 12:11:36 2012 mathieu leurquin
 //
 
 #ifndef SERVER_COMMUNICATION_HPP
@@ -17,6 +17,7 @@
 #include <iostream>
 #include <string>
 #include <boost/asio.hpp>
+#include <boost/asio/buffer.hpp>
 #include <boost/thread.hpp>
 #include <msgpack.hpp>
 #include <map>
@@ -27,25 +28,26 @@ namespace Server
   {
   public:
     std::map<int, tcp_connection::pointer> clients;
-
+    boost::array<char, 127> buf;
     Communication() : acceptor(io_service, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), 4242)), incr(0)
     {
     }
 
     /// return true to success, false if failed.
     bool sendToClient(const msgpack::sbuffer& packedInformation, int clientId);
-    // GameData::Command* tryReceiveFromClient(int clientId);
+    GameData::Command* tryReceiveFromClient(int clientId);
     /// pointer, to "force" a variable to be sent to this function, which will contain the new clientId
     // bool tryAccept(int* clientId);
     void init();
     void start_accept();
     void handle_accept(tcp_connection::pointer& new_connection,
 		       const boost::system::error_code& error);
+    void handleRead(const boost::system::error_code& error);
     void addConnection(tcp_connection::pointer&);
 
     /// For thread:
     void accept_loop()
-    {  
+    {
       io_service.run();
     }
 
@@ -53,7 +55,7 @@ namespace Server
     {
       thread_accept.join();
     }
-
+    
   private:
     boost::thread thread_accept;
     boost::asio::io_service io_service;

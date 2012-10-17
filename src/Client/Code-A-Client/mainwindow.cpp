@@ -2,12 +2,13 @@
 #include "ui_mainwindow.h"
 #include "nm.h"
 
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow) , game(new Game(this))
 {
     ui->setupUi(this);
-    connect(ui->pushButton_2, SIGNAL(clicked()), qApp, SLOT(quit()));
+    ui->Gameview->hide();
     music = Phonon::createPlayer(Phonon::MusicCategory,
                                  Phonon::MediaSource("/home/edouard/proj_temp/CodeA/src/Client/Code-A-Client/Menu.mp3"));
     music->play();
@@ -25,16 +26,22 @@ void MainWindow::Playagain()
     music->play();
 }
 
-void MainWindow::on_pushButton_clicked()
-{
-    NewGame();
-}
 void MainWindow::NewGame()
 {
     music->stop();
-    ui->pushButton->close();
-    ui->pushButton_2->close();
     std::cout << "You just started a new game" << std::endl;
-    Nm *n = new Nm("127.0.0.1", 4242);
+    n = new Nm("127.0.0.1", 4242, game);
     n->connectToServer();
+}
+
+void MainWindow::on_loginb_pressed()
+{
+    std::cout << ui->logini->displayText().toStdString() << " " << ui->passwordi->text().toStdString() << std::endl;
+    if (ui->logini->text() == "root" && ui->passwordi->text() == "toor")
+    {
+        std::cout << "login ok !" << std::endl;
+        NewGame();
+    }
+    else
+        std::cout << "login ko !" << std::endl;
 }

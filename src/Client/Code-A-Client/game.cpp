@@ -17,7 +17,7 @@ GameData::World Game::getWorld() {
 void Game::drawWorld() {
     QGraphicsItem *item;
     QGraphicsScene *scene = new QGraphicsScene(0, 0, 800, 600, ui);
-    QPixmap grass("/home/edouard/proj_temp/CodeA/src/Client/Code-A-Client/grass.png");
+    QPixmap grass("./grass.png");
     GameData::Physics p;
     for (std::list<GameData::Physics>::iterator it = pelem.begin(); it != pelem.end(); ++it) {
         p = *it;

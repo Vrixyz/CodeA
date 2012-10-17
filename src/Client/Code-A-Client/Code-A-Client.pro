@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui phonon network
+QT       += core gui network
 
 LIBS = -lboost_system -lmsgpack
 

@@ -11,8 +11,12 @@
 #include <QGraphicsView>
 #include <QGraphicsItem>
 #include <list>
+#include "../../GameData/Command.hpp"
 #include "nm.h"
 #include "game.h"
+#include <QKeyEvent>
+#include <QRect>
+#include <QPolygon>
 
 class Nm;
 
@@ -29,6 +33,7 @@ public:
     void NewGame();
     ~MainWindow();
     Ui::MainWindow *ui;
+    void keyPressEvent(QKeyEvent *);
     
 private slots:
     void Playagain();
@@ -38,6 +43,7 @@ private:
     Phonon::MediaObject *music;
     Nm *n;
     Game *game;
+    bool ingame;
 };
 
 #endif // MAINWINDOW_H

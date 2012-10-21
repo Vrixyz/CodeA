@@ -13,6 +13,8 @@ MainWindow::MainWindow(QWidget *parent) :
                                  Phonon::MediaSource("/home/edouard/proj_temp/CodeA/src/Client/Code-A-Client/Menu.mp3"));
     music->play();
     connect(music, SIGNAL(aboutToFinish()), this, SLOT(Playagain()));
+    ingame = false;
+    NewGame();
 }
 
 MainWindow::~MainWindow()
@@ -28,10 +30,12 @@ void MainWindow::Playagain()
 
 void MainWindow::NewGame()
 {
+    ingame = true;
     music->stop();
     std::cout << "You just started a new game" << std::endl;
     n = new Nm("127.0.0.1", 4242, game);
     n->connectToServer();
+    ui->Loginpage->hide();
 }
 
 void MainWindow::on_loginb_pressed()
@@ -44,4 +48,65 @@ void MainWindow::on_loginb_pressed()
     }
     else
         std::cout << "login ko !" << std::endl;
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *e) {
+
+    if (ingame) {
+        GameData::Command cmd;
+        msgpack::sbuffer sbuf;
+        msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+        int key = e->key();
+        std::cout << key << std::endl;
+        switch (key) {
+        case Qt::Key_unknown:
+            std::cout << "PATRON ELLE PIQUE PAS TA VITEL !" << std::endl;
+            break;
+        case Qt::Key_W:
+            std::cout << "UP !" << std::endl;
+            cmd.type = 3;
+            cmd.y = 1;
+            break;
+        case Qt::Key_A:
+            std::cout << "LEFT !" << std::endl;
+            cmd.type = 3;
+            cmd.x = -1;
+            break;
+        case Qt::Key_S:
+            std::cout << "DOWN !" << std::endl;
+            cmd.type = 3;
+            cmd.y = -1;
+            break;
+        case Qt::Key_D:
+            std::cout << "RIGHT !" << std::endl;
+            cmd.type = 3;
+            cmd.x = 1;
+            break;
+        case Qt::Key_Up:
+            std::cout << "UP !" << std::endl;
+            cmd.type = 3;
+            cmd.y = 1;
+            break;
+        case Qt::Key_Left:
+            std::cout << "LEFT !" << std::endl;
+            cmd.type = 3;
+            cmd.x = -1;
+            break;
+        case Qt::Key_Down:
+            std::cout << "DOWN !" << std::endl;
+            cmd.type = 3;
+            cmd.y = -1;
+            break;
+        case Qt::Key_Right:
+            std::cout << "RIGHT !" << std::endl;
+            cmd.type = 3;
+            cmd.x = 1;
+            break;
+        default:
+            std::cout << "Left = " << Qt::Key_Left << ", Right = " << Qt::Key_Right << ", Value = " << e->key() << std::endl;
+            break;
+        }
+        packet.pack(cmd);
+        n->sendToServer(sbuf);
+    }
 }

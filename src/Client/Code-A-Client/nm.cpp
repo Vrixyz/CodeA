@@ -13,8 +13,9 @@ Nm::~Nm()
 
 }
 
-void    Nm::sendToServer()
+void    Nm::sendToServer(const msgpack::sbuffer& packedInformation)
 {
+    soc.write(packedInformation.data());
     std::cout << "send" << std::endl;
 }
 
@@ -26,7 +27,6 @@ void    Nm::connectToServer()
 
 void    Nm::ReceiveFromServer()
 {
-    std::cout << "founded" << std::endl;
     QByteArray ligne;
     ligne = soc.readAll();
     try
@@ -52,10 +52,8 @@ void    Nm::updateWorld(QByteArray ligne) {
     GameData::Unit u(0, 0);
     GameData::Element e(0, false);
     if (pac.next(&result)) {
-        std::cout << result.get() << std::endl;
         result.get().convert(&woo);
         game->setWorld(woo);
-        std::cout << "WORLD: [nbUnit: " << woo.nbUnit << ", nbElement: " << woo.nbElement << ", nbBullet: " << woo.nbBullet << "]" << std::endl;
         game->unit.clear();
         game->punit.clear();
         game->elem.clear();
@@ -89,7 +87,6 @@ void    Nm::updateWorld(QByteArray ligne) {
             game->bullet.push_back(b);
             game->pbullet.push_back(p);
         }
-        std::cout << "done" << std::endl;
         game->drawWorld();
     }
 }

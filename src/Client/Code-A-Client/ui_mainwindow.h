@@ -64,7 +64,7 @@ public:
         Main->setSizePolicy(sizePolicy);
         Loginpage = new QWidget(Main);
         Loginpage->setObjectName(QString::fromUtf8("Loginpage"));
-        Loginpage->setGeometry(QRect(150, 110, 480, 320));
+        Loginpage->setGeometry(QRect(0, 0, 800, 600));
         sizePolicy.setHeightForWidth(Loginpage->sizePolicy().hasHeightForWidth());
         Loginpage->setSizePolicy(sizePolicy);
         formLayoutWidget = new QWidget(Loginpage);
@@ -132,9 +132,9 @@ public:
 
         Login->setWidget(7, QFormLayout::SpanningRole, create);
 
-        Title = new QLabel(Main);
+        Title = new QLabel(Loginpage);
         Title->setObjectName(QString::fromUtf8("Title"));
-        Title->setGeometry(QRect(300, 30, 161, 61));
+        Title->setGeometry(QRect(360, 10, 161, 61));
         QFont font;
         font.setPointSize(20);
         Title->setFont(font);
@@ -145,6 +145,8 @@ public:
         Gameview->setObjectName(QString::fromUtf8("Gameview"));
         Gameview->setGeometry(QRect(0, 0, 800, 600));
         MainWindow->setCentralWidget(Main);
+        Gameview->raise();
+        Loginpage->raise();
         QWidget::setTabOrder(logini, passwordi);
         QWidget::setTabOrder(passwordi, Remember);
         QWidget::setTabOrder(Remember, loginb);

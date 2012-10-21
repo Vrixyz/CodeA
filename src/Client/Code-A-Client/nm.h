@@ -14,7 +14,7 @@ public:
     Nm(QString, int, Game *);
     ~Nm();
     void connectToServer();
-    void sendToServer();
+    void sendToServer(const msgpack::sbuffer&);
     void updateWorld(QByteArray);
 public slots:
     void ReceiveFromServer();

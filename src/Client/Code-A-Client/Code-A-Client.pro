@@ -15,10 +15,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     nm.cpp \
-    game.cpp
+    game.cpp \
+    serverselection.cpp
 
 HEADERS  += mainwindow.h \
     nm.h \
-    game.h
+    game.h \
+    serverselection.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    serverselection.ui

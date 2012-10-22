@@ -3,8 +3,8 @@
 
 #include <QMainWindow>
 #include <iostream>
-#include <phonon/MediaSource>
-#include <phonon/MediaObject>
+// #include <phonon/MediaSource>
+// #include <phonon/MediaObject>
 #include <QCoreApplication>
 #include <QTcpSocket>
 #include <QPixmap>
@@ -40,7 +40,7 @@ private slots:
     void on_loginb_pressed();
 
 private:
-    Phonon::MediaObject *music;
+//    Phonon::MediaObject *music;
     Nm *n;
     Game *game;
     bool ingame;

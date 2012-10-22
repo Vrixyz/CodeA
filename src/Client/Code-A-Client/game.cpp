@@ -18,9 +18,10 @@ void Game::drawWorld() {
     QGraphicsItem *item;
     GameData::Physics::Coord c;
     QGraphicsScene *scene = new QGraphicsScene(0, 0, 800, 600, ui);
-//    QPolygon *poly = new QPolygon();
+    // FIXME: use ressource loading
+    //    QPolygon *poly = new QPolygon();
     QPixmap grass("/home/edouard/proj_temp/CodeA/src/Client/Code-A-Client/grass.png");
-    GameData::Physics p;
+   GameData::Physics p;
     for (std::list<GameData::Physics>::iterator it = pelem.begin(); it != pelem.end(); ++it) {
 //        poly->setPoints(4, p.x + p.vertices);
         p = *it;

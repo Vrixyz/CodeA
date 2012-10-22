@@ -9,10 +9,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->Gameview->hide();
-    music = Phonon::createPlayer(Phonon::MusicCategory,
-                                 Phonon::MediaSource("/home/edouard/proj_temp/CodeA/src/Client/Code-A-Client/Menu.mp3"));
-    music->play();
-    connect(music, SIGNAL(aboutToFinish()), this, SLOT(Playagain()));
+    // music = Phonon::createPlayer(Phonon::MusicCategory,
+    //                              Phonon::MediaSource("/home/edouard/proj_temp/CodeA/src/Client/Code-A-Client/Menu.mp3"));
+    // music->play();
+    // connect(music, SIGNAL(aboutToFinish()), this, SLOT(Playagain()));
     ingame = false;
     NewGame();
 }
@@ -24,14 +24,14 @@ MainWindow::~MainWindow()
 
 void MainWindow::Playagain()
 {
-    music->enqueue(Phonon::MediaSource("/home/edouard/proj_temp/CodeA/src/Client/Code-A-Client/Menu.mp3"));
-    music->play();
+    // music->enqueue(Phonon::MediaSource("/home/edouard/proj_temp/CodeA/src/Client/Code-A-Client/Menu.mp3"));
+    // music->play();
 }
 
 void MainWindow::NewGame()
 {
     ingame = true;
-    music->stop();
+ //    music->stop();
     std::cout << "You just started a new game" << std::endl;
     n = new Nm("127.0.0.1", 4242, game);
     n->connectToServer();

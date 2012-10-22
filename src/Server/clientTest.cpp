@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Fri Sep 14 12:40:33 2012 thierry berger
-// Last update Mon Oct  8 17:47:13 2012 mathieu leurquin
+// Last update Mon Oct 22 16:47:13 2012 mathieu leurquin
 //
 
 #include <iostream>
@@ -38,17 +38,13 @@ int main(int argc, char* argv[])
 	  boost::array<char, 127> buf;
 
 	  size_t len = socket.read_some(boost::asio::buffer(buf), error);
-	  std::cout << "len: " << len << std::endl;
+	  // std::cout << "len: " << len << std::endl;
 	  if (error == boost::asio::error::eof)
 	    break; // Connection closed cleanly by peer.
 	  else if (error)
 	    throw boost::system::system_error(error); // Some other error.
-	  std::cout.write(buf.data(), len);
-	  std::cout << std::endl;
-
-
-	  
-	  
+	  // std::cout.write(buf.data(), len);
+	  // std::cout << std::endl;  
 	  msgpack::unpacker pac;
  
 	  // feeds the buffer.
@@ -64,12 +60,13 @@ int main(int argc, char* argv[])
 	      GameData::World woo;
 	      msgpack::object obj = result.get();
 	      obj.convert(&woo);
-	      std::cout << "WORLD: [nbUnit: " << woo.nbUnit << ", nbElement: " << woo.nbElement << ", nbBullet: " << woo.nbBullet << "]" << std::endl;
+ 	      std::cout << "WORLD: [nbElement: " << woo.nbElement << ", nbUnit: " << woo.nbUnit << ", nbBullet: " << woo.nbBullet << "]" << std::endl;
 	    }
 	  while (pac.next(&result)) {
 	    std::cout << result.get() << std::endl;
 	  }
 	  socket.close();
+
 	  exit(1);
 	}
     }

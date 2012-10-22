@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:24:59 2012 mathieu leurquin
-// Last update Tue Oct  9 12:11:36 2012 mathieu leurquin
+// Last update Mon Oct 22 17:17:52 2012 mathieu leurquin
 //
 
 #ifndef SERVER_COMMUNICATION_HPP
@@ -42,7 +42,7 @@ namespace Server
     void start_accept();
     void handle_accept(tcp_connection::pointer& new_connection,
 		       const boost::system::error_code& error);
-    void handleRead(const boost::system::error_code& error);
+    void handleRead(const boost::system::error_code& error, std::size_t size);
     void addConnection(tcp_connection::pointer&);
 
     /// For thread:
@@ -62,7 +62,6 @@ namespace Server
     boost::asio::ip::tcp::acceptor acceptor;
     mutable boost::mutex _m_clients;
     mutable boost::mutex _m_incr;
-    
     int	incr;
   };
 }

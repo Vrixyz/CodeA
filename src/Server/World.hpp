@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 10:46:49 2012 thierry berger
-// Last update Fri Sep 14 19:15:39 2012 thierry berger
+// Last update Sun Oct 21 20:09:12 2012 mathieu leurquin
 //
 
 #ifndef SERVER_WORLD_HPP
@@ -44,7 +44,7 @@ namespace Server
     b2World _physicWorld;
 
     World() : _physicWorld(b2Vec2(0, 0)) {}
-    void init();
+    void init(int width, int height);
     void run();
     void handleContact(b2Body object1, b2Body object2);
     Player& createPlayer(int id);
@@ -60,7 +60,7 @@ namespace Server
     void destroyElement(int id);
     void destroyBullet(int id);
 
-    virtual void	serialize(msgpack::packer<msgpack::sbuffer>& packet) const;
+    virtual void serialize(msgpack::packer<msgpack::sbuffer>& packet) const;
     virtual bool unSerialize(msgpack::packer<msgpack::sbuffer>& packet);
     virtual int	getClassId() const;
 

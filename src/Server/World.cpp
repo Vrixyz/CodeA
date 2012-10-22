@@ -5,12 +5,12 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Wed Oct 10 11:56:20 2012 mathieu leurquin
+// Last update Mon Oct 22 16:36:21 2012 mathieu leurquin
 //
 
 #include "World.hpp"
 
-void	Server::World::init()
+void	Server::World::init(int width, int height)
 {
   static_cast<Unit*>(this->createUnit().GetUserData())->addPlayer(&this->createPlayer(4));
   this->createElement(true, 100, 100);
@@ -160,8 +160,8 @@ void	Server::World::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
   /// Packing GameData::World
   GameData::World *woo = new GameData::World;
 
-  woo->nbUnit = (int)(units.size());
   woo->nbElement = (int)(elements.size());
+  woo->nbUnit = (int)(units.size());
   woo->nbBullet = (int)(bullets.size());
   packet.pack(*woo);
   Serializable const * toPack;

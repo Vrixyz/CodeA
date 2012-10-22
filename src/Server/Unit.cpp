@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 13:21:11 2012 thierry berger
-// Last update Wed Sep 19 13:50:15 2012 mathieu leurquin
+// Last update Fri Oct 12 10:13:00 2012 mathieu leurquin
 //
 
 #include "Unit.hpp"
@@ -158,5 +158,5 @@ void Server::Unit::move(float x, float y)
   float impulseX = _body->GetMass() * current.x;
   float impulseY = _body->GetMass() * current.y;
 
-  _body->ApplyLinearImpulse(b2Vec2(impulseX, impulseY), _body->GetWorldCenter());  
+  _body->ApplyLinearImpulse(b2Vec2(impulseX, impulseY), _body->GetWorldCenter());
 }

@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 16:40:52 2012 thierry berger
-// Last update Thu Sep 13 21:50:49 2012 thierry berger
+// Last update Wed Oct 17 10:57:53 2012 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -17,7 +17,7 @@ int	main()
 {
   Server::World w;
 
-  w.init();
+  w.init(100, 100);
   // msgpack::sbuffer buffer;
   // msgpack::packer<msgpack::sbuffer> pk(&buffer);
   // w.serialize(pk);

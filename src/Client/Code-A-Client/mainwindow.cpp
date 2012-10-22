@@ -56,9 +56,7 @@ void MainWindow::keyPressEvent(QKeyEvent *e) {
         GameData::Command cmd;
         msgpack::sbuffer sbuf;
         msgpack::packer<msgpack::sbuffer> packet(&sbuf);
-        int key = e->key();
-        std::cout << key << std::endl;
-        switch (key) {
+        switch (e->key()) {
         case Qt::Key_unknown:
             std::cout << "PATRON ELLE PIQUE PAS TA VITEL !" << std::endl;
             break;
@@ -66,47 +64,61 @@ void MainWindow::keyPressEvent(QKeyEvent *e) {
             std::cout << "UP !" << std::endl;
             cmd.type = 3;
             cmd.y = 1;
+            packet.pack(cmd);
+            n->sendToServer(sbuf);
             break;
         case Qt::Key_A:
             std::cout << "LEFT !" << std::endl;
             cmd.type = 3;
             cmd.x = -1;
+            packet.pack(cmd);
+            n->sendToServer(sbuf);
             break;
         case Qt::Key_S:
             std::cout << "DOWN !" << std::endl;
             cmd.type = 3;
             cmd.y = -1;
+            packet.pack(cmd);
+            n->sendToServer(sbuf);
             break;
         case Qt::Key_D:
             std::cout << "RIGHT !" << std::endl;
             cmd.type = 3;
             cmd.x = 1;
+            packet.pack(cmd);
+            n->sendToServer(sbuf);
             break;
         case Qt::Key_Up:
             std::cout << "UP !" << std::endl;
             cmd.type = 3;
             cmd.y = 1;
+            packet.pack(cmd);
+            n->sendToServer(sbuf);
             break;
         case Qt::Key_Left:
             std::cout << "LEFT !" << std::endl;
             cmd.type = 3;
             cmd.x = -1;
+            packet.pack(cmd);
+            n->sendToServer(sbuf);
             break;
         case Qt::Key_Down:
             std::cout << "DOWN !" << std::endl;
             cmd.type = 3;
             cmd.y = -1;
+            packet.pack(cmd);
+            n->sendToServer(sbuf);
             break;
         case Qt::Key_Right:
             std::cout << "RIGHT !" << std::endl;
             cmd.type = 3;
             cmd.x = 1;
+            packet.pack(cmd);
+            n->sendToServer(sbuf);
             break;
         default:
             std::cout << "Left = " << Qt::Key_Left << ", Right = " << Qt::Key_Right << ", Value = " << e->key() << std::endl;
             break;
         }
-        packet.pack(cmd);
-        n->sendToServer(sbuf);
     }
 }

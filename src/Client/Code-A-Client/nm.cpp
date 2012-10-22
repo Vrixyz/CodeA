@@ -10,7 +10,7 @@ Nm::Nm(QString h, int p, Game *g)
 
 Nm::~Nm()
 {
-
+    soc.close();
 }
 
 void    Nm::sendToServer(const msgpack::sbuffer& packedInformation)

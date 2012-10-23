@@ -17,19 +17,19 @@ class	IAccountManager
 {
 public:
 
-  bool initialize(bool (*serializer)(T data)) = 0; // true if succeed
+  bool initialize() = 0; // true if succeed
   IAccount<T>* createAccount(const std::string& login, const std::string& passwd) = 0; // TODO: add mail
   bool deleteAccount(const IAccount<T>&) = 0;
-  
   bool updateAccount(const IAccount<T>&) = 0;
   IAccount<T>* tryConnect(const std::string& login, const std::string& passwd) = 0;
-private:
+protected:
   class IDataManager
   {
-    bool setAccount(Account& account) = 0;
+    bool initialize(IAccountManager&, Account& account) = 0;
     bool save(T data) = 0;
-    T load() = 0;
+    T load() const = 0;
   };
+  IDataManager& getDataManagerForAccount(const IAccount&) const = 0;
 };
 
 #endif

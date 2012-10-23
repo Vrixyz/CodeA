@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Tue Sep 11 15:03:16 2012 thierry berger
-// Last update Wed Oct 10 11:51:04 2012 mathieu leurquin
+// Last update Wed Oct 17 16:04:42 2012 thierry berger
 //
 
 #ifndef GAME_DATA_HPP
@@ -19,10 +19,10 @@ namespace GameData
   {
     typedef enum e_Type
       {
-	Fire,
-	MoveTo, /// for RTS
-	aimTo,
-	Move
+	Fire = 0,
+	MoveTo = 1, /// for RTS
+	aimTo = 2,
+	Move = 3
       } Type;
     int type;
     float x;

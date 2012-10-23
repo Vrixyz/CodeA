@@ -8,7 +8,7 @@ OBJ		=	$(SRC:.cpp=.o)
 
 INC		=	-I./include
 
-LIB		=	-L./lib -lsqlite3
+LIB		=	-lsqlite3
 
 CXXFLAGS	=	-W $(INC)
 

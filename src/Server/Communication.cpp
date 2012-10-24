@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 19:13:12 2012 thierry berger
-// Last update Mon Oct 22 19:38:23 2012 mathieu leurquin
+// Last update Wed Oct 24 12:58:11 2012 mathieu leurquin
 //
 
 #include "Communication.hpp"
@@ -40,32 +40,6 @@ bool Server::Communication::sendToClient(const msgpack::sbuffer& packedInformati
   return true;
 }
 
-GameData::Command* Server::Communication::tryReceiveFromClient(int clientId)
-{
-  // try
- //    {
- //      boost::system::error_code error;
- //      boost::array<char, 127> buf;
-      
- //      size_t len = clients[clientId]->socket().read_some(boost::asio::buffer(buf), error);
- //      if (error)
- // 	{
- // 	  boost::lock_guard<boost::mutex> _m(_m_clients);
- // 	  clients.erase(clientId);
- // 	  return 0;
- // 	}
- //      std::cout.write(buf.data(), len);
- //      std::cout << std::endl;
- //    }
- // catch (std::exception& e)
- //   {
- //     /// FIXME: I don't know how it could get here.
- //     std::cerr << e.what() << std::endl;
- //     exit(1);
- //   }
- return 0;
-}
-
 void Server::Communication::start_accept()
 {
   tcp_connection::pointer new_connection =
@@ -74,11 +48,6 @@ void Server::Communication::start_accept()
   acceptor.async_accept(new_connection->socket(),
 			boost::bind(&Server::Communication::handle_accept, this, new_connection,
 				    boost::asio::placeholders::error));
-
-  // for (std::map<int, tcp_connection::pointer>::iterator
-  // 	 it = clients.begin(); it != clients.end();
-  //      it++)
-  std::cout << "initialise" << std::endl;
 }
 
 
@@ -91,26 +60,18 @@ public:
 		  const boost::system::error_code& ec,
 		  std::size_t size)
   {
-    std::string *s;
     msgpack::unpacker pac;
     msgpack::unpacked result;
-    msgpack::sbuffer sbuf;
 
-    std::cout << size << std::endl;
-    // if (size == 0 || size == 3)
-    //   return ;
-
-    // pac.reserve_buffer(12);
-    // memcpy(pac.buffer(), buf.data(), 12);
-    // pac.buffer_consumed(12);
-    // if (pac.next(&result))
-    //   {
-    // 	GameData::Command c;
-    // 	msgpack::object obj = result.get();
-    // 	std::cout << "getted" << std::endl;      
-    // 	obj.convert(&c);
-    // 	std::cout<<"Command : "<<c.type<<" "<<c.x<<" "<<c.y<<std::endl;
-    //   }
+    pac.reserve_buffer(size);
+    memcpy(pac.buffer(), buf.elems, size);
+    pac.buffer_consumed(size);
+    if (pac.next(&result))
+      {
+    	GameData::Command c;
+    	msgpack::object obj = result.get();
+    	obj.convert(&c);
+      }
     setHandler();
   }
 
@@ -118,7 +79,7 @@ public:
   {
     _connection->socket().
       async_read_some(boost::asio::buffer(buf, 127),
-		      bind(boost::type<void>(), *this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
+		      bind(boost::type<void>(), boost::ref(*this), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
   }
 private:
   boost::array<char, 127> buf;

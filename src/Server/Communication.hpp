@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:24:59 2012 mathieu leurquin
-// Last update Mon Oct 22 17:17:52 2012 mathieu leurquin
+// Last update Wed Oct 24 12:55:51 2012 mathieu leurquin
 //
 
 #ifndef SERVER_COMMUNICATION_HPP
@@ -35,7 +35,6 @@ namespace Server
 
     /// return true to success, false if failed.
     bool sendToClient(const msgpack::sbuffer& packedInformation, int clientId);
-    GameData::Command* tryReceiveFromClient(int clientId);
     /// pointer, to "force" a variable to be sent to this function, which will contain the new clientId
     // bool tryAccept(int* clientId);
     void init();

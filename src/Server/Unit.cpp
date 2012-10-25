@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 13:21:11 2012 thierry berger
-// Last update Fri Oct 12 10:13:00 2012 mathieu leurquin
+// Last update Thu Oct 25 13:59:12 2012 mathieu leurquin
 //
 
 #include "Unit.hpp"
@@ -29,13 +29,18 @@ b2Body*	Server::Unit::setBody()
 
 void	Server::Unit::addPlayer(Player* p)
 {
-  /// TODO: add only if not already in the list
-  for (std::list<uint32_t>::iterator it = _data.playersId.begin(); it != _data.playersId.end(); it++)
+  _data.playersId.push_back(p->id);
+}
+
+bool	Server::Unit::ownPlayer(int idPlayer)
+{
+   for (std::list<uint32_t>::iterator it = _data.playersId.begin(); it != _data.playersId.end(); it++)
     {
-      if ((*it) == p->id)
-	return;
-      _data.playersId.push_back(p->id);
+      if ((*it) == idPlayer)
+	return true;
+      return false;
     }
+   return false;
 }
 
 void	Server::Unit::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
@@ -159,4 +164,18 @@ void Server::Unit::move(float x, float y)
   float impulseY = _body->GetMass() * current.y;
 
   _body->ApplyLinearImpulse(b2Vec2(impulseX, impulseY), _body->GetWorldCenter());
+  std::cout<<"Move"<<std::endl;
 }
+
+void Server::Unit::fire(float x, float y)
+{
+}
+
+void Server::Unit::aimTo(float x, float y)
+{
+}
+
+void Server::Unit::moveTo(float x, float y)
+{
+}
+

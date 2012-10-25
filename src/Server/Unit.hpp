@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:00:00 2012 mathieu leurquin
-// Last update Wed Sep 19 13:50:15 2012 mathieu leurquin
+// Last update Thu Oct 25 13:49:56 2012 mathieu leurquin
 //
 
 #ifndef SERVER_UNIT_HPP
@@ -30,6 +30,7 @@ namespace Server
     virtual b2Body*	setBody();
     const GameData::Unit& getData() const {return _data;}
     void addPlayer(Player* p);
+    bool ownPlayer(int idPlayer);
     void fire(float x, float y);
     void aimTo(float x, float y);
     void moveTo(float x, float y);

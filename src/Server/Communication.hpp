@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:24:59 2012 mathieu leurquin
-// Last update Mon Oct 22 17:17:52 2012 mathieu leurquin
+// Last update Thu Oct 25 12:37:37 2012 mathieu leurquin
 //
 
 #ifndef SERVER_COMMUNICATION_HPP
@@ -21,6 +21,7 @@
 #include <boost/thread.hpp>
 #include <msgpack.hpp>
 #include <map>
+#include <vector>
 
 namespace Server
 {
@@ -28,6 +29,7 @@ namespace Server
   {
   public:
     std::map<int, tcp_connection::pointer> clients;
+    std::vector<std::pair<GameData::Command, tcp_connection::pointer> >cmds;
     boost::array<char, 127> buf;
     Communication() : acceptor(io_service, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), 4242)), incr(0)
     {
@@ -35,7 +37,6 @@ namespace Server
 
     /// return true to success, false if failed.
     bool sendToClient(const msgpack::sbuffer& packedInformation, int clientId);
-    GameData::Command* tryReceiveFromClient(int clientId);
     /// pointer, to "force" a variable to be sent to this function, which will contain the new clientId
     // bool tryAccept(int* clientId);
     void init();
@@ -63,6 +64,49 @@ namespace Server
     mutable boost::mutex _m_clients;
     mutable boost::mutex _m_incr;
     int	incr;
+    
+    class read_socket_handler
+    {
+    public:
+      read_socket_handler(Server::tcp_connection::pointer& connection, Communication *c) : _connection(connection), _com(c) {}
+      
+      void operator()(
+		      const boost::system::error_code& ec,
+		      std::size_t size)
+      {
+	msgpack::unpacker pac;
+	msgpack::unpacked result;
+	
+	pac.reserve_buffer(size);
+	memcpy(pac.buffer(), buf.elems, size);
+	pac.buffer_consumed(size);
+	if (pac.next(&result))
+	  {
+	    GameData::Command c;
+	    msgpack::object obj = result.get();
+	    obj.convert(&c);
+	    _command = c;
+	    _com->cmds.push_back(std::pair<GameData::Command, tcp_connection::pointer>(c, _connection));	    
+	  }
+	setHandler();
+      }
+      
+      void	setHandler()
+      {
+	_connection->socket().
+	  async_read_some(boost::asio::buffer(buf, 127),
+			  bind(boost::type<void>(), boost::ref(*this), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
+      }
+    
+      GameData::Command &getCommand(){return _command;}
+      Server::tcp_connection::pointer &getConnection(){return _connection;}
+      
+    private:
+      boost::array<char, 127> buf;
+      GameData::Command _command;
+      Server::tcp_connection::pointer _connection;
+      Communication *_com;
+    };
   };
 }
 

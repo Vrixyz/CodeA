@@ -5,14 +5,22 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Mon Oct 22 16:36:21 2012 mathieu leurquin
+// Last update Thu Oct 25 14:07:41 2012 mathieu leurquin
 //
 
 #include "World.hpp"
 
 void	Server::World::init(int width, int height)
 {
-  static_cast<Unit*>(this->createUnit().GetUserData())->addPlayer(&this->createPlayer(4));
+  fcts[GameData::Command::Fire] = &Server::Unit::fire;
+  fcts[GameData::Command::MoveTo] = &Server::Unit::moveTo;
+  fcts[GameData::Command::AimTo] = &Server::Unit::aimTo;  
+  fcts[GameData::Command::Move] = &Server::Unit::move;
+
+  Server::Unit *u;
+  u = this->createUnitE();
+  u->addPlayer(&this->createPlayer(0));
+  units.push_back(u);
   this->createElement(true, 100, 100);
   communication.init();
 }
@@ -47,6 +55,27 @@ void	Server::World::run()
 	      /// TODO: sepcify type of sent data (here: World)
 	      serialize(packet);
 	      
+	      //Execute cmd
+ 	      GameData::Command *c;
+	      for (unsigned int i = 0; i < communication.cmds.size(); i++)
+		{
+		  if (communication.cmds[i].second == it->second)
+		    {
+		      for (std::list<Server::Unit*>::iterator itu = units.begin(); itu != units.end(); itu++)
+			{
+			  if ((*itu)->ownPlayer(it->first))
+			    {
+			      c = &communication.cmds[i].first;
+			      ((*itu)->*fcts[c->getType()])(c->x, c->y);
+			      communication.cmds.pop_back();
+			      break;
+			    }
+			}
+		    }
+		}
+
+	      
+
 	      if (communication.sendToClient(sbuf, it->first))
 	      	{
 	      	  msgpack::unpacker pac;
@@ -81,8 +110,17 @@ b2Body&	Server::World::createUnit()
   Server::Unit* u = new Server::Unit(*this, (int)units.size());
   b2Body* physicBody = u->setBody();
 
-  units.push_back(physicBody);
+  b2units.push_back(physicBody);
   return *physicBody;
+}
+
+Server::Unit*	Server::World::createUnitE()
+{
+  Server::Unit* u = new Server::Unit(*this, (int)units.size());
+  b2Body* physicBody = u->setBody();
+
+  units.push_back(u);
+  return u;
 }
 
 b2Body& Server::World::createElement(bool walkable, float width, float height)
@@ -117,7 +155,7 @@ Server::Player* Server::World::getPlayer(int id)
 
 b2Body* Server::World::getUnit(int id)
 {
-  return getFromList(units, id);
+  return getFromList(b2units, id);
 }
 
 b2Body* Server::World::getElement(int id)
@@ -147,7 +185,7 @@ void Server::World::destroyPlayer(int id)
 
 void Server::World::destroyUnit(int id)
 {
-  return destroyFromList(units, id);
+  return destroyFromList(b2units, id);
 }
 
 void Server::World::destroyBullet(int id)
@@ -161,7 +199,7 @@ void	Server::World::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
   GameData::World *woo = new GameData::World;
 
   woo->nbElement = (int)(elements.size());
-  woo->nbUnit = (int)(units.size());
+  woo->nbUnit = (int)(b2units.size());
   woo->nbBullet = (int)(bullets.size());
   packet.pack(*woo);
   Serializable const * toPack;
@@ -173,7 +211,7 @@ void	Server::World::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
       packet.pack(getPhysics(*it));
     }
   /// Packing units
-  for (std::list<b2Body*>::const_iterator it = units.begin(); it != units.end(); it++)
+  for (std::list<b2Body*>::const_iterator it = b2units.begin(); it != b2units.end(); it++)
     {
       toPack = static_cast<Serializable const*>((*it)->GetUserData());
       toPack->serialize(packet);

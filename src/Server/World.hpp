@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 10:46:49 2012 thierry berger
-// Last update Sun Oct 21 20:09:12 2012 mathieu leurquin
+// Last update Thu Oct 25 13:47:22 2012 mathieu leurquin
 //
 
 #ifndef SERVER_WORLD_HPP
@@ -16,6 +16,7 @@
 #include "../GameData/World.hpp"
 #include "../GameData/Physics.hpp"
 #include "../GameData/Unit.hpp"
+#include "../GameData/Command.hpp"
 #include "../GameData/Serializable.hpp"
 #include "Element.hpp"
 #include "Bullet.hpp"
@@ -30,15 +31,18 @@
 namespace Server
 {
   class Player;
-
+  class Unit;
   class	World : GameData::Serializable
   {
   public:
 
+    std::map<GameData::Command::Type, void (Server::Unit::*)(float x, float y)> fcts;
+    
     /// TODO: Add a trash list to remove safely the bodies
     Communication	communication;
     std::list<b2Body*>	elements;
-    std::list<b2Body*>	units;
+    std::list<b2Body*>	b2units;
+    std::list<Server::Unit*>	units;
     std::list<b2Body*>	bullets;
     std::list<Player*>	players;
     b2World _physicWorld;
@@ -49,6 +53,7 @@ namespace Server
     void handleContact(b2Body object1, b2Body object2);
     Player& createPlayer(int id);
     b2Body& createUnit();
+    Server::Unit* createUnitE();
     b2Body& createElement(bool walkable, float width, float height);
     b2Body& createBullet(int damage);
     Player* getPlayer(int id);

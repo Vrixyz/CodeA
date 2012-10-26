@@ -17,19 +17,19 @@ class	IAccountManager
 {
 public:
 
-  bool initialize() = 0; // true if succeed
-  IAccount<T>* createAccount(const std::string& login, const std::string& passwd) = 0; // TODO: add mail
-  bool deleteAccount(const IAccount<T>&) = 0;
-  bool updateAccount(const IAccount<T>&) = 0;
-  IAccount<T>* tryConnect(const std::string& login, const std::string& passwd) = 0;
+  virtual bool initialize() = 0; // true if succeed
+  virtual IAccount<T>* createAccount(const std::string& login, const std::string& passwd) = 0; // TODO: add mail
+  virtual bool deleteAccount(const IAccount<T>&) = 0;
+  virtual bool updateAccount(const IAccount<T>&) = 0;
+  virtual IAccount<T>* tryConnect(const std::string& login, const std::string& passwd) = 0;
 protected:
   class IDataManager
   {
-    bool initialize(IAccountManager&, Account& account) = 0;
-    bool save(T data) = 0;
-    T load() const = 0;
+    virtual bool initialize(IAccountManager&, IAccount<T>& account) = 0;
+    virtual bool save(T data) = 0;
+    virtual T load() const = 0;
   };
-  IDataManager& getDataManagerForAccount(const IAccount&) const = 0;
+  virtual IDataManager& getDataManagerForAccount(const IAccount<T>&) const = 0;
 };
 
 #endif

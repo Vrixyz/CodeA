@@ -10,18 +10,18 @@ private:
 
 public:
   bool initialize();
-  GameAccount createAccount(const std::string& login, const std::string& passwd);
-  bool deleteAccount(const GameAccount&);
-  bool updateAccount(const GameAccount&);
-  GameAccount tryConnect(const std::string& login, const std::string& pass);
+  IAccount<std::string>* createAccount(const std::string& login, const std::string& passwd);
+  bool deleteAccount(const IAccount<std::string>&);
+  bool updateAccount(const IAccount<std::string>&);
+  IAccount<std::string>* tryConnect(const std::string& login, const std::string& pass);
 protected:
   class SQLDataManager
   {
-    bool initialize(GameAccountManager&, GameAccount&);
+    bool initialize(GameAccountManager&, IAccount<std::string>&);
     bool save(std::string data);
     std::string load() const;
   };
-  SQLDataManager& getDataManagerForAccount(const GameAccount&) const;
+  IDataManager* getDataManagerForAccount(const IAccount<std::string>&) const{};
 };
 
 #endif

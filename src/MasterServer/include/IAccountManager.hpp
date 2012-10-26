@@ -29,7 +29,7 @@ protected:
     virtual bool save(T data) = 0;
     virtual T load() const = 0;
   };
-  virtual IDataManager& getDataManagerForAccount(const IAccount<T>&) const = 0;
+  virtual IDataManager* getDataManagerForAccount(const IAccount<T>&) const = 0;
 };
 
 #endif

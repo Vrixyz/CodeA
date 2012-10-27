@@ -5,6 +5,11 @@ int GameAccount::getId() const
   return _id;
 }
 
+void GameAccount::setId(int id)
+{
+  _id = id;
+}
+
 const std::string& GameAccount::getLogin() const
 {
   return _login;

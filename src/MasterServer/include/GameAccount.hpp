@@ -13,6 +13,7 @@ private:
   std::string	_data;
 public:
   int getId() const;
+  void setId(int);
   const std::string& getLogin() const;
   void setLogin(const std::string&);
   const std::string& getPasswd() const;

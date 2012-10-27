@@ -3,25 +3,26 @@
 
 #include "IAccountManager.hpp"
 #include "GameAccount.hpp"
+#include <iostream>
+#include "sqlite3.h"
 
 class GameAccountManager : public IAccountManager<std::string>
 {
 private:
-
+  std::string _dbname;
+  sqlite3 *_db;
+  //  bool _valid;
+protected:
+  IAccount<std::string>* getId(const std::string& login, IAccount<std::string>*);
 public:
-  bool initialize();
-  IAccount<std::string>* createAccount(const std::string& login, const std::string& passwd);
+  GameAccountManager();
+  bool reset();
+  IAccount<std::string>* createAccount(const std::string& login, const std::string& passwd, const std::string& mail);
   bool deleteAccount(const IAccount<std::string>&);
   bool updateAccount(const IAccount<std::string>&);
   IAccount<std::string>* tryConnect(const std::string& login, const std::string& pass);
-protected:
-  class SQLDataManager
-  {
-    bool initialize(GameAccountManager&, IAccount<std::string>&);
-    bool save(std::string data);
-    std::string load() const;
-  };
-  IDataManager* getDataManagerForAccount(const IAccount<std::string>&) const{};
+  IAccount<std::string>* getAccountById(int id);
+  //  bool setPasswd(const std::string oldpass&, const std::string newpass&, IAccount<std::string>&);
 };
 
 #endif

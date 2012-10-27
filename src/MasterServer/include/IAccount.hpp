@@ -18,6 +18,7 @@ class	IAccount
 {
 public:
   virtual int getId() const = 0;
+  virtual void setId(int) = 0;
   virtual const std::string& getLogin() const = 0;
   virtual void setLogin(const std::string&) = 0;
   virtual const std::string& getPasswd() const = 0;

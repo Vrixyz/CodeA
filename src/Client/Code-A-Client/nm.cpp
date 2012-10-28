@@ -15,18 +15,19 @@ Nm::~Nm()
 
 void    Nm::sendToServer(const msgpack::sbuffer& packedInformation)
 {
-    soc.write(packedInformation.data());
-    std::cout << "send" << std::endl;
+    int i;
+    i = soc.write(packedInformation.data(), packedInformation.size());
+    std::cout << "send " << i << " " << packedInformation.size() << std::endl;
 }
 
 void    Nm::connectToServer()
 {
     soc.connectToHost(host, port);
-    std::cout << "connected" << std::endl;
 }
 
 void    Nm::ReceiveFromServer()
 {
+    std::cout << "received" << std::endl;
     QByteArray ligne;
     ligne = soc.readAll();
     try

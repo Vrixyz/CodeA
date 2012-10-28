@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network
+QT       += core gui network webkit
 
 LIBS = -lboost_system -lmsgpack
 
@@ -16,12 +16,12 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     nm.cpp \
     game.cpp \
-    serverselection.cpp
+    mainpage.cpp
 
 HEADERS  += mainwindow.h \
     nm.h \
     game.h \
-    serverselection.h
+    mainpage.h
 
 FORMS    += mainwindow.ui \
-    serverselection.ui
+    mainpage.ui

@@ -11,21 +11,24 @@
 #ifndef IACCOUNT_HPP_
 # define IACCOUNT_HPP_
 
+#include <iostream>
+
 template<typename T>
 class	IAccount
 {
 public:
-  int getId() const = 0;
-  const std::string& getLogin() const = 0;
-  void setLogin(const std::string&) = 0;
-  const std::string& getPasswd() const = 0;
-  void setPasswd(const std::string&) = 0;
-  const std::string& getMailAddress() const = 0;
-  void setMailAddress(const std::string&) = 0;
+  virtual int getId() const = 0;
+  virtual void setId(int) = 0;
+  virtual const std::string& getLogin() const = 0;
+  virtual void setLogin(const std::string&) = 0;
+  virtual const std::string& getPasswd() const = 0;
+  virtual void setPasswd(const std::string&) = 0;
+  virtual const std::string& getMailAddress() const = 0;
+  virtual void setMailAddress(const std::string&) = 0;
   /// data would be specific game/program data (successes/account statistics in our game)
-  const T& getData() const = 0;
+  virtual const T& getData() const = 0;
   /// T would inherit from a ISerializable adapted to the DataManager
-  void setData(const T&) = 0;
+  virtual void setData(const T&) = 0;
 };
 
 #endif

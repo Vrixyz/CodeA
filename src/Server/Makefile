@@ -5,7 +5,7 @@
 ## Login   <berger_t@epitech.net>
 ## 
 ## Started on  Fri Sep 14 10:58:16 2012 thierry berger
-## Last update Mon Oct  8 11:09:58 2012 mathieu leurquin
+## Last update Sun Oct 28 12:10:35 2012 thierry berger
 ##
 
 SRC_SR	=	mainTest.cpp \
@@ -15,7 +15,8 @@ SRC_SR	=	mainTest.cpp \
 		Unit.cpp \
 		Bullet.cpp \
 		tcp_connection.cpp \
-		BitField.cpp
+		BitField.cpp \
+		Object.cpp
 
 SRC_CL	=	clientTest.cpp
 

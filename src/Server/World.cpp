@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Thu Oct 25 14:07:41 2012 mathieu leurquin
+// Last update Sun Oct 28 12:23:32 2012 thierry berger
 //
 
 #include "World.hpp"
@@ -18,6 +18,8 @@ void	Server::World::init(int width, int height)
   fcts[GameData::Command::Move] = &Server::Unit::move;
 
   Server::Unit *u;
+
+  // FIXME: we must create the player and the unit at the connection !
   u = this->createUnitE();
   u->addPlayer(&this->createPlayer(0));
   units.push_back(u);
@@ -45,6 +47,8 @@ void	Server::World::run()
 	  // DEBUG [
 
 	  // thread safe on communication.clients because of the const specifier (std::map is thread safe on read operations)
+
+	  // FIXME: Actually, seems not, add shared_ptr please (meaning no one else will modify this connection (like closing it !)
 	  for (std::map<int, tcp_connection::pointer>::const_iterator
 		 it = communication.clients.begin(); it != communication.clients.end();
  	       it++)
@@ -57,6 +61,9 @@ void	Server::World::run()
 	      
 	      //Execute cmd
  	      GameData::Command *c;
+
+	      // FIXME: cmds is modified by World and Communication, which are different threads, this could lead to problems, lock_guard needed (or smth equivalent)
+	      // INFO: this would lead to 2 locks at the same time for the same running code, care to deadlocks ! (unique/defer_lock might be an option)
 	      for (unsigned int i = 0; i < communication.cmds.size(); i++)
 		{
 		  if (communication.cmds[i].second == it->second)
@@ -75,9 +82,10 @@ void	Server::World::run()
 		}
 
 	      
-
+	      // FIXME: sendToClient will lock_guard on clients, meaning it will deadlock if we shared_lock earlier. (solution would be to upgrade the lock (in sendToClient, and set an upgradeable lock in before this loop))
 	      if (communication.sendToClient(sbuf, it->first))
 	      	{
+		  
 	      	  msgpack::unpacker pac;
 	      	  pac.reserve_buffer(sbuf.size());
 	      	  memcpy(pac.buffer(), sbuf.data(), sbuf.size());
@@ -89,6 +97,7 @@ void	Server::World::run()
 	      	    // std::cout << result.get() << std::endl;
 	      	  }
 	      	}
+	      // FIXME: downgrade mutex here (should be at the end of sendToClient actually)
 	    }
 	  // ] DEBUG
 	}
@@ -215,7 +224,6 @@ void	Server::World::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
     {
       toPack = static_cast<Serializable const*>((*it)->GetUserData());
       toPack->serialize(packet);
-      packet.pack(getPhysics(*it));
     }
   /// Packing bullets
   for (std::list<b2Body*>::const_iterator it = bullets.begin(); it != bullets.end(); it++)

@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 19:13:12 2012 thierry berger
-// Last update Thu Oct 25 12:36:53 2012 mathieu leurquin
+// Last update Sun Oct 28 10:38:14 2012 mathieu leurquin
 //
 
 #include "Communication.hpp"
@@ -42,14 +42,6 @@ bool Server::Communication::sendToClient(const msgpack::sbuffer& packedInformati
 
 void Server::Communication::start_accept()
 {
-  // GameData::Command *c;
-  // std::cout<<"size: "<<cmds.size()<<std::endl;
-
-  // for (unsigned int i = 0; i < cmds.size(); i++)
-  //   {
-  //     c = &cmds[i].first;
-  //     std::cout<<"cmd : "<<c->x<<c->y<<std::endl;
-  //   }
   tcp_connection::pointer new_connection =
     tcp_connection::create(*this, acceptor.get_io_service());
   
@@ -77,27 +69,3 @@ void Server::Communication::handle_accept(tcp_connection::pointer& new_connectio
   rsh->setHandler();
   start_accept();
 }
-
-// void Server::Communication::handleRead(const boost::system::error_code& error, std::size_t size)
-// {
-//   std::string *s;
-//   msgpack::unpacker pac;
-//   msgpack::unpacked result;
-//   msgpack::sbuffer sbuf;
-
-//   std::cout << size << std::endl;
-//   if (size == 0 || size == 3)
-//     return ;
-
-//   pac.reserve_buffer(12);
-//   memcpy(pac.buffer(), buf.data(), 12);
-//   pac.buffer_consumed(12);
-//   if (pac.next(&result))
-//     {
-//       GameData::Command c;
-//       msgpack::object obj = result.get();
-//       std::cout << "getted" << std::endl;      
-//       obj.convert(&c);
-//       std::cout<<"Command : "<<c.type<<" "<<c.x<<" "<<c.y<<std::endl;
-//     }
-// }

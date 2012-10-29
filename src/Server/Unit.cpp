@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 13:21:11 2012 thierry berger
-// Last update Thu Oct 25 13:59:12 2012 mathieu leurquin
+// Last update Sun Oct 28 12:22:53 2012 thierry berger
 //
 
 #include "Unit.hpp"
@@ -46,6 +46,7 @@ bool	Server::Unit::ownPlayer(int idPlayer)
 void	Server::Unit::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
 {
   packet.pack(_data);
+  packet.pack(this->getPhysics());
 }
 
 // void	Server::Unit::goUp()
@@ -164,7 +165,7 @@ void Server::Unit::move(float x, float y)
   float impulseY = _body->GetMass() * current.y;
 
   _body->ApplyLinearImpulse(b2Vec2(impulseX, impulseY), _body->GetWorldCenter());
-  std::cout<<"Move"<<std::endl;
+  std::cout<<"Move" << impulseX << ";" << impulseY <<std::endl;
 }
 
 void Server::Unit::fire(float x, float y)

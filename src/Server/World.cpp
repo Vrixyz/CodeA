@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Thu Oct 25 14:07:41 2012 mathieu leurquin
+// Last update Mon Oct 29 16:38:56 2012 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -18,7 +18,7 @@ void	Server::World::init(int width, int height)
   fcts[GameData::Command::Move] = &Server::Unit::move;
 
   Server::Unit *u;
-  u = this->createUnitE();
+  u = this->createUnit();
   u->addPlayer(&this->createPlayer(0));
   units.push_back(u);
   this->createElement(true, 100, 100);
@@ -105,40 +105,28 @@ Server::Player&	Server::World::createPlayer(int id)
   return *p;
 }
 
-b2Body&	Server::World::createUnit()
+Server::Unit* Server::World::createUnit()
 {
   Server::Unit* u = new Server::Unit(*this, (int)units.size());
-  b2Body* physicBody = u->setBody();
-
-  b2units.push_back(physicBody);
-  return *physicBody;
-}
-
-Server::Unit*	Server::World::createUnitE()
-{
-  Server::Unit* u = new Server::Unit(*this, (int)units.size());
-  b2Body* physicBody = u->setBody();
-
+  u->setBody();
   units.push_back(u);
   return u;
 }
 
-b2Body& Server::World::createElement(bool walkable, float width, float height)
+Server::Element* Server::World::createElement(bool walkable, float width, float height)
 {
-  Element* e = new Element(*this, (int)elements.size(), walkable);
-  b2Body* physicBody = e->setBody(width, height);
-
-  elements.push_back(physicBody);  
-  return *physicBody;
+  Server::Element* e = new Element(*this, (int)elements.size(), walkable);
+  e->setBody(width, height);
+  elements.push_back(e);  
+  return e;
 }
 
-b2Body&  Server::World::createBullet(int damage)
+Server::Bullet*  Server::World::createBullet(int damage)
 {
-  Bullet* b = new Bullet(*this, (int)elements.size(), damage);
-  b2Body* physicBody = b->setBody();
-
-  bullets.push_back(physicBody);
-  return *physicBody;
+  Server::Bullet* b = new Bullet(*this, (int)elements.size(), damage);
+  b->setBody();
+  bullets.push_back(b);
+  return b;
 }
 
 Server::Player* Server::World::getPlayer(int id)
@@ -153,19 +141,34 @@ Server::Player* Server::World::getPlayer(int id)
   return 0;
 }
 
-b2Body* Server::World::getUnit(int id)
+Server::Unit* Server::World::getUnit(int id)
 {
-  return getFromList(b2units, id);
+  for (std::list<Unit*>::iterator it = units.begin(); it != units.end(); it++)
+    {
+      if ((*it)->id == id)
+	return (*it);
+    }
+  return NULL;
 }
 
-b2Body* Server::World::getElement(int id)
+Server::Element* Server::World::getElement(int id)
 {
-  return getFromList(elements, id);
+  for (std::list<Element*>::iterator it = elements.begin(); it != elements.end(); it++)
+    {
+      if ((*it)->id == id)
+	return (*it);
+    }
+  return NULL;
 }
 
-b2Body* Server::World::getBullet(int id)
+Server::Bullet* Server::World::getBullet(int id)
 {
-  return getFromList(bullets, id);
+  for (std::list<Bullet*>::iterator it = bullets.begin(); it != bullets.end(); it++)
+    {
+      if ((*it)->id == id)
+	return (*it);
+    }
+  return NULL;
 }
 
 void Server::World::destroyPlayer(int id)
@@ -183,15 +186,15 @@ void Server::World::destroyPlayer(int id)
     }
 }
 
-void Server::World::destroyUnit(int id)
-{
-  return destroyFromList(b2units, id);
-}
+// void Server::World::destroyUnit(int id)
+// {
+//   return destroyFromList(b2units, id);
+// }
 
-void Server::World::destroyBullet(int id)
-{
-  return destroyFromList(bullets, id);
-}
+// void Server::World::destroyBullet(int id)
+// {
+//   return destroyFromList(bullets, id);
+// }
 
 void	Server::World::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
 {
@@ -199,30 +202,30 @@ void	Server::World::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
   GameData::World *woo = new GameData::World;
 
   woo->nbElement = (int)(elements.size());
-  woo->nbUnit = (int)(b2units.size());
+  woo->nbUnit = (int)(units.size());
   woo->nbBullet = (int)(bullets.size());
   packet.pack(*woo);
   Serializable const * toPack;
   /// Packing elements
-  for (std::list<b2Body*>::const_iterator it = elements.begin(); it != elements.end(); it++)
+  for (std::list<Element*>::const_iterator it = elements.begin(); it != elements.end(); it++)
     {
-      toPack = static_cast<Serializable const*>((*it)->GetUserData());
+      toPack = static_cast<Serializable const*>(((*it)->getBody())->GetUserData());
       toPack->serialize(packet);
-      packet.pack(getPhysics(*it));
+      packet.pack(getPhysics((*it)->getBody()));
     }
   /// Packing units
-  for (std::list<b2Body*>::const_iterator it = b2units.begin(); it != b2units.end(); it++)
+  for (std::list<Unit*>::const_iterator it = units.begin(); it != units.end(); it++)
     {
-      toPack = static_cast<Serializable const*>((*it)->GetUserData());
+      toPack = static_cast<Serializable const*>(((*it)->getBody())->GetUserData());
       toPack->serialize(packet);
-      packet.pack(getPhysics(*it));
+      packet.pack(getPhysics((*it)->getBody()));
     }
   /// Packing bullets
-  for (std::list<b2Body*>::const_iterator it = bullets.begin(); it != bullets.end(); it++)
+  for (std::list<Bullet*>::const_iterator it = bullets.begin(); it != bullets.end(); it++)
     {
-      toPack = static_cast<Serializable const*>((*it)->GetUserData());
+      toPack = static_cast<Serializable const*>(((*it)->getBody())->GetUserData());
       toPack->serialize(packet);
-      packet.pack(getPhysics(*it));
+      packet.pack(getPhysics((*it)->getBody()));
     }
 }
 
@@ -231,31 +234,49 @@ bool Server::World::unSerialize(msgpack::packer<msgpack::sbuffer>& packet) {retu
 int	Server::World::getClassId() const {return 0;}
 
 
-b2Body* Server::World::getFromList(std::list<b2Body*> l, int id)
+void Server::World::destroyUnit(int id)
 {
-  Object* obj;
-
-  for (std::list<b2Body*>::iterator it = l.begin(); it != l.end(); it++)
+  for (std::list<Unit*>::iterator it = units.begin(); it != units.end(); it++)
     {
-      obj = static_cast<Object*>((*it)->GetUserData());
-      if (obj->id == id)
-	return *it;
-    }
-  return 0;
-}
-
-void Server::World::destroyFromList(std::list<b2Body*> l, int id)
-{
-  Object* obj;
-
-  for (std::list<b2Body*>::iterator it = l.begin(); it != l.end(); it++)
-    {
-      obj = static_cast<Object*>((*it)->GetUserData());
-      if (obj->id == id)
+      if ((*it)->id == id)
 	{
 	  /// TODO: put that in a list to delete later (it may cause problem if deletion in timestep)
-	  _physicWorld.DestroyBody(*it);
-	  l.erase(it);
+	  _physicWorld.DestroyBody((*it)->getBody());
+	  units.erase(it);
+	  return;
+	}
+      else
+	it++;
+    }
+  return;
+}
+
+void Server::World::destroyBullet(int id)
+{
+  for (std::list<Bullet*>::iterator it = bullets.begin(); it != bullets.end(); it++)
+    {
+      if ((*it)->id == id)
+	{
+	  /// TODO: put that in a list to delete later (it may cause problem if deletion in timestep)
+	  _physicWorld.DestroyBody((*it)->getBody());
+	  bullets.erase(it);
+	  return;
+	}
+      else
+	it++;
+    }
+  return;
+}
+
+void Server::World::destroyElement(int id)
+{
+  for (std::list<Element*>::iterator it = elements.begin(); it != elements.end(); it++)
+    {
+      if ((*it)->id == id)
+	{
+	  /// TODO: put that in a list to delete later (it may cause problem if deletion in timestep)
+	  _physicWorld.DestroyBody((*it)->getBody());
+	  elements.erase(it);
 	  return;
 	}
       else

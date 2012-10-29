@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 11:04:47 2012 thierry berger
-// Last update Tue Sep 18 10:33:45 2012 mathieu leurquin
+// Last update Mon Oct 29 16:27:42 2012 mathieu leurquin
 //
 
 #ifndef SERVER_OBJECT_HPP
@@ -40,6 +40,8 @@ namespace Server
     b2Body* _body;
 
     Object(World& world, Type type, int _id) : id(_id), _type(type), _world(world){}
+  public:   
+    b2Body* getBody(){return _body;}
   };
 }
 

@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 10:46:49 2012 thierry berger
-// Last update Thu Oct 25 13:47:22 2012 mathieu leurquin
+// Last update Mon Oct 29 16:50:10 2012 mathieu leurquin
 //
 
 #ifndef SERVER_WORLD_HPP
@@ -32,6 +32,8 @@ namespace Server
 {
   class Player;
   class Unit;
+  class Element;
+  class Bullet;
   class	World : GameData::Serializable
   {
   public:
@@ -40,10 +42,9 @@ namespace Server
     
     /// TODO: Add a trash list to remove safely the bodies
     Communication	communication;
-    std::list<b2Body*>	elements;
-    std::list<b2Body*>	b2units;
-    std::list<Server::Unit*>	units;
-    std::list<b2Body*>	bullets;
+    std::list<Server::Element*>	elements;
+    std::list<Server::Unit*> units;
+    std::list<Server::Bullet*>	bullets;
     std::list<Player*>	players;
     b2World _physicWorld;
 
@@ -52,27 +53,24 @@ namespace Server
     void run();
     void handleContact(b2Body object1, b2Body object2);
     Player& createPlayer(int id);
-    b2Body& createUnit();
-    Server::Unit* createUnitE();
-    b2Body& createElement(bool walkable, float width, float height);
-    b2Body& createBullet(int damage);
+    Server::Unit* createUnit();
+    Server::Element* createElement(bool walkable, float width, float height);
+    Server::Bullet* createBullet(int damage);
     Player* getPlayer(int id);
-    b2Body* getUnit(int id);
-    b2Body* getElement(int id);
-    b2Body* getBullet(int id);
+    Server::Unit* getUnit(int id);
+    Server::Element* getElement(int id);
+    Server::Bullet* getBullet(int id);
     void destroyPlayer(int id);
     void destroyUnit(int id);
     void destroyElement(int id);
     void destroyBullet(int id);
-
+    
     virtual void serialize(msgpack::packer<msgpack::sbuffer>& packet) const;
     virtual bool unSerialize(msgpack::packer<msgpack::sbuffer>& packet);
     virtual int	getClassId() const;
 
   private:
 
-    b2Body* getFromList(std::list<b2Body*>, int id);
-    void destroyFromList(std::list<b2Body*>, int id);
     GameData::Physics getPhysics(const b2Body* body) const;
   };
 }

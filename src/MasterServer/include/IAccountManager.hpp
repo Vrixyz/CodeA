@@ -16,20 +16,14 @@ template<typename T>
 class	IAccountManager
 {
 public:
-
-  bool initialize() = 0; // true if succeed
-  IAccount<T>* createAccount(const std::string& login, const std::string& passwd) = 0; // TODO: add mail
-  bool deleteAccount(const IAccount<T>&) = 0;
-  bool updateAccount(const IAccount<T>&) = 0;
-  IAccount<T>* tryConnect(const std::string& login, const std::string& passwd) = 0;
-protected:
-  class IDataManager
-  {
-    bool initialize(IAccountManager&, Account& account) = 0;
-    bool save(T data) = 0;
-    T load() const = 0;
-  };
-  IDataManager& getDataManagerForAccount(const IAccount&) const = 0;
+  virtual bool reset() = 0; // true if succeed  
+  // le create account n'envoi pas le mail de confirmation
+  virtual IAccount<T>* createAccount(const std::string& login, const std::string& passwd, const std::string& mail) = 0;
+  virtual bool deleteAccount(const IAccount<T>&) = 0;
+  virtual bool updateAccount(const IAccount<T>&) = 0;
+  virtual IAccount<T>* tryConnect(const std::string& login, const std::string& passwd) = 0;
+  virtual IAccount<T>* getAccountById(int id) = 0;
+  //  virtual bool setPasswd(const std::string oldpass&, const std::string newpass&, IAccount<T>&) = 0;
 };
 
 #endif

@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:24:59 2012 mathieu leurquin
-// Last update Thu Oct 25 12:37:37 2012 mathieu leurquin
+// Last update Tue Oct 30 16:20:37 2012 mathieu leurquin
 //
 
 #ifndef SERVER_COMMUNICATION_HPP
@@ -28,10 +28,12 @@ namespace Server
   class	Communication
   {
   public:
+    mutable boost::mutex _m_clients;
+    std::list<int> clientsErase;
     std::map<int, tcp_connection::pointer> clients;
     std::vector<std::pair<GameData::Command, tcp_connection::pointer> >cmds;
     boost::array<char, 127> buf;
-    Communication() : acceptor(io_service, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), 4242)), incr(0)
+    Communication() : acceptor(io_service, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), 4242))
     {
     }
 
@@ -61,9 +63,6 @@ namespace Server
     boost::thread thread_accept;
     boost::asio::io_service io_service;
     boost::asio::ip::tcp::acceptor acceptor;
-    mutable boost::mutex _m_clients;
-    mutable boost::mutex _m_incr;
-    int	incr;
     
     class read_socket_handler
     {

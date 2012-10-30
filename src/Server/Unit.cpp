@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 13:21:11 2012 thierry berger
-// Last update Tue Oct 30 13:44:58 2012 mathieu leurquin
+// Last update Tue Oct 30 16:28:31 2012 mathieu leurquin
 //
 
 #include "Unit.hpp"
@@ -162,10 +162,17 @@ void Server::Unit::move(float x, float y)
   float impulseX = _body->GetMass() * x;
   float impulseY = _body->GetMass() * y;
   float im;
+  float im1;
 
   current = _body->GetLinearVelocity();
   if (x == 0 && y == 0)
     {
+      if (current.y != 0 && current.x != 0)
+	{
+	  im = 0 - current.x;
+	  im1 = 0 - current.y;
+	  _body->ApplyLinearImpulse(b2Vec2(im, im1), _body->GetWorldCenter());
+	}
       if (current.y != 0)
 	{
 	  im = 0 - current.y;

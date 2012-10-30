@@ -20,6 +20,8 @@ public:
     Game(MainWindow *);
     void drawWorld();
     void setWorld(GameData::World);
+    int xref;
+    int yref;
     GameData::World getWorld();
     std::list<GameData::Element> elem;
     std::list<GameData::Unit> unit;

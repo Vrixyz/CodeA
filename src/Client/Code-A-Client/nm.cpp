@@ -27,7 +27,7 @@ void    Nm::connectToServer()
 
 void    Nm::ReceiveFromServer()
 {
-    std::cout << "received" << std::endl;
+//    std::cout << "received" << std::endl;
     QByteArray ligne;
     ligne = soc.readAll();
     try

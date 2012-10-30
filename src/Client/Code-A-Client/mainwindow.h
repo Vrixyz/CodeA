@@ -17,6 +17,7 @@
 #include <QKeyEvent>
 #include <QRect>
 #include <QPolygon>
+#include <QPoint>
 
 class Nm;
 

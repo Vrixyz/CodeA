@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Mon Sep 17 12:28:48 2012 thierry berger
-// Last update Wed Sep 26 10:38:14 2012 thierry berger
+// Last update Tue Oct 30 14:42:01 2012 mathieu leurquin
 //
 
 #ifndef TCP_CONNECTION_HPP
@@ -14,6 +14,7 @@
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <boost/smart_ptr.hpp>
+#include <boost/thread.hpp>
 
 #include <iostream>
 
@@ -26,6 +27,7 @@ namespace Server
   {
   public:
     typedef boost::shared_ptr<tcp_connection> pointer;
+    mutable boost::mutex _mutex;
 
     ~tcp_connection()
     {

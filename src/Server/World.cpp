@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Mon Oct 29 16:49:56 2012 mathieu leurquin
+// Last update Tue Oct 30 16:20:53 2012 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -41,7 +41,7 @@ void	Server::World::run()
 	  rest = timer.GetMilliseconds() + rest - TIMESTEP;
 	  timer.Reset();
 	  _physicWorld.Step(TIMESTEP, VELOCITY_ITERATION, POSITION_ITERATION);
-
+	  std::cout << "debut update boucle" << std::endl;
 
 
 	  // DEBUG [
@@ -49,13 +49,14 @@ void	Server::World::run()
 	  // thread safe on communication.clients because of the const specifier (std::map is thread safe on read operations)
 
 	  // FIXME: Actually, seems not, add shared_ptr please (meaning no one else will modify this connection (like closing it !)
-	  for (std::map<int, tcp_connection::pointer>::const_iterator
+	   // boost::lock_guard<boost::mutex> lock(communication._m_clients);
+	   for (std::map<int, tcp_connection::pointer>::const_iterator
 		 it = communication.clients.begin(); it != communication.clients.end();
  	       it++)
-	    {
-	      msgpack::sbuffer sbuf;
-	      msgpack::packer<msgpack::sbuffer> packet(&sbuf);
-
+	     {
+	       msgpack::sbuffer sbuf;
+	       msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+	       
 	      /// TODO: sepcify type of sent data (here: World)
 	      serialize(packet);
 	      
@@ -64,6 +65,7 @@ void	Server::World::run()
 
 	      // FIXME: cmds is modified by World and Communication, which are different threads, this could lead to problems, lock_guard needed (or smth equivalent)
 	      // INFO: this would lead to 2 locks at the same time for the same running code, care to deadlocks ! (unique/defer_lock might be an option)
+	      std::cout<<"debut cmd"<<std::endl;
 	      for (unsigned int i = 0; i < communication.cmds.size(); i++)
 		{
 		  if (communication.cmds[i].second == it->second)
@@ -80,7 +82,7 @@ void	Server::World::run()
 			}
 		    }
 		}
-
+	      std::cout<<"fin cmd"<<std::endl;
 	      
 	      // FIXME: sendToClient will lock_guard on clients, meaning it will deadlock if we shared_lock earlier. (solution would be to upgrade the lock (in sendToClient, and set an upgradeable lock in before this loop))
 	      if (communication.sendToClient(sbuf, it->first))
@@ -96,7 +98,15 @@ void	Server::World::run()
 	      	  while(pac.next(&result)) {
 	      	    // std::cout << result.get() << std::endl;
 	      	  }
+		  
 	      	}
+	      
+	      //delete clients
+
+	      for (std::list<int>::iterator it = communication.clientsErase.begin(); it != communication.clientsErase.end(); it++)
+		{
+		  communication.clients.erase(*it);
+		}
 	      // FIXME: downgrade mutex here (should be at the end of sendToClient actually)
 	    }
 	  // ] DEBUG

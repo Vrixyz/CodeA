@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 19:13:12 2012 thierry berger
-// Last update Sun Oct 28 10:38:14 2012 mathieu leurquin
+// Last update Tue Oct 30 16:20:37 2012 mathieu leurquin
 //
 
 #include "Communication.hpp"
@@ -18,25 +18,34 @@ void	Server::Communication::init()
 
 bool Server::Communication::sendToClient(const msgpack::sbuffer& packedInformation, int clientId)
 {
+  std::cout<<"debut send"<<std::endl;
+  if (!clients[clientId])
+    {
+      std::cout<<"fin send (erased)"<<std::endl;
+      return false;
+    }
   try
     {
       boost::system::error_code ignored_error;
-      
+      // boost::lock_guard<boost::mutex> lock2(clients[clientId]->_mutex);
       boost::asio::write(clients[clientId]->socket(), boost::asio::buffer(packedInformation.data(), packedInformation.size()), ignored_error);
       if (ignored_error)
 	{
 	  /// FIXME: some errors might be more or less killing than others.
-	  boost::lock_guard<boost::mutex> _m(_m_clients);
-	  clients.erase(clientId);
+	  // clients[clientId].swap();
+	  std::cout<<"erase..."<<std::endl;
+	  clientsErase.push_back(clientId);
+	  std::cout<<"erased !"<<std::endl;
 	  return false;
 	}
     }
   catch (std::exception& e)
     {
       /// FIXME: I don't know how it could get here.
-      std::cerr << e.what() << std::endl;
+      std::cerr<<"Send to client fail : "<< e.what() << std::endl;
       exit(1);
     }
+  std::cout<<"fin send"<<std::endl;
   return true;
 }
 
@@ -54,14 +63,12 @@ void Server::Communication::start_accept()
 void Server::Communication::handle_accept(tcp_connection::pointer& new_connection,
 					  const boost::system::error_code& error)
 {
+  static int	incr = 0;
+
   if (!error)
     {
-      boost::unique_lock<boost::mutex> lhs_lock(_m_clients, boost::defer_lock);
-      boost::unique_lock<boost::mutex> rhs_lock(_m_incr, boost::defer_lock);
-      boost::lock(lhs_lock, rhs_lock);
-      /// FIXME: not thread safe.
+      // boost::lock_guard<boost::mutex> lock(_m_clients);
       clients[incr++] = new_connection;
-      // new_connection->start();
     }
   
   read_socket_handler* rsh = new read_socket_handler(new_connection, this);

@@ -18,9 +18,6 @@ GameData::World Game::getWorld() {
 
 void Game::drawWorld() {
     QGraphicsItem *item;
-    std::cout << "unit " << punit.size() << std::endl;
-    std::cout << "bullet " << pbullet.size() << std::endl;
-    std::cout << "elem " << pelem.size() << std::endl;
     GameData::Physics::Coord c;
     QGraphicsScene *scene = new QGraphicsScene(0, 0, 800, 600, ui);
     // FIXME: use ressource loading
@@ -31,37 +28,39 @@ void Game::drawWorld() {
         for (std::list<GameData::Physics::Coord>::iterator ite = p.vertices.begin(); ite != p.vertices.end(); ++ite) {
             c = *ite;
             poly << QPoint(c.x, c.y);
-            std::cout << c.x << " " << c.y << std::endl;
+//            std::cout << c.x << " " << c.y << std::endl;
         }
         p = *it;
         item = scene->addPolygon(poly);
         item->setPos(p.x, p.y);
+        poly.empty();
     }
     for (std::list<GameData::Physics>::iterator it = punit.begin(); it != punit.end(); ++it) {
         for (std::list<GameData::Physics::Coord>::iterator ite = p.vertices.begin(); ite != p.vertices.end(); ++ite) {
             c = *ite;
             poly << QPoint(c.x, c.y);
-            std::cout << c.x << " " << c.y << std::endl;
+//            std::cout << c.x << " " << c.y << std::endl;
         }
-        std::cout << "try" << std::endl;
         p = *it;
-        if (!(xref && yref)) {
+        if (!(xref || yref)) {
             xref = p.x;
             yref = p.y;
-            std::cout << "set default " << p.x << " " << p.y;
+            std::cout << "set default " << xref << " " << yref << std::endl;
         }
         item = scene->addPolygon(poly);
         item->setPos(p.x, p.y);
+        poly.empty();
     }
     for (std::list<GameData::Physics>::iterator it = pbullet.begin(); it != pbullet.end(); ++it) {
         for (std::list<GameData::Physics::Coord>::iterator ite = p.vertices.begin(); ite != p.vertices.end(); ++ite) {
             c = *ite;
             poly << QPoint(c.x, c.y);
-            std::cout << c.x << " " << c.y << std::endl;
+//            std::cout << c.x << " " << c.y << std::endl;
         }
         p = *it;
         item = scene->addPolygon(poly);
         item->setPos(p.x, p.y);
+        poly.empty();
     }
     ui->ui->Gameview->setScene(scene);
     ui->ui->Gameview->show();

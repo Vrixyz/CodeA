@@ -35,6 +35,7 @@ public:
     ~MainWindow();
     Ui::MainWindow *ui;
     void keyPressEvent(QKeyEvent *);
+    void keyReleaseEvent(QKeyEvent *);
     
 private slots:
     void Playagain();
@@ -45,6 +46,8 @@ private:
     Nm *n;
     Game *game;
     bool ingame;
+    int dvectorx;
+    int dvectory;
 };
 
 #endif // MAINWINDOW_H

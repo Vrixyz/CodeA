@@ -53,7 +53,7 @@ void MainWindow::on_loginb_pressed()
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *e) {
-
+    bool sendable = false;
     if (ingame && !(e->isAutoRepeat())) {
         GameData::Command cmd;
         msgpack::sbuffer sbuf;
@@ -64,41 +64,49 @@ void MainWindow::keyPressEvent(QKeyEvent *e) {
             break;
         case Qt::Key_W:
             std::cout << "UP !" << std::endl;
+            sendable = true;
             dvectory += 1;
             cmd.type = 3;
             break;
         case Qt::Key_A:
             std::cout << "LEFT !" << std::endl;
+            sendable = true;
             dvectorx -= 1;
             cmd.type = 3;
             break;
         case Qt::Key_S:
             std::cout << "DOWN !" << std::endl;
+            sendable = true;
             dvectory -= 1;
             cmd.type = 3;
             break;
         case Qt::Key_D:
             std::cout << "RIGHT !" << std::endl;
+            sendable = true;
             dvectorx += 1;
             cmd.type = 3;
             break;
         case Qt::Key_Up:
             std::cout << "UP !" << std::endl;
+            sendable = true;
             dvectory += 1;
             cmd.type = 3;
             break;
         case Qt::Key_Left:
             std::cout << "LEFT !" << std::endl;
+            sendable = true;
             dvectorx -= 1;
             cmd.type = 3;
             break;
         case Qt::Key_Down:
             std::cout << "DOWN !" << std::endl;
+            sendable = true;
             dvectory -= 1;
             cmd.type = 3;
             break;
         case Qt::Key_Right:
             std::cout << "RIGHT !" << std::endl;
+            sendable = true;
             dvectorx += 1;
             cmd.type = 3;
             break;
@@ -108,14 +116,17 @@ void MainWindow::keyPressEvent(QKeyEvent *e) {
         }
         cmd.x = dvectorx;
         cmd.y = dvectory;
-        std::cout << "vector : (" << cmd.x << ", " << cmd.y << ")" << std::endl;
-        packet.pack(cmd);
-        n->sendToServer(sbuf);
+        std::cout << "press => vector : (" << cmd.x << ", " << cmd.y << ")" << std::endl;
+        if (sendable)
+        {
+            packet.pack(cmd);
+            n->sendToServer(sbuf);
+        }
     }
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent *e) {
-
+    bool sendable = false;
     if (ingame && !(e->isAutoRepeat())) {
         GameData::Command cmd;
         msgpack::sbuffer sbuf;
@@ -126,41 +137,49 @@ void MainWindow::keyReleaseEvent(QKeyEvent *e) {
             break;
         case Qt::Key_W:
             std::cout << "UP !" << std::endl;
+            sendable = true;
             cmd.type = 3;
             dvectory -= 1;
             break;
         case Qt::Key_A:
             std::cout << "LEFT !" << std::endl;
+            sendable = true;
             cmd.type = 3;
             dvectorx += 1;
             break;
         case Qt::Key_S:
             std::cout << "DOWN !" << std::endl;
+            sendable = true;
             cmd.type = 3;
             dvectory += 1;
             break;
         case Qt::Key_D:
             std::cout << "RIGHT !" << std::endl;
+            sendable = true;
             cmd.type = 3;
             dvectorx -= 1;
             break;
         case Qt::Key_Up:
             std::cout << "UP !" << std::endl;
+            sendable = true;
             cmd.type = 3;
             dvectory -= 1;
             break;
         case Qt::Key_Left:
             std::cout << "LEFT !" << std::endl;
+            sendable = true;
             cmd.type = 3;
             dvectorx += 1;
             break;
         case Qt::Key_Down:
             std::cout << "DOWN !" << std::endl;
+            sendable = true;
             cmd.type = 3;
             dvectory += 1;
             break;
         case Qt::Key_Right:
             std::cout << "RIGHT !" << std::endl;
+            sendable = true;
             cmd.type = 3;
             dvectorx -= 1;
             break;
@@ -170,8 +189,11 @@ void MainWindow::keyReleaseEvent(QKeyEvent *e) {
         }
         cmd.x = dvectorx;
         cmd.y = dvectory;
-        std::cout << "vector : (" << cmd.x << ", " << cmd.y << ")" << std::endl;
-        packet.pack(cmd);
-        n->sendToServer(sbuf);
+        std::cout << "release => vector : (" << cmd.x << ", " << cmd.y << ")" << std::endl;
+        if (sendable)
+        {
+            packet.pack(cmd);
+            n->sendToServer(sbuf);
+        }
     }
 }

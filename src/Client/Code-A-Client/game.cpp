@@ -19,7 +19,7 @@ GameData::World Game::getWorld() {
 void Game::drawWorld() {
     QGraphicsItem *item;
     GameData::Physics::Coord c;
-    QGraphicsScene *scene = new QGraphicsScene(0, 0, 800, 600, ui);
+    QGraphicsScene *scene = new QGraphicsScene(0, 0, 700, 500, ui);
     // FIXME: use ressource loading
     QPolygon poly;
 //    QPixmap grass("/home/edouard/proj_temp/CodeA/src/Client/Code-A-Client/grass.png");
@@ -33,7 +33,6 @@ void Game::drawWorld() {
         p = *it;
         item = scene->addPolygon(poly);
         item->setPos(p.x, p.y);
-        poly.empty();
     }
     for (std::list<GameData::Physics>::iterator it = punit.begin(); it != punit.end(); ++it) {
         for (std::list<GameData::Physics::Coord>::iterator ite = p.vertices.begin(); ite != p.vertices.end(); ++ite) {
@@ -49,7 +48,6 @@ void Game::drawWorld() {
         }
         item = scene->addPolygon(poly);
         item->setPos(p.x, p.y);
-        poly.empty();
     }
     for (std::list<GameData::Physics>::iterator it = pbullet.begin(); it != pbullet.end(); ++it) {
         for (std::list<GameData::Physics::Coord>::iterator ite = p.vertices.begin(); ite != p.vertices.end(); ++ite) {
@@ -60,7 +58,6 @@ void Game::drawWorld() {
         p = *it;
         item = scene->addPolygon(poly);
         item->setPos(p.x, p.y);
-        poly.empty();
     }
     ui->ui->Gameview->setScene(scene);
     ui->ui->Gameview->show();

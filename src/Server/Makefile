@@ -28,7 +28,7 @@ OBJ_CL	=	$(SRC_CL:.cpp=.o)
 
 OBJ_SR	=	$(SRC_SR:.cpp=.o)
 
-LIBS	=	-lboost_system -lmsgpack -lBox2D -lboost_thread
+LIBS	=	-lboost_system -lmsgpack -lBox2D -lboost_thread -lpthread
 
 CXXFLAGS=	-W -Wall -Wextra
 

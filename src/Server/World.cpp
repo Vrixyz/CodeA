@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Mon Oct 29 16:49:56 2012 mathieu leurquin
+// Last update Tue Oct 30 17:10:00 2012 Edouard Brunvarlet
 //
 
 #include "World.hpp"
@@ -22,7 +22,6 @@ void	Server::World::init(int width, int height)
 
   // FIXME: we must create the player and the unit at the connection !
   u->addPlayer(&this->createPlayer(0));
-  units.push_back(u);
   this->createElement(true, 100, 100);
   communication.init();
 }

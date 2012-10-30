@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 13:21:11 2012 thierry berger
-// Last update Sun Oct 28 12:22:53 2012 thierry berger
+// Last update Tue Oct 30 13:44:58 2012 mathieu leurquin
 //
 
 #include "Unit.hpp"
@@ -159,11 +159,24 @@ void	Server::Unit::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
 
 void Server::Unit::move(float x, float y)
 {
-  current.x = x - current.x;
-  current.y = y - current.y;
-  float impulseX = _body->GetMass() * current.x;
-  float impulseY = _body->GetMass() * current.y;
+  float impulseX = _body->GetMass() * x;
+  float impulseY = _body->GetMass() * y;
+  float im;
 
+  current = _body->GetLinearVelocity();
+  if (x == 0 && y == 0)
+    {
+      if (current.y != 0)
+	{
+	  im = 0 - current.y;
+	  _body->ApplyLinearImpulse(b2Vec2(0, im), _body->GetWorldCenter());
+	}
+      else if (current.x != 0)
+	{
+	  im = 0 - current.x;
+	  _body->ApplyLinearImpulse(b2Vec2(im, 0), _body->GetWorldCenter());
+	}
+    }
   _body->ApplyLinearImpulse(b2Vec2(impulseX, impulseY), _body->GetWorldCenter());
   std::cout<<"Move" << impulseX << ";" << impulseY <<std::endl;
 }

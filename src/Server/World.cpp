@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Tue Oct 30 16:20:53 2012 mathieu leurquin
+// Last update Tue Oct 30 16:41:56 2012 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -36,6 +36,7 @@ void	Server::World::run()
   timer.Reset();
   while (1)
     {
+	  std::cout << "debutloop" << std::endl;
       if (timer.GetMilliseconds() + rest >= TIMESTEP)
 	{
 	  rest = timer.GetMilliseconds() + rest - TIMESTEP;
@@ -100,16 +101,18 @@ void	Server::World::run()
 	      	  }
 		  
 	      	}
-	      
-	      //delete clients
+	      	  // ] DEBUG
+	     }
+	   //delete clients
 
-	      for (std::list<int>::iterator it = communication.clientsErase.begin(); it != communication.clientsErase.end(); it++)
-		{
-		  communication.clients.erase(*it);
-		}
-	      // FIXME: downgrade mutex here (should be at the end of sendToClient actually)
-	    }
-	  // ] DEBUG
+	   std::cout<<"begin erase"<<std::endl;
+	   for (std::list<int>::iterator it = communication.clientsErase.begin(); it != communication.clientsErase.end(); it++)
+	     {
+	       std::cout<<"erase"<<std::endl;
+	       communication.clients.erase(*it);
+	     }
+	   std::cout<<"end erase"<<std::endl;
+	   // FIXME: downgrade mutex here (should be at the end of sendToClient actually)
 	}
       // FIXME: think more about that sleep.
       usleep(500);

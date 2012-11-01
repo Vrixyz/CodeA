@@ -19,46 +19,51 @@ GameData::World Game::getWorld() {
 void Game::drawWorld() {
     QGraphicsItem *item;
     GameData::Physics::Coord c;
-    QGraphicsScene *scene = new QGraphicsScene(0, 0, 700, 500, ui);
-    // FIXME: use ressource loading
-    QPolygon poly;
-//    QPixmap grass("/home/edouard/proj_temp/CodeA/src/Client/Code-A-Client/grass.png");
+    QGraphicsScene *scene = new QGraphicsScene(0, 0, 400, 400, ui);
+    //    QPolygon poly;
     GameData::Physics p;
-    for (std::list<GameData::Physics>::iterator it = pelem.begin(); it != pelem.end(); ++it) {
-        for (std::list<GameData::Physics::Coord>::iterator ite = p.vertices.begin(); ite != p.vertices.end(); ++ite) {
+    for (std::list<GameData::Physics>::iterator it = pelem.begin(); it != pelem.end(); it++) {
+        QPolygon *poly = new QPolygon();
+        p = *it;
+        for (std::list<GameData::Physics::Coord>::iterator ite = p.vertices.begin(); ite != p.vertices.end(); ite++) {
             c = *ite;
-            poly << QPoint(c.x, c.y);
+            (*poly) << QPoint(c.x, c.y);
 //            std::cout << c.x << " " << c.y << std::endl;
         }
-        p = *it;
-        item = scene->addPolygon(poly);
+        item = scene->addPolygon(*poly);
+//        std::cout << "Elem : " << p.x << " " << p.y << std::endl;
         item->setPos(p.x, p.y);
     }
-    for (std::list<GameData::Physics>::iterator it = punit.begin(); it != punit.end(); ++it) {
-        for (std::list<GameData::Physics::Coord>::iterator ite = p.vertices.begin(); ite != p.vertices.end(); ++ite) {
+    for (std::list<GameData::Physics>::iterator it = punit.begin(); it != punit.end(); it++) {
+        p = *it;
+        QPolygon *poly = new QPolygon();
+        for (std::list<GameData::Physics::Coord>::iterator ite = p.vertices.begin(); ite != p.vertices.end(); ite++) {
             c = *ite;
-            poly << QPoint(c.x, c.y);
+            (*poly) << QPoint(c.x, c.y);
 //            std::cout << c.x << " " << c.y << std::endl;
         }
-        p = *it;
         if (!(xref || yref)) {
             xref = p.x;
             yref = p.y;
             std::cout << "set default " << xref << " " << yref << std::endl;
         }
-        item = scene->addPolygon(poly);
+        item = scene->addPolygon(*poly);
+//        std::cout << "Unit : " << p.x << " " << p.y << " " << punit.size() << std::endl;
         item->setPos(p.x, p.y);
     }
-    for (std::list<GameData::Physics>::iterator it = pbullet.begin(); it != pbullet.end(); ++it) {
-        for (std::list<GameData::Physics::Coord>::iterator ite = p.vertices.begin(); ite != p.vertices.end(); ++ite) {
-            c = *ite;
-            poly << QPoint(c.x, c.y);
-//            std::cout << c.x << " " << c.y << std::endl;
-        }
+    for (std::list<GameData::Physics>::iterator it = pbullet.begin(); it != pbullet.end(); it++) {
         p = *it;
-        item = scene->addPolygon(poly);
+        QPolygon *poly = new QPolygon();
+        for (std::list<GameData::Physics::Coord>::iterator ite = p.vertices.begin(); ite != p.vertices.end(); ite++) {
+            c = *ite;
+            (*poly) << QPoint(c.x, c.y);
+            //            std::cout << c.x << " " << c.y << std::endl;
+        }
+        item = scene->addPolygon(*poly);
+//        std::cout << "Bullet : " << p.x << " " << p.y << std::endl;
         item->setPos(p.x, p.y);
     }
     ui->ui->Gameview->setScene(scene);
+    //    ui->ui->Gameview->setFixedSize(200, 200);
     ui->ui->Gameview->show();
 }

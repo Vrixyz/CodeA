@@ -48,6 +48,7 @@ void	Server::World::run()
 
 	  // FIXME: Actually, seems not, add shared_ptr please (meaning no one else will modify this connection (like closing it !)
 	   // boost::lock_guard<boost::mutex> lock(communication._m_clients);
+	  boost::lock_guard<boost::mutex> lock(communication._m_clients);
 	   for (std::map<int, tcp_connection::pointer>::const_iterator
 		 it = communication.clients.begin(); it != communication.clients.end();
  	       it++)
@@ -56,9 +57,6 @@ void	Server::World::run()
 	      //Interpret cmd
  	      GameData::Command *c;
 
-	      // FIXME: cmds is modified by World and Communication, which are different threads, this could lead to problems, lock_guard needed (or smth equivalent)
-	      // INFO: this would lead to 2 locks at the same time for the same running code, care to deadlocks ! (unique/defer_lock might be an option)
-	      // std::cout<<"debut cmd"<<std::endl;
 	      for (unsigned int i = 0; i < communication.cmds.size(); i++)
 		{
 		  if (communication.cmds[i].second == it->second)
@@ -69,15 +67,11 @@ void	Server::World::run()
 			    {
 			      c = &communication.cmds[i].first;
 			      ((*itu)->*fcts[c->getType()])(c->x, c->y);
-			      // WTF ?
-			      // communication.cmds.pop_back();
 			      break;
 			    }
 			}
 		    }
 		}
-	      // BAAAAAH C'EST ULTRA MOCHE FAUT FAIRE CA THREAD SAFE AU SECOURS !
-	      // (avec le bloc du dessus evidemment patate)
 	      while (communication.cmds.size() > 0)
 		{
 		  communication.cmds.pop_back();

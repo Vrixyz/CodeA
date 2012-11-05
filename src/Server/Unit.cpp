@@ -54,6 +54,7 @@ void	Server::Unit::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
 
 void Server::Unit::askMove(float x, float y)
 {
+  std::cout<<"Move " << x << ";" << y <<std::endl;
   current.x = x;
   current.y = y;
 }
@@ -87,7 +88,7 @@ void Server::Unit::move(float x, float y)
 	}
     }
   _body->ApplyLinearImpulse(b2Vec2(impulseX, impulseY), _body->GetWorldCenter());
-  std::cout<<"Move" << impulseX << ";" << impulseY <<std::endl;
+  // std::cout<<"Move" << impulseX << ";" << impulseY <<std::endl;
 }
 
 void Server::Unit::update(float elapsedMilliseconds)

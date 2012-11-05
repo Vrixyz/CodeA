@@ -85,6 +85,7 @@ namespace Server
 	    msgpack::object obj = result.get();
 	    obj.convert(&c);
 	    _command = c;
+	    boost::lock_guard<boost::mutex> lock(_com->_m_clients);
 	    _com->cmds.push_back(std::pair<GameData::Command, tcp_connection::pointer>(c, _connection));	    
 	  }
 	setHandler();

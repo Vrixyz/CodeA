@@ -16,12 +16,14 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     nm.cpp \
     game.cpp \
-    mainpage.cpp
+    mainpage.cpp \
+    mage.cpp
 
 HEADERS  += mainwindow.h \
     nm.h \
     game.h \
-    mainpage.h
+    mainpage.h \
+    mage.h
 
 FORMS    += mainwindow.ui \
     mainpage.ui

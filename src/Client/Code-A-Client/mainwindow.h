@@ -18,6 +18,7 @@
 #include <QRect>
 #include <QPolygon>
 #include <QPoint>
+#include <QLine>
 
 class Nm;
 

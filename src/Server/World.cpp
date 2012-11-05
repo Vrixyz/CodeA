@@ -15,7 +15,7 @@ void	Server::World::init(int width, int height)
   fcts[GameData::Command::Fire] = &Server::Unit::fire;
   fcts[GameData::Command::MoveTo] = &Server::Unit::moveTo;
   fcts[GameData::Command::AimTo] = &Server::Unit::aimTo;  
-  fcts[GameData::Command::Move] = &Server::Unit::move;
+  fcts[GameData::Command::Move] = &Server::Unit::askMove;
 
   Server::Unit *u;
   u = this->createUnit();
@@ -35,13 +35,11 @@ void	Server::World::run()
   timer.Reset();
   while (1)
     {
-	  std::cout << "debutloop" << std::endl;
       if (timer.GetMilliseconds() + rest >= TIMESTEP)
 	{
 	  rest = timer.GetMilliseconds() + rest - TIMESTEP;
 	  timer.Reset();
 	  _physicWorld.Step(TIMESTEP, VELOCITY_ITERATION, POSITION_ITERATION);
-	  std::cout << "debut update boucle" << std::endl;
 
 
 	  // DEBUG [
@@ -54,18 +52,13 @@ void	Server::World::run()
 		 it = communication.clients.begin(); it != communication.clients.end();
  	       it++)
 	     {
-	       msgpack::sbuffer sbuf;
-	       msgpack::packer<msgpack::sbuffer> packet(&sbuf);
-	       
-	      /// TODO: sepcify type of sent data (here: World)
-	      serialize(packet);
 	      
-	      //Execute cmd
+	      //Interpret cmd
  	      GameData::Command *c;
 
 	      // FIXME: cmds is modified by World and Communication, which are different threads, this could lead to problems, lock_guard needed (or smth equivalent)
 	      // INFO: this would lead to 2 locks at the same time for the same running code, care to deadlocks ! (unique/defer_lock might be an option)
-	      std::cout<<"debut cmd"<<std::endl;
+	      // std::cout<<"debut cmd"<<std::endl;
 	      for (unsigned int i = 0; i < communication.cmds.size(); i++)
 		{
 		  if (communication.cmds[i].second == it->second)
@@ -76,41 +69,61 @@ void	Server::World::run()
 			    {
 			      c = &communication.cmds[i].first;
 			      ((*itu)->*fcts[c->getType()])(c->x, c->y);
-			      communication.cmds.pop_back();
+			      // WTF ?
+			      // communication.cmds.pop_back();
 			      break;
 			    }
 			}
 		    }
 		}
-	      std::cout<<"fin cmd"<<std::endl;
-	      
-	      // FIXME: sendToClient will lock_guard on clients, meaning it will deadlock if we shared_lock earlier. (solution would be to upgrade the lock (in sendToClient, and set an upgradeable lock in before this loop))
-	      if (communication.sendToClient(sbuf, it->first))
-	      	{
+	      // BAAAAAH C'EST ULTRA MOCHE FAUT FAIRE CA THREAD SAFE AU SECOURS !
+	      // (avec le bloc du dessus evidemment patate)
+	      while (communication.cmds.size() > 0)
+		{
+		  communication.cmds.pop_back();
+		}
+	     }
+	   for (std::list<Server::Unit*>::iterator itu = units.begin(); itu != units.end(); itu++)
+	     {
+	       (*itu)->update(TIMESTEP);
+	     }
+	   
+	   for (std::map<int, tcp_connection::pointer>::const_iterator
+		  it = communication.clients.begin(); it != communication.clients.end();
+		it++)
+	     {
+	       msgpack::sbuffer sbuf;
+	       msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+	       
+	       /// TODO: sepcify type of sent data (here: World)
+	       /// TODO: send different packet depending on client (fog of war, etc...)
+	       serialize(packet);
+
+
+	       // FIXME: sendToClient will lock_guard on clients, meaning it will deadlock if we shared_lock earlier. (solution would be to upgrade the lock (in sendToClient, and set an upgradeable lock in before this loop))
+	       if (communication.sendToClient(sbuf, it->first))
+		 {
 		  
-	      	  msgpack::unpacker pac;
-	      	  pac.reserve_buffer(sbuf.size());
-	      	  memcpy(pac.buffer(), sbuf.data(), sbuf.size());
-	      	  pac.buffer_consumed(sbuf.size());
+		   msgpack::unpacker pac;
+		   pac.reserve_buffer(sbuf.size());
+		   memcpy(pac.buffer(), sbuf.data(), sbuf.size());
+		   pac.buffer_consumed(sbuf.size());
 		  
-	      	  //	  now starts streaming deserialization.
-	      	  msgpack::unpacked result;
-	      	  while(pac.next(&result)) {
-	      	    // std::cout << result.get() << std::endl;
-	      	  }
+		   //	  now starts streaming deserialization.
+		   msgpack::unpacked result;
+		   while(pac.next(&result)) {
+		     // std::cout << result.get() << std::endl;
+		   }
 		  
-	      	}
-	      	  // ] DEBUG
+		 }
+	       // ] DEBUG
 	     }
 	   //delete clients
 
-	   std::cout<<"begin erase"<<std::endl;
 	   for (std::list<int>::iterator it = communication.clientsErase.begin(); it != communication.clientsErase.end(); it++)
 	     {
-	       std::cout<<"erase"<<std::endl;
 	       communication.clients.erase(*it);
 	     }
-	   std::cout<<"end erase"<<std::endl;
 	   // FIXME: downgrade mutex here (should be at the end of sendToClient actually)
 	}
       // FIXME: think more about that sleep.

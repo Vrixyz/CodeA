@@ -24,7 +24,8 @@ namespace Server
   public:
     GameData::Unit _data;
     b2Vec2 current;
-
+    
+    
     Unit(World& world, int id) : Object(world, Object::Unit, id), _data(id, 10), current(0, 0) {}
 
     virtual b2Body*	setBody();
@@ -34,18 +35,13 @@ namespace Server
     void fire(float x, float y);
     void aimTo(float x, float y);
     void moveTo(float x, float y);
-    // void goUp();
-    // void goRight();
-    // void goDown();
-    // void goLeft();
-    // void stopUp();
-    // void stopRight();
-    // void stopDown();
-    // void stopLeft();
+    void askMove(float x, float y);
     void move(float x, float y);
+    virtual void update(float elapsedMilliseconds);
     virtual void serialize(msgpack::packer<msgpack::sbuffer>& packet) const;
     virtual bool unSerialize(msgpack::packer<msgpack::sbuffer>& packet) {return false;}
     virtual int	getClassId() const {return 0;}
+    
   };
 }
 

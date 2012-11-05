@@ -18,9 +18,12 @@ b2Body*	Server::Unit::setBody()
   uBDef.fixedRotation = true;
   uBDef.type = b2_dynamicBody;
   uBDef.gravityScale = 0;
+  uBDef.bullet = true;
+  uBDef.position.Set(0, 0);  
   this->_body = _world._physicWorld.CreateBody(&uBDef);
   b2PolygonShape unitShape;
   unitShape.SetAsBox(2, 2);
+  
   b2FixtureDef fDef;
   fDef.shape = &unitShape;
   this->_body->CreateFixture(&fDef);
@@ -49,113 +52,11 @@ void	Server::Unit::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
   packet.pack(this->getPhysics());
 }
 
-// void	Server::Unit::goUp()
-// {
-//   if (direction.get(1) == 0)
-//     {
-//       b2Vec2 vel = _body->GetLinearVelocity();
-//       float desiredVel = 5;
-//       float velChange = desiredVel - vel.y;
-//       float impulse = _body->GetMass() * velChange;
-      
-//       _body->ApplyLinearImpulse(b2Vec2(0, impulse), _body->GetWorldCenter());
-//       direction.set(1);
-//     }
-// }
-
-// void	Server::Unit::goRight()
-// {
-//   if (direction.get(2) == 0)
-//     {
-//       b2Vec2 vel = _body->GetLinearVelocity();
-//       float desiredVel = 5;
-//       float velChange = desiredVel - vel.x;
-//       float impulse = _body->GetMass() * velChange;
-      
-//       _body->ApplyLinearImpulse(b2Vec2(impulse, 0), _body->GetWorldCenter());
-//       direction.set(2);
-//     }
-// }
-
-// void	Server::Unit::goDown()
-// {
-//   if (direction.get(3) == 0)
-//     {
-//       b2Vec2 vel = _body->GetLinearVelocity();
-//       float desiredVel = -5;
-//       float velChange = desiredVel - vel.y;
-//       float impulse = _body->GetMass() * velChange;
-      
-//       _body->ApplyLinearImpulse(b2Vec2(0, impulse), _body->GetWorldCenter());
-//       direction.set(3);
-//     }
-// }
-// void Server::Unit::goLeft()
-// {
-//   if (direction.get(4) == 0)
-//     {
-//       b2Vec2 vel = _body->GetLinearVelocity();
-//       float desiredVel = 5;
-//       float velChange = desiredVel - vel.x;
-//       float impulse = _body->GetMass() * velChange;
-      
-//       _body->ApplyLinearImpulse(b2Vec2(impulse, 0), _body->GetWorldCenter());
-//       direction.set(4);
-//     }
-// }
-
-// void Server::Unit::stopUp()
-// {
-//   if (direction.get(1) == 1)
-//     {
-//       b2Vec2 vel = _body->GetLinearVelocity();
-//       float desiredVel = 0;
-//       float velChange = desiredVel - 5;
-//       float impulse = _body->GetMass() * velChange;
-      
-//       _body->ApplyLinearImpulse(b2Vec2(0, impulse), _body->GetWorldCenter());
-//       direction.unset(1);
-//     }
-// }
-
-// void Server::Unit::stopRight()
-// {
-//   if (direction.get(2) == 1)
-//     {
-//       float desiredVel = 0;
-//       float velChange = desiredVel - 5;
-//       float impulse = _body->GetMass() * velChange;
-      
-//       _body->ApplyLinearImpulse(b2Vec2(impulse, 0), _body->GetWorldCenter());
-//       direction.unset(2);
-//     }
-// }
-
-// void Server::Unit::stopDown()
-// {
-//   if (direction.get(3) == 1)
-//     {
-//       float desiredVel = 0;
-//       float velChange = desiredVel - 5;
-//       float impulse = _body->GetMass() * velChange;
-      
-//       _body->ApplyLinearImpulse(b2Vec2(0, impulse), _body->GetWorldCenter());
-//       direction.unset(3);
-//     }
-// }
-
-// void Server::Unit::stopLeft()
-// {
-//   if (direction.get(4) == 1)
-//     {
-//       float desiredVel = 0;
-//       float velChange = desiredVel - 5;
-//       float impulse = _body->GetMass() * velChange;
-      
-//       _body->ApplyLinearImpulse(b2Vec2(impulse, 0), _body->GetWorldCenter());
-//       direction.unset(4);
-//     }
-// }
+void Server::Unit::askMove(float x, float y)
+{
+  current.x = x;
+  current.y = y;
+}
 
 void Server::Unit::move(float x, float y)
 {
@@ -163,29 +64,37 @@ void Server::Unit::move(float x, float y)
   float impulseY = _body->GetMass() * y;
   float im;
   float im1;
+  b2Vec2 actualLinearVelocity;
 
-  current = _body->GetLinearVelocity();
+  actualLinearVelocity = _body->GetLinearVelocity();
   if (x == 0 && y == 0)
     {
-      if (current.y != 0 && current.x != 0)
+      if (actualLinearVelocity.y != 0 && actualLinearVelocity.x != 0)
 	{
-	  im = 0 - current.x;
-	  im1 = 0 - current.y;
+	  im = 0 - actualLinearVelocity.x;
+	  im1 = 0 - actualLinearVelocity.y;
 	  _body->ApplyLinearImpulse(b2Vec2(im, im1), _body->GetWorldCenter());
 	}
-      if (current.y != 0)
+      if (actualLinearVelocity.y != 0)
 	{
-	  im = 0 - current.y;
+	  im = 0 - actualLinearVelocity.y;
 	  _body->ApplyLinearImpulse(b2Vec2(0, im), _body->GetWorldCenter());
 	}
-      else if (current.x != 0)
+      else if (actualLinearVelocity.x != 0)
 	{
-	  im = 0 - current.x;
+	  im = 0 - actualLinearVelocity.x;
 	  _body->ApplyLinearImpulse(b2Vec2(im, 0), _body->GetWorldCenter());
 	}
     }
   _body->ApplyLinearImpulse(b2Vec2(impulseX, impulseY), _body->GetWorldCenter());
   std::cout<<"Move" << impulseX << ";" << impulseY <<std::endl;
+}
+
+void Server::Unit::update(float elapsedMilliseconds)
+{
+  // b2Vec2 curVel = _body->GetLinearVelocity();
+  // if (curVel.x != current.x && curVel.y != current.y)
+    this->move(current.x, current.y);
 }
 
 void Server::Unit::fire(float x, float y)

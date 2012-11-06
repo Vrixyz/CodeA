@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:00:00 2012 mathieu leurquin
-// Last update Mon Nov  5 12:32:57 2012 mathieu leurquin
+// Last update Tue Nov  6 10:52:08 2012 mathieu leurquin
 //
 
 #ifndef SERVER_UNIT_HPP
@@ -33,7 +33,6 @@ namespace Server
     void fire(float x, float y);
     void aimTo(float x, float y);
     void moveTo(float x, float y);
-    void 
     // void goUp();
     // void goRight();
     // void goDown();
@@ -44,9 +43,13 @@ namespace Server
     // void stopLeft();
     void move(float x, float y);
     void shield(float x, float y);
+    void askMove(float x, float y);
+    void move(float x, float y);
+    virtual void update(float elapsedMilliseconds);
     virtual void serialize(msgpack::packer<msgpack::sbuffer>& packet) const;
     virtual bool unSerialize(msgpack::packer<msgpack::sbuffer>& packet) {return false;}
     virtual int	getClassId() const {return 0;}
+    
   };
 }
 

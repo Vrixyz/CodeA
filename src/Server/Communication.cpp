@@ -18,7 +18,6 @@ void	Server::Communication::init()
 
 bool Server::Communication::sendToClient(const msgpack::sbuffer& packedInformation, int clientId)
 {
-  std::cout<<"debut send"<<std::endl;
   if (!clients[clientId])
     {
       std::cout<<"fin send (erased)"<<std::endl;
@@ -47,7 +46,6 @@ bool Server::Communication::sendToClient(const msgpack::sbuffer& packedInformati
       std::cerr<<"Send to client fail : "<< e.what() << std::endl;
       exit(1);
     }
-  std::cout<<"fin send"<<std::endl;
   return true;
 }
 

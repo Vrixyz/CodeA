@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 13:21:11 2012 thierry berger
-// Last update Mon Nov  5 12:58:20 2012 mathieu leurquin
+// Last update Tue Nov  6 10:52:33 2012 mathieu leurquin
 //
 
 #include "Unit.hpp"
@@ -18,9 +18,12 @@ b2Body*	Server::Unit::setBody(BitField *b)
   uBDef.fixedRotation = true;
   uBDef.type = b2_dynamicBody;
   uBDef.gravityScale = 0;
+  uBDef.bullet = true;
+  uBDef.position.Set(0, 0);  
   this->_body = _world._physicWorld.CreateBody(&uBDef);
   b2PolygonShape unitShape;
   unitShape.SetAsBox(2, 2);
+  
   b2FixtureDef fDef;
   fDef.shape = &unitShape;
   fDef.filter.categoryBits = b->what;
@@ -56,34 +59,50 @@ void	Server::Unit::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
   packet.pack(this->getPhysics());
 }
 
+void Server::Unit::askMove(float x, float y)
+{
+  std::cout<<"Move " << x << ";" << y <<std::endl;
+  current.x = x;
+  current.y = y;
+}
+
 void Server::Unit::move(float x, float y)
 {
   float impulseX = _body->GetMass() * x;
   float impulseY = _body->GetMass() * y;
   float im;
   float im1;
+  b2Vec2 actualLinearVelocity;
 
-  current = _body->GetLinearVelocity();
+  actualLinearVelocity = _body->GetLinearVelocity();
   if (x == 0 && y == 0)
     {
-      if (current.y != 0 && current.x != 0)
+      if (actualLinearVelocity.y != 0 && actualLinearVelocity.x != 0)
 	{
-	  im = 0 - current.x;
-	  im1 = 0 - current.y;
+	  im = 0 - actualLinearVelocity.x;
+	  im1 = 0 - actualLinearVelocity.y;
 	  _body->ApplyLinearImpulse(b2Vec2(im, im1), _body->GetWorldCenter());
 	}
-      if (current.y != 0)
+      if (actualLinearVelocity.y != 0)
 	{
-	  im = 0 - current.y;
+	  im = 0 - actualLinearVelocity.y;
 	  _body->ApplyLinearImpulse(b2Vec2(0, im), _body->GetWorldCenter());
 	}
-      else if (current.x != 0)
+      else if (actualLinearVelocity.x != 0)
 	{
-	  im = 0 - current.x;
+	  im = 0 - actualLinearVelocity.x;
 	  _body->ApplyLinearImpulse(b2Vec2(im, 0), _body->GetWorldCenter());
 	}
     }
   _body->ApplyLinearImpulse(b2Vec2(impulseX, impulseY), _body->GetWorldCenter());
+  // std::cout<<"Move" << impulseX << ";" << impulseY <<std::endl;
+}
+
+void Server::Unit::update(float elapsedMilliseconds)
+{
+  // b2Vec2 curVel = _body->GetLinearVelocity();
+  // if (curVel.x != current.x && curVel.y != current.y)
+    this->move(current.x, current.y);
 }
 
 void Server::Unit::fire(float x, float y)

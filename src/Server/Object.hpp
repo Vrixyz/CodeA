@@ -40,6 +40,7 @@ namespace Server
     b2Body* _body;
     GameData::Physics getPhysics() const;
     Object(World& world, Type type, int _id) : id(_id), _type(type), _world(world){}
+    virtual void update(float elapsedMilliseconds) {};
   public:   
     b2Body* getBody(){return _body;}
   };

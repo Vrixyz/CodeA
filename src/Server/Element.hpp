@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:16:58 2012 mathieu leurquin
-// Last update Fri Sep 14 10:33:57 2012 thierry berger
+// Last update Sat Nov  3 14:35:40 2012 mathieu leurquin
 //
 
 #ifndef SERVER_ELEMENT_HPP
@@ -13,6 +13,7 @@
 
 #include "../GameData/Element.hpp"
 #include "Object.hpp"
+#include "BitField.hpp"
 
 namespace Server
 {
@@ -23,7 +24,7 @@ namespace Server
     
     Element(World& world, int id, bool walkable) :
       Object(world, Object::Element, id), _data(id, walkable) {}
-    virtual b2Body* setBody(float width = 100, float height = 100);
+    virtual b2Body* setBody(BitField *b, float width = 100, float height = 100, int x = 10, int y = 10);
     const GameData::Element& getData()const {return _data;}
 
     virtual void serialize(msgpack::packer<msgpack::sbuffer>& packet) const;

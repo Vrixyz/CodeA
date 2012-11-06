@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Mon Oct 29 16:47:27 2012 mathieu leurquin
-// Last update Mon Oct 29 16:47:31 2012 mathieu leurquin
+// Last update Sat Nov  3 14:27:41 2012 mathieu leurquin
 //
 
 #ifndef SERVER_OBJECT_HPP

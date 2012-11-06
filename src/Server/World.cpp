@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Tue Nov  6 10:53:10 2012 mathieu leurquin
+// Last update Tue Nov  6 10:59:51 2012 mathieu leurquin
 //
 
 #include "World.hpp"

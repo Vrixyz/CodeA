@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:00:00 2012 mathieu leurquin
-// Last update Tue Nov  6 10:52:08 2012 mathieu leurquin
+// Last update Tue Nov  6 11:01:41 2012 mathieu leurquin
 //
 
 #ifndef SERVER_UNIT_HPP
@@ -25,7 +25,6 @@ namespace Server
     GameData::Unit _data;
     b2Vec2 current;
     Unit(World& world, int id) : Object(world, Object::Unit, id), _data(id, 10), current(0, 0) {}
-
     virtual b2Body*	setBody(BitField *b);
     const GameData::Unit& getData() const {return _data;}
     void addPlayer(Player* p);
@@ -33,6 +32,9 @@ namespace Server
     void fire(float x, float y);
     void aimTo(float x, float y);
     void moveTo(float x, float y);
+    void rotateLeft();
+    void rotateRight();
+    void rotateStop();
     // void goUp();
     // void goRight();
     // void goDown();
@@ -41,7 +43,6 @@ namespace Server
     // void stopRight();
     // void stopDown();
     // void stopLeft();
-    void move(float x, float y);
     void shield(float x, float y);
     void askMove(float x, float y);
     void move(float x, float y);

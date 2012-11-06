@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 13:21:11 2012 thierry berger
-// Last update Tue Nov  6 10:52:33 2012 mathieu leurquin
+// Last update Tue Nov  6 11:02:27 2012 mathieu leurquin
 //
 
 #include "Unit.hpp"
@@ -129,14 +129,14 @@ void Server::Unit::shield(float x, float y)
 
 void Server::Unit::rotateLeft()
 {
-  float impulse = body->GetInertia() * (-10);// disregard time factor
+  float impulse = this->getBody()->GetInertia() * (-10);// disregard time factor
  
   this->getBody()->ApplyAngularImpulse(impulse);
 }
 
 void Server::Unit::rotateRight()
 {
-  float impulse = body->GetInertia() * (-10);// disregard time factor
+  float impulse = this->getBody()->GetInertia() * (-10);// disregard time factor
  
   this->getBody()->ApplyAngularImpulse(impulse);
 }

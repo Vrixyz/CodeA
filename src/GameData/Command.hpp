@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Tue Sep 11 15:03:16 2012 thierry berger
-// Last update Sun Oct 28 11:27:46 2012 thierry berger
+// Last update Mon Nov  5 12:32:57 2012 mathieu leurquin
 //
 
 #ifndef GAME_DATA_HPP
@@ -21,8 +21,11 @@ namespace GameData
       {
 	Fire = 0,
 	MoveTo = 1, /// for RTS
-	AimTo = 2,
-	Move = 3
+	RotateLeft = 2,
+	RotateRight = 3,
+	RotateStop = 4,
+	Move = 5,
+	Shield = 6
       } Type;
     int type;
     float x;

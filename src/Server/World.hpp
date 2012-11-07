@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 10:46:49 2012 thierry berger
-// Last update Mon Oct 29 16:50:10 2012 mathieu leurquin
+// Last update Mon Nov  5 11:04:02 2012 mathieu leurquin
 //
 
 #ifndef SERVER_WORLD_HPP
@@ -21,7 +21,7 @@
 #include "Element.hpp"
 #include "Bullet.hpp"
 #include "Unit.hpp"
-
+#include "BitField.hpp"
 #include <list>
 
 #define VELOCITY_ITERATION 6
@@ -34,10 +34,11 @@ namespace Server
   class Unit;
   class Element;
   class Bullet;
+  // class MyContactListener;
   class	World : GameData::Serializable
   {
   public:
-
+    // static MyContactListener myContactListenerInstance;
     std::map<GameData::Command::Type, void (Server::Unit::*)(float x, float y)> fcts;
     
     /// TODO: Add a trash list to remove safely the bodies
@@ -53,8 +54,8 @@ namespace Server
     void run();
     void handleContact(b2Body object1, b2Body object2);
     Player& createPlayer(int id);
-    Server::Unit* createUnit();
-    Server::Element* createElement(bool walkable, float width, float height);
+    Server::Unit* createUnit(BitField *b);
+    Server::Element* createElement(bool walkable, float width, float height, BitField *b);
     Server::Bullet* createBullet(int damage);
     Player* getPlayer(int id);
     Server::Unit* getUnit(int id);
@@ -76,5 +77,6 @@ namespace Server
 }
 
 #include "Player.hpp"
+// #include "myContactListener.hpp"
 
 #endif

@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 19:13:12 2012 thierry berger
-// Last update Tue Oct 30 16:20:37 2012 mathieu leurquin
+// Last update Tue Oct 30 16:34:32 2012 mathieu leurquin
 //
 
 #include "Communication.hpp"
@@ -33,7 +33,9 @@ bool Server::Communication::sendToClient(const msgpack::sbuffer& packedInformati
 	  /// FIXME: some errors might be more or less killing than others.
 	  // clients[clientId].swap();
 	  std::cout<<"erase..."<<std::endl;
+	  
 	  clientsErase.push_back(clientId);
+	  clientsErase.unique();
 	  std::cout<<"erased !"<<std::endl;
 	  return false;
 	}

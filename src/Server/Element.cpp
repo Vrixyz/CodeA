@@ -5,12 +5,12 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 17:53:20 2012 thierry berger
-// Last update Sat Sep 15 18:56:14 2012 thierry berger
+// Last update Mon Nov  5 11:00:02 2012 mathieu leurquin
 //
 
 #include "Element.hpp"
 
-b2Body*	Server::Element::setBody(float width, float height)
+b2Body*	Server::Element::setBody(BitField *b, float width, float height, int x, int y)
 {
   b2BodyDef eBDef;
 
@@ -18,6 +18,7 @@ b2Body*	Server::Element::setBody(float width, float height)
   eBDef.fixedRotation = true;
   eBDef.type = b2_dynamicBody;
   eBDef.gravityScale = 0;
+  eBDef.position.Set(x, y);
   this->_body = _world._physicWorld.CreateBody(&eBDef);
 
   b2PolygonShape elementShape;
@@ -25,7 +26,15 @@ b2Body*	Server::Element::setBody(float width, float height)
 
   b2FixtureDef fDef;
   fDef.shape = &elementShape;
+  fDef.filter.categoryBits = b->what;
+  fDef.filter.maskBits = b->collide;
   this->_body->CreateFixture(&fDef);
+  
+  //collision
+  // std::string *s = new std::string("element");
+  // this->_body->SetUserData((void*)s);
+
+
   return this->_body;
 }
 

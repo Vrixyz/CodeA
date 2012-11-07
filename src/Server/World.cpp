@@ -5,24 +5,40 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Tue Oct 30 17:38:16 2012 Edouard Brunvarlet
+// Last update Wed Nov  7 15:08:07 2012 mathieu leurquin
 //
 
 #include "World.hpp"
 
+// Server::MyContactListener Server::World::myContactListenerInstance;
+
 void	Server::World::init(int width, int height)
 {
   fcts[GameData::Command::Fire] = &Server::Unit::fire;
+  fcts[GameData::Command::AimTo] = &Server::Unit::aimTo;  
   fcts[GameData::Command::MoveTo] = &Server::Unit::moveTo;
-  fcts[GameData::Command::AimTo] = &Server::Unit::aimTo;
   fcts[GameData::Command::Move] = &Server::Unit::askMove;
-
+  fcts[GameData::Command::RotateLeft] = &Server::Unit::rotateLeft;
+  fcts[GameData::Command::RotateRight] = &Server::Unit::rotateRight;
+  fcts[GameData::Command::RotateStop] = &Server::Unit::rotateStop;
+  fcts[GameData::Command::Shield] = &Server::Unit::shield;
+  
   Server::Unit *u;
-  u = this->createUnit();
-
+ 
   // FIXME: we must create the player and the unit at the connection !
-  u->addPlayer(&this->createPlayer(0));
-  this->createElement(true, 100, 100);
+  BitField *b = new  BitField(Server::BitField::MAGE, Server::BitField::MAGE);
+  
+  BitField *obs = new BitField(Server::BitField::OBSTACLE, Server::BitField::MAGE);
+  
+  // BitField *shield = new BitField(Server::BitField::SHIELD_MAGE, Server::BitField::OBSTACLE);
+
+  u = this->createUnit(b);
+   u->addPlayer(&this->createPlayer(0));
+  this->createElement(true, 100, 100, obs);
+  // this->createElement(true, 1, 10, shield);
+  
+  // _physicWorld.SetContactListener(&World::myContactListenerInstance);
+  
   communication.init();
 }
 
@@ -134,18 +150,18 @@ Server::Player&	Server::World::createPlayer(int id)
   return *p;
 }
 
-Server::Unit* Server::World::createUnit()
+Server::Unit* Server::World::createUnit(BitField *b)
 {
   Server::Unit* u = new Server::Unit(*this, (int)units.size());
-  u->setBody();
+  u->setBody(b);
   units.push_back(u);
   return u;
 }
 
-Server::Element* Server::World::createElement(bool walkable, float width, float height)
+Server::Element* Server::World::createElement(bool walkable, float width, float height, BitField *b)
 {
   Server::Element* e = new Element(*this, (int)elements.size(), walkable);
-  e->setBody(width, height);
+  e->setBody(b, width, height);
   elements.push_back(e);  
   return e;
 }

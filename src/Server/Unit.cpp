@@ -5,12 +5,12 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 13:21:11 2012 thierry berger
-// Last update Tue Oct 30 16:28:31 2012 mathieu leurquin
+// Last update Wed Nov  7 15:09:22 2012 mathieu leurquin
 //
 
 #include "Unit.hpp"
 
-b2Body*	Server::Unit::setBody()
+b2Body*	Server::Unit::setBody(BitField *b)
 {
   b2BodyDef uBDef;
 
@@ -26,7 +26,14 @@ b2Body*	Server::Unit::setBody()
   
   b2FixtureDef fDef;
   fDef.shape = &unitShape;
+  fDef.filter.categoryBits = b->what;
+  fDef.filter.maskBits = b->collide;
   this->_body->CreateFixture(&fDef);
+
+  //collision
+  // std::string *s = new std::string("mage");
+  // this->_body->SetUserData((void*)s);
+
   return this->_body;
 }
 
@@ -110,3 +117,33 @@ void Server::Unit::moveTo(float x, float y)
 {
 }
 
+void Server::Unit::shield(float x, float y)
+{
+  BitField *shield = new BitField(Server::BitField::SHIELD_MAGE, Server::BitField::OBSTACLE);
+  Server::Element *e = new Server::Element(this->_world, (int)this->_world.elements.size(), false);
+  b2Vec2 position = this->getBody()->GetPosition();
+  
+  e->setBody(shield, 1, 10, position.x + 10, position.y + 1);
+  _world.elements.push_back(e); 
+}
+
+void Server::Unit::rotateLeft(float x, float y)
+{
+  float impulse = this->getBody()->GetInertia() * (-10);// disregard time factor
+ 
+  this->getBody()->ApplyAngularImpulse(impulse);
+}
+
+void Server::Unit::rotateRight(float x, float y)
+{
+  float impulse = this->getBody()->GetInertia() * (-10);// disregard time factor
+ 
+  this->getBody()->ApplyAngularImpulse(impulse);
+}
+ 
+void Server::Unit::rotateStop(float x, float y)
+{
+  float impulse = 0;
+ 
+  this->getBody()->ApplyAngularImpulse(impulse);
+}

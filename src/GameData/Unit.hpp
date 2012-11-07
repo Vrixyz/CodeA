@@ -20,7 +20,7 @@ namespace GameData
   struct	Unit
   {
     Unit(uint32_t _id, uint32_t _health) :
-      id(_id), health(_health) {}
+      id(_id), health(_health), aimRotation(0) {}
     std::list<uint32_t> playersId;
     uint32_t	id;
     uint32_t	health;

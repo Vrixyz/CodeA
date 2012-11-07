@@ -17,6 +17,7 @@ namespace GameData
 {
   struct Command
   {
+    // make id command
     typedef enum e_Type
       {
 	Fire = 0,
@@ -25,6 +26,8 @@ namespace GameData
 	Move = 3
       } Type;
     int type;
+    //
+
     float x;
     float y;
     Command() : x(0), y(0) {}

@@ -14,7 +14,7 @@ void	Server::World::init(int width, int height)
 {
   fcts[GameData::Command::Fire] = &Server::Unit::fire;
   fcts[GameData::Command::MoveTo] = &Server::Unit::moveTo;
-  fcts[GameData::Command::AimTo] = &Server::Unit::aimTo;  
+  fcts[GameData::Command::AimTo] = &Server::Unit::aimTo;
   fcts[GameData::Command::Move] = &Server::Unit::askMove;
 
   Server::Unit *u;
@@ -61,6 +61,7 @@ void	Server::World::run()
 		{
 		  if (communication.cmds[i].second == it->second)
 		    {
+		      // TODO: seek directly asked unit (send unitId from client)
 		      for (std::list<Server::Unit*>::iterator itu = units.begin(); itu != units.end(); itu++)
 			{
 			  if ((*itu)->ownPlayer(it->first))

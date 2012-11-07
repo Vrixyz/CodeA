@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:00:00 2012 mathieu leurquin
-// Last update Tue Nov  6 11:01:41 2012 mathieu leurquin
+// Last update Wed Nov  7 15:09:21 2012 mathieu leurquin
 //
 
 #ifndef SERVER_UNIT_HPP
@@ -32,9 +32,9 @@ namespace Server
     void fire(float x, float y);
     void aimTo(float x, float y);
     void moveTo(float x, float y);
-    void rotateLeft();
-    void rotateRight();
-    void rotateStop();
+    void rotateLeft(float x, float y);
+    void rotateRight(float x, float y);
+    void rotateStop(float x, float y);
     // void goUp();
     // void goRight();
     // void goDown();

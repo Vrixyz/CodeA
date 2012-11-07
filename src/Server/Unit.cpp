@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 13:21:11 2012 thierry berger
-// Last update Tue Nov  6 11:02:27 2012 mathieu leurquin
+// Last update Wed Nov  7 15:09:22 2012 mathieu leurquin
 //
 
 #include "Unit.hpp"
@@ -127,21 +127,21 @@ void Server::Unit::shield(float x, float y)
   _world.elements.push_back(e); 
 }
 
-void Server::Unit::rotateLeft()
+void Server::Unit::rotateLeft(float x, float y)
 {
   float impulse = this->getBody()->GetInertia() * (-10);// disregard time factor
  
   this->getBody()->ApplyAngularImpulse(impulse);
 }
 
-void Server::Unit::rotateRight()
+void Server::Unit::rotateRight(float x, float y)
 {
   float impulse = this->getBody()->GetInertia() * (-10);// disregard time factor
  
   this->getBody()->ApplyAngularImpulse(impulse);
 }
  
-void Server::Unit::rotateStop()
+void Server::Unit::rotateStop(float x, float y)
 {
   float impulse = 0;
  

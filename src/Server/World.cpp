@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Tue Nov  6 10:59:51 2012 mathieu leurquin
+// Last update Wed Nov  7 15:08:07 2012 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -15,12 +15,14 @@
 void	Server::World::init(int width, int height)
 {
   fcts[GameData::Command::Fire] = &Server::Unit::fire;
-  fcts[GameData::Command::MoveTo] = &Server::Unit::moveTo;
   fcts[GameData::Command::AimTo] = &Server::Unit::aimTo;  
-  fcts[GameData::Command::Move] = &Server::Unit::move;
-  fcts[GameData::Command::Shield] = &Server::Unit::shield;
+  fcts[GameData::Command::MoveTo] = &Server::Unit::moveTo;
   fcts[GameData::Command::Move] = &Server::Unit::askMove;
-
+  fcts[GameData::Command::RotateLeft] = &Server::Unit::rotateLeft;
+  fcts[GameData::Command::RotateRight] = &Server::Unit::rotateRight;
+  fcts[GameData::Command::RotateStop] = &Server::Unit::rotateStop;
+  fcts[GameData::Command::Shield] = &Server::Unit::shield;
+  
   Server::Unit *u;
  
   // FIXME: we must create the player and the unit at the connection !

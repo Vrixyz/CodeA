@@ -1,11 +1,11 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-Game::Game(MainWindow *u)
+Game::Game(MainWindow *u, GameView *v)
 {
-    xref = 0;
-    yref = 0;
+    angle = 0;
     ui = u;
+    view = v;
 }
 
 void Game::setWorld(GameData::World w) {
@@ -17,7 +17,6 @@ GameData::World Game::getWorld() {
 }
 
 void Game::drawWorld() {
-    int tx, ty;
     QGraphicsItem *item;
     GameData::Physics::Coord c;
     QGraphicsScene *scene = new QGraphicsScene(0, 0, 800, 600, ui);
@@ -36,7 +35,7 @@ void Game::drawWorld() {
             //            std::cout << c.x << " " << c.y << std::endl;
         }
         item = scene->addPolygon(*poly);
-        std::cout << "Elem : " << p.x << " " << p.y << std::endl;
+//        std::cout << "Elem : " << p.x << " " << p.y << std::endl;
         item->setPos(p.x * 1, p.y * -1);
     }
     for (std::list<GameData::Physics>::iterator it = punit.begin(); it != punit.end(); it++) {
@@ -48,8 +47,9 @@ void Game::drawWorld() {
             //            std::cout << c.x << " " << c.y << std::endl;
         }
         item = scene->addPolygon(*poly);
-        ui->ui->Gameview->setSceneRect(p.x - 400, -300 - p.y, 800, 600);
-        std::cout << "Unit : " << p.x << " " << p.y << " " << punit.size() << std::endl;
+        view->setSceneRect(p.x - 400., -300. - p.y, 800, 600);
+//        ui->ui->Gameview->setSceneRect(p.x - 400., -300. - p.y, 800, 600);
+//        std::cout << "Unit : " << p.x << " " << p.y << std::endl;
         item->setPos(p.x * 1, p.y * -1);
     }
     for (std::list<GameData::Physics>::iterator it = pbullet.begin(); it != pbullet.end(); it++) {
@@ -64,6 +64,8 @@ void Game::drawWorld() {
         //        std::cout << "Bullet : " << p.x << " " << p.y << std::endl;
         item->setPos(p.x * 1, p.y * -1);
     }
-    ui->ui->Gameview->setScene(scene);
-    ui->ui->Gameview->show();
+    view->setScene(scene);
+    view->show();
+//    ui->ui->Gameview->setScene(scene);
+//    ui->ui->Gameview->show();
 }

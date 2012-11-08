@@ -9,6 +9,7 @@
 #include "mainwindow.h"
 
 class MainWindow;
+class GameView;
 namespace Ui
 {
 class MainWindow;
@@ -17,11 +18,10 @@ class MainWindow;
 class Game
 {
 public:
-    Game(MainWindow *);
+    Game(MainWindow *, GameView *);
     void drawWorld();
     void setWorld(GameData::World);
-    int xref;
-    int yref;
+    int angle;
     GameData::World getWorld();
     std::list<GameData::Element> elem;
     std::list<GameData::Unit> unit;
@@ -29,6 +29,7 @@ public:
     std::list<GameData::Physics> pelem;
     std::list<GameData::Physics> punit;
     std::list<GameData::Physics> pbullet;
+    GameView *view;
     MainWindow *ui;
 
 private:

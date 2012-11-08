@@ -14,11 +14,14 @@
 #include "../../GameData/Command.hpp"
 #include "nm.h"
 #include "game.h"
+#include "gameview.h"
 #include <QKeyEvent>
 #include <QRect>
 #include <QPolygon>
 #include <QPoint>
 #include <QLine>
+#include <cmath>
+#include "math.h"
 
 class Nm;
 
@@ -35,8 +38,9 @@ public:
     void NewGame();
     ~MainWindow();
     Ui::MainWindow *ui;
-    void keyPressEvent(QKeyEvent *);
+    // WARNING : arrows key cannot be used
     void keyReleaseEvent(QKeyEvent *);
+    void keyPressEvent(QKeyEvent *);
     
 private slots:
     void Playagain();
@@ -46,6 +50,7 @@ private:
 //    Phonon::MediaObject *music;
     Nm *n;
     Game *game;
+    GameView *view;
     bool ingame;
     int dvectorx;
     int dvectory;

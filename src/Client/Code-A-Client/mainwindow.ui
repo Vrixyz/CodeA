@@ -16,6 +16,9 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
+  <property name="mouseTracking">
+   <bool>false</bool>
+  </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
@@ -202,35 +205,6 @@
      </property>
     </widget>
    </widget>
-   <widget class="QGraphicsView" name="Gameview">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>800</width>
-      <height>600</height>
-     </rect>
-    </property>
-    <property name="verticalScrollBarPolicy">
-     <enum>Qt::ScrollBarAlwaysOff</enum>
-    </property>
-    <property name="horizontalScrollBarPolicy">
-     <enum>Qt::ScrollBarAlwaysOff</enum>
-    </property>
-    <property name="interactive">
-     <bool>true</bool>
-    </property>
-    <property name="sceneRect">
-     <rectf>
-      <x>-400.000000000000000</x>
-      <y>-300.000000000000000</y>
-      <width>800.000000000000000</width>
-      <height>600.000000000000000</height>
-     </rectf>
-    </property>
-   </widget>
-   <zorder>Gameview</zorder>
-   <zorder>Loginpage</zorder>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

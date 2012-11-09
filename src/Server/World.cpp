@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Wed Nov  7 15:08:07 2012 mathieu leurquin
+// Last update Fri Nov  9 13:31:33 2012 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -14,15 +14,6 @@
 
 void	Server::World::init(int width, int height)
 {
-  fcts[GameData::Command::Fire] = &Server::Unit::fire;
-  fcts[GameData::Command::AimTo] = &Server::Unit::aimTo;  
-  fcts[GameData::Command::MoveTo] = &Server::Unit::moveTo;
-  fcts[GameData::Command::Move] = &Server::Unit::askMove;
-  fcts[GameData::Command::RotateLeft] = &Server::Unit::rotateLeft;
-  fcts[GameData::Command::RotateRight] = &Server::Unit::rotateRight;
-  fcts[GameData::Command::RotateStop] = &Server::Unit::rotateStop;
-  fcts[GameData::Command::Shield] = &Server::Unit::shield;
-  
   Server::Unit *u;
  
   // FIXME: we must create the player and the unit at the connection !
@@ -39,7 +30,7 @@ void	Server::World::init(int width, int height)
   
   // _physicWorld.SetContactListener(&World::myContactListenerInstance);
   
-  communication.init();
+  communication.init(this);
 }
 
 void	Server::World::run()
@@ -65,52 +56,55 @@ void	Server::World::run()
 	  // FIXME: Actually, seems not, add shared_ptr please (meaning no one else will modify this connection (like closing it !)
 	   // boost::lock_guard<boost::mutex> lock(communication._m_clients);
 	  boost::lock_guard<boost::mutex> lock(communication._m_clients);
-	   for (std::map<int, tcp_connection::pointer>::const_iterator
-		 it = communication.clients.begin(); it != communication.clients.end();
- 	       it++)
-	     {
+	   // for (std::map<int, tcp_connection::pointer>::const_iterator
+	   // 	 it = communication.clients.begin(); it != communication.clients.end();
+ 	   //     it++)
+	   //   {
 	      
 	      //Interpret cmd
- 	      GameData::Command *c;
+ 	     //  GameData::Command *c;
 
-	      for (unsigned int i = 0; i < communication.cmds.size(); i++)
-		{
-		  if (communication.cmds[i].second == it->second)
-		    {
-		      // TODO: seek directly asked unit (send unitId from client)
-		      for (std::list<Server::Unit*>::iterator itu = units.begin(); itu != units.end(); itu++)
-			{
-			  if ((*itu)->ownPlayer(it->first))
-			    {
-			      c = &communication.cmds[i].first;
-			      ((*itu)->*fcts[c->getType()])(c->x, c->y);
-			      break;
-			    }
-			}
-		    }
-		}
-	      while (communication.cmds.size() > 0)
-		{
-		  communication.cmds.pop_back();
-		}
-	     }
-	   for (std::list<Server::Unit*>::iterator itu = units.begin(); itu != units.end(); itu++)
+ 	    
+	  communication._command->interpretCommands();
+	  
+	  for (std::list<Server::Unit*>::iterator itu = units.begin(); itu != units.end(); itu++)
+	    {
+	      (*itu)->update(TIMESTEP);
+	    }
+	  
+	  for (std::map<int, tcp_connection::pointer>::const_iterator
+	  	  it = communication.clients.begin(); it != communication.clients.end();
+	  	it++)
 	     {
-	       (*itu)->update(TIMESTEP);
-	     }
-	   
-	   for (std::map<int, tcp_connection::pointer>::const_iterator
-		  it = communication.clients.begin(); it != communication.clients.end();
-		it++)
-	     {
+	       // for (unsigned int i = 0; i < communication.cmds.s ize(); i++)
+	     // 	{
+	     // 	  if (communication.cmds[i].second == it->second)
+	     // 	    {
+	     // 	      // TODO: seek directly asked unit (send unitId from client)
+	     // 	      for (std::list<Server::Unit*>::iterator itu = units.begin(); itu != units.end(); itu++)
+	     // 		{
+	     // 		  if ((*itu)->ownPlayer(it->first))
+	     // 		    {
+	     // 		      c = &communication.cmds[i].first;
+	     // 		      ((*itu)->*fcts[c->getType()])(c->x, c->y);
+	     // 		      break;
+	     // 		    }
+	     // 		}
+	     // 	    }
+	     // 	}
+	     //  while (communication.cmds.size() > 0)
+	     // 	{
+	     // 	  communication.cmds.pop_back();
+	     // 	}
+	     // }
 	       msgpack::sbuffer sbuf;
 	       msgpack::packer<msgpack::sbuffer> packet(&sbuf);
 	       
 	       /// TODO: sepcify type of sent data (here: World)
 	       /// TODO: send different packet depending on client (fog of war, etc...)
 	       serialize(packet);
-
-
+	       
+	       
 	       // FIXME: sendToClient will lock_guard on clients, meaning it will deadlock if we shared_lock earlier. (solution would be to upgrade the lock (in sendToClient, and set an upgradeable lock in before this loop))
 	       if (communication.sendToClient(sbuf, it->first))
 		 {
@@ -335,7 +329,7 @@ GameData::Physics Server::World::getPhysics(const b2Body* body) const
   b2Vec2 position = body->GetPosition();
   physics.x = position.x;
   physics.y = position.y;
-
+  physics.angle = body->GetAngle();
   /// assuming that shapes are only simple rectangles (real simple, centered at 0)
   const b2PolygonShape* shape = static_cast<const b2PolygonShape*>(body->GetFixtureList()->GetShape());
   for (int i = 0; i < shape->GetVertexCount(); ++i)
@@ -345,4 +339,80 @@ GameData::Physics Server::World::getPhysics(const b2Body* body) const
       physics.vertices.push_back(GameData::Physics::Coord(vertice.x, vertice.y));
     }
   return physics;
+}
+
+void Server::World::askMove(boost::array<char, 127>cmd)
+{
+  int x;
+  int y;
+  std::list<Unit*>::iterator it = units.begin();
+  msgpack::object obj;
+  msgpack::unpacked result;
+  msgpack::unpacker pac;
+  
+  pac.reserve_buffer(3);
+  memcpy(pac.buffer(), cmd.elems, 3);
+  pac.buffer_consumed(3);
+  
+  pac.next(&result);
+  if (pac.next(&result))
+    {
+      obj = result.get();
+      obj.convert(&x);
+      (*it)->current.x = x;
+    }
+  if (pac.next(&result))
+    {
+      obj = result.get();
+      obj.convert(&y);
+      (*it)->current.y = y;
+    }
+}
+
+void Server::World::fire(boost::array<char, 127>cmd)
+{
+}
+
+void Server::World::aimTo(boost::array<char, 127>cmd)
+{
+}
+
+void Server::World::moveTo(boost::array<char, 127>cmd)
+{
+}
+
+void Server::World::shield(boost::array<char, 127>cmd)
+{
+  // BitField *shield = new BitField(Server::BitField::SHIELD_MAGE, Server::BitField::OBSTACLE);
+  // Server::Element *e = new Server::Element(this->_world, (int)this->_world.elements.size(), false);
+  // b2Vec2 position = this->getBody()->GetPosition();
+  
+  // e->setBody(shield, 1, 10, position.x + 10, position.y + 1);
+  // _world.elements.push_back(e); 
+}
+
+void Server::World::rotateLeft(boost::array<char, 127>cmd)
+{
+  std::list<Unit*>::iterator it = units.begin();
+  float impulse = (*it)->getBody()->GetInertia() * (100);// disregard time factor
+  
+  (*it)->getBody()->ApplyAngularImpulse(impulse);
+}
+
+void Server::World::rotateRight(boost::array<char, 127>cmd)
+{
+    std::cout<<"DROITEEEEEEEEEEEEEee"<<std::endl;
+  std::list<Unit*>::iterator it = units.begin();
+  std::cout<<(*it)->getBody()->GetInertia()<<std::endl;
+  float impulse = (*it)->getBody()->GetInertia() * (100);// disregard time factor
+ 
+  (*it)->getBody()->ApplyAngularImpulse(impulse);
+}
+ 
+void Server::World::rotateStop(boost::array<char, 127>cmd)
+{
+  float impulse = 0;
+  std::list<Unit*>::iterator it = units.begin();
+
+  (*it)->getBody()->ApplyAngularImpulse(impulse);
 }

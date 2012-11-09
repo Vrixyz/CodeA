@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Tue Sep 11 15:56:37 2012 thierry berger
-// Last update Thu Sep 13 17:18:56 2012 thierry berger
+// Last update Fri Nov  9 11:56:30 2012 mathieu leurquin
 //
 
 #ifndef GAMEDATA_PHYSICS_HPP
@@ -29,6 +29,7 @@ namespace GameData
     };
     float	x;
     float	y;
+    float	angle;
     std::list<Coord> vertices;
 
     MSGPACK_DEFINE(x, y, vertices);

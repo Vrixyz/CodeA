@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:00:00 2012 mathieu leurquin
-// Last update Wed Nov  7 15:09:21 2012 mathieu leurquin
+// Last update Fri Nov  9 10:14:23 2012 mathieu leurquin
 //
 
 #ifndef SERVER_UNIT_HPP
@@ -29,23 +29,7 @@ namespace Server
     const GameData::Unit& getData() const {return _data;}
     void addPlayer(Player* p);
     bool ownPlayer(int idPlayer);
-    void fire(float x, float y);
-    void aimTo(float x, float y);
-    void moveTo(float x, float y);
-    void rotateLeft(float x, float y);
-    void rotateRight(float x, float y);
-    void rotateStop(float x, float y);
-    // void goUp();
-    // void goRight();
-    // void goDown();
-    // void goLeft();
-    // void stopUp();
-    // void stopRight();
-    // void stopDown();
-    // void stopLeft();
-    void shield(float x, float y);
-    void askMove(float x, float y);
-    void move(float x, float y);
+    void move(int x, int y);
     virtual void update(float elapsedMilliseconds);
     virtual void serialize(msgpack::packer<msgpack::sbuffer>& packet) const;
     virtual bool unSerialize(msgpack::packer<msgpack::sbuffer>& packet) {return false;}

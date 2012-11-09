@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 13:21:11 2012 thierry berger
-// Last update Wed Nov  7 15:09:22 2012 mathieu leurquin
+// Last update Fri Nov  9 13:37:24 2012 mathieu leurquin
 //
 
 #include "Unit.hpp"
@@ -14,8 +14,9 @@ b2Body*	Server::Unit::setBody(BitField *b)
 {
   b2BodyDef uBDef;
 
+  uBDef.type = b2_dynamicBody;
   uBDef.userData = this;
-  uBDef.fixedRotation = true;
+  // uBDef.fixedRotation = true;
   uBDef.type = b2_dynamicBody;
   uBDef.gravityScale = 0;
   uBDef.bullet = true;
@@ -59,14 +60,7 @@ void	Server::Unit::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
   packet.pack(this->getPhysics());
 }
 
-void Server::Unit::askMove(float x, float y)
-{
-  std::cout<<"Move " << x << ";" << y <<std::endl;
-  current.x = x;
-  current.y = y;
-}
-
-void Server::Unit::move(float x, float y)
+void Server::Unit::move(int x, int y)
 {
   float impulseX = _body->GetMass() * x;
   float impulseY = _body->GetMass() * y;
@@ -102,48 +96,5 @@ void Server::Unit::update(float elapsedMilliseconds)
 {
   // b2Vec2 curVel = _body->GetLinearVelocity();
   // if (curVel.x != current.x && curVel.y != current.y)
-    this->move(current.x, current.y);
-}
-
-void Server::Unit::fire(float x, float y)
-{
-}
-
-void Server::Unit::aimTo(float x, float y)
-{
-}
-
-void Server::Unit::moveTo(float x, float y)
-{
-}
-
-void Server::Unit::shield(float x, float y)
-{
-  BitField *shield = new BitField(Server::BitField::SHIELD_MAGE, Server::BitField::OBSTACLE);
-  Server::Element *e = new Server::Element(this->_world, (int)this->_world.elements.size(), false);
-  b2Vec2 position = this->getBody()->GetPosition();
-  
-  e->setBody(shield, 1, 10, position.x + 10, position.y + 1);
-  _world.elements.push_back(e); 
-}
-
-void Server::Unit::rotateLeft(float x, float y)
-{
-  float impulse = this->getBody()->GetInertia() * (-10);// disregard time factor
- 
-  this->getBody()->ApplyAngularImpulse(impulse);
-}
-
-void Server::Unit::rotateRight(float x, float y)
-{
-  float impulse = this->getBody()->GetInertia() * (-10);// disregard time factor
- 
-  this->getBody()->ApplyAngularImpulse(impulse);
-}
- 
-void Server::Unit::rotateStop(float x, float y)
-{
-  float impulse = 0;
- 
-  this->getBody()->ApplyAngularImpulse(impulse);
+  this->move(current.x, current.y);
 }

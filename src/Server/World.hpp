@@ -5,14 +5,16 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 10:46:49 2012 thierry berger
-// Last update Mon Nov  5 11:04:02 2012 mathieu leurquin
+// Last update Fri Nov  9 11:26:19 2012 mathieu leurquin
 //
 
 #ifndef SERVER_WORLD_HPP
 # define SERVER_WORLD_HPP
 
 #include <Box2D/Box2D.h>
+#include <boost/asio/buffer.hpp>
 #include "Communication.hpp"
+#include <boost/asio.hpp>
 #include "../GameData/World.hpp"
 #include "../GameData/Physics.hpp"
 #include "../GameData/Unit.hpp"
@@ -39,10 +41,8 @@ namespace Server
   {
   public:
     // static MyContactListener myContactListenerInstance;
-    std::map<GameData::Command::Type, void (Server::Unit::*)(float x, float y)> fcts;
-    
     /// TODO: Add a trash list to remove safely the bodies
-    Communication	communication;
+    Communication       communication;
     std::list<Server::Element*>	elements;
     std::list<Server::Unit*> units;
     std::list<Server::Bullet*>	bullets;
@@ -66,6 +66,17 @@ namespace Server
     void destroyElement(int id);
     void destroyBullet(int id);
     
+    //fct unit
+    void fire(boost::array<char, 127>cmd);
+    void aimTo(boost::array<char, 127>cmd);
+    void moveTo(boost::array<char, 127>cmd);
+    void rotateLeft(boost::array<char, 127>cmd);
+    void rotateRight(boost::array<char, 127>cmd);
+    void rotateStop(boost::array<char, 127>cmd);
+    void shield(boost::array<char, 127>cmd);
+    void askMove(boost::array<char, 127>cmd);
+    void move(boost::array<char, 127>cmd);
+
     virtual void serialize(msgpack::packer<msgpack::sbuffer>& packet) const;
     virtual bool unSerialize(msgpack::packer<msgpack::sbuffer>& packet);
     virtual int	getClassId() const;

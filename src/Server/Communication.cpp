@@ -5,14 +5,15 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 19:13:12 2012 thierry berger
-// Last update Tue Oct 30 16:34:32 2012 mathieu leurquin
+// Last update Fri Nov  9 11:30:12 2012 mathieu leurquin
 //
 
 #include "Communication.hpp"
 
-void	Server::Communication::init()
+void	Server::Communication::init(World *w)
 {
   this->start_accept();
+  _command = new CommandManager(w);
   thread_accept = boost::thread(&Server::Communication::accept_loop, this);
 }
 
@@ -76,3 +77,25 @@ void Server::Communication::handle_accept(tcp_connection::pointer& new_connectio
   rsh->setHandler();
   start_accept();
 }
+
+void Server::Communication::read_socket_handler::operator()(const boost::system::error_code& ec, std::size_t size)
+{
+  // msgpack::sbuffer d;
+
+  // memcpy(&d, buf.data(), size);
+  // pac.reserve_buffer(size);
+  // memcpy(pac.buffer(), buf.elems, size);
+  // pac.buffer_consumed(size);
+  // if (pac.next(&result))
+  //   {
+  //     GameData::Command c;
+  //     msgpack::object obj = result.get();
+  //     obj.convert(&c);
+  //     _command = c;
+  //     boost::lock_guard<boost::mutex> lock(_com->_m_clients);
+  //   }
+  
+  _com->_command->addCommandToQueue(_connection, buf);
+  setHandler();
+}
+

@@ -32,7 +32,7 @@ namespace GameData
     float	angle;
     std::list<Coord> vertices;
 
-    MSGPACK_DEFINE(x, y, vertices);
+    MSGPACK_DEFINE(x, y, vertices, angle);
   };
 }
 

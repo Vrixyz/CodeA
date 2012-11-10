@@ -394,25 +394,22 @@ void Server::World::shield(boost::array<char, 127>cmd)
 void Server::World::rotateLeft(boost::array<char, 127>cmd)
 {
   std::list<Unit*>::iterator it = units.begin();
-  float impulse = (*it)->getBody()->GetInertia() * (100);// disregard time factor
-  
-  (*it)->getBody()->ApplyAngularImpulse(impulse);
+ 
+  std::cout << "left" << std::endl;
+  (*it)->askRotateLeft();
 }
 
 void Server::World::rotateRight(boost::array<char, 127>cmd)
 {
-    std::cout<<"DROITEEEEEEEEEEEEEee"<<std::endl;
   std::list<Unit*>::iterator it = units.begin();
-  std::cout<<(*it)->getBody()->GetInertia()<<std::endl;
-  float impulse = (*it)->getBody()->GetInertia() * (100);// disregard time factor
- 
-  (*it)->getBody()->ApplyAngularImpulse(impulse);
+
+  std::cout << "right" << std::endl;
+  (*it)->askRotateRight();
 }
  
 void Server::World::rotateStop(boost::array<char, 127>cmd)
 {
-  float impulse = 0;
   std::list<Unit*>::iterator it = units.begin();
 
-  (*it)->getBody()->ApplyAngularImpulse(impulse);
+  (*it)->askRotateStop();
 }

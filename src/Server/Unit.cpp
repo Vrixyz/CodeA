@@ -16,14 +16,14 @@ b2Body*	Server::Unit::setBody(BitField *b)
 
   uBDef.type = b2_dynamicBody;
   uBDef.userData = this;
-  // uBDef.fixedRotation = true;
+  uBDef.fixedRotation = false;
   uBDef.type = b2_dynamicBody;
-  uBDef.gravityScale = 0;
+  uBDef.gravityScale = 1;
   uBDef.bullet = true;
   uBDef.position.Set(0, 0);  
   this->_body = _world._physicWorld.CreateBody(&uBDef);
   b2PolygonShape unitShape;
-  unitShape.SetAsBox(2, 2);
+  unitShape.SetAsBox(5, 5);
   
   b2FixtureDef fDef;
   fDef.shape = &unitShape;
@@ -62,39 +62,42 @@ void	Server::Unit::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
 
 void Server::Unit::move(int x, int y)
 {
-  float impulseX = _body->GetMass() * x;
-  float impulseY = _body->GetMass() * y;
-  float im;
-  float im1;
+  float impulseX;
+  float impulseY;
   b2Vec2 actualLinearVelocity;
 
   actualLinearVelocity = _body->GetLinearVelocity();
-  if (x == 0 && y == 0)
-    {
-      if (actualLinearVelocity.y != 0 && actualLinearVelocity.x != 0)
-	{
-	  im = 0 - actualLinearVelocity.x;
-	  im1 = 0 - actualLinearVelocity.y;
-	  _body->ApplyLinearImpulse(b2Vec2(im, im1), _body->GetWorldCenter());
-	}
-      if (actualLinearVelocity.y != 0)
-	{
-	  im = 0 - actualLinearVelocity.y;
-	  _body->ApplyLinearImpulse(b2Vec2(0, im), _body->GetWorldCenter());
-	}
-      else if (actualLinearVelocity.x != 0)
-	{
-	  im = 0 - actualLinearVelocity.x;
-	  _body->ApplyLinearImpulse(b2Vec2(im, 0), _body->GetWorldCenter());
-	}
-    }
+  impulseX = _body->GetMass() * x - actualLinearVelocity.x;
+  impulseY = _body->GetMass() * y - actualLinearVelocity.y;
+
+  // std::cout<<"actualLinealVelocity: " <<  actualLinearVelocity.x << ";" << actualLinearVelocity.y << std::endl;
   _body->ApplyLinearImpulse(b2Vec2(impulseX, impulseY), _body->GetWorldCenter());
   // std::cout<<"Move" << impulseX << ";" << impulseY <<std::endl;
+  actualLinearVelocity = _body->GetLinearVelocity();
+  // std::cout<<"actualLinealVelocity: " <<  actualLinearVelocity.x << ";" << actualLinearVelocity.y << std::endl;
 }
+
+void Server::Unit::askRotateLeft()
+{
+  rotation = -0.001;
+}
+
+void Server::Unit::askRotateRight()
+{
+  rotation = 0.001;
+}
+
+void Server::Unit::askRotateStop()
+{
+  rotation = 0;
+}
+
+
 
 void Server::Unit::update(float elapsedMilliseconds)
 {
   // b2Vec2 curVel = _body->GetLinearVelocity();
   // if (curVel.x != current.x && curVel.y != current.y)
   this->move(current.x, current.y);
+  _body->SetAngularVelocity(rotation);
 }

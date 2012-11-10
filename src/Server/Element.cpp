@@ -16,7 +16,7 @@ b2Body*	Server::Element::setBody(BitField *b, float width, float height, int x, 
 
   eBDef.userData = this;
   eBDef.fixedRotation = true;
-  eBDef.type = b2_dynamicBody;
+  eBDef.type = b2_staticBody;
   eBDef.gravityScale = 0;
   eBDef.position.Set(x, y);
   this->_body = _world._physicWorld.CreateBody(&eBDef);

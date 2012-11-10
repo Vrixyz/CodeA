@@ -24,12 +24,17 @@ namespace Server
   public:
     GameData::Unit _data;
     b2Vec2 current;
+    float rotation;
     Unit(World& world, int id) : Object(world, Object::Unit, id), _data(id, 10), current(0, 0) {}
     virtual b2Body*	setBody(BitField *b);
     const GameData::Unit& getData() const {return _data;}
     void addPlayer(Player* p);
     bool ownPlayer(int idPlayer);
     void move(int x, int y);
+    void askRotateLeft();
+    void askRotateRight();
+    void askRotateStop();
+
     virtual void update(float elapsedMilliseconds);
     virtual void serialize(msgpack::packer<msgpack::sbuffer>& packet) const;
     virtual bool unSerialize(msgpack::packer<msgpack::sbuffer>& packet) {return false;}

@@ -25,5 +25,9 @@ GameData::Physics Server::Object::getPhysics() const
 
       physics.vertices.push_back(GameData::Physics::Coord(vertice.x, vertice.y));
     }
+  physics.angle = _body->GetAngle() * 57.2957795;
+  physics.angle = (int)physics.angle % (int)360;
+  physics.angle = physics.angle  < 0 ? -physics.angle : physics.angle;
+  std::cout << physics.angle << std::endl;
   return physics;
 }

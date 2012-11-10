@@ -46,7 +46,9 @@ void Game::drawWorld() {
             (*poly) << QPoint(c.x, c.y * -1);
             //            std::cout << c.x << " " << c.y << std::endl;
         }
+        view->angle = p.angle;
         item = scene->addPolygon(*poly);
+        item->rotate(view->angle);
         view->setSceneRect(p.x - 400., -300. - p.y, 800, 600);
 //        ui->ui->Gameview->setSceneRect(p.x - 400., -300. - p.y, 800, 600);
 //        std::cout << "Unit : " << p.x << " " << p.y << std::endl;

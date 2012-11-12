@@ -12,6 +12,7 @@
 # define COMMAND_MANAGER_HPP
 
 #include "tcp_connection.hpp"
+#include <msgpack.h>
 
 namespace Server
 {
@@ -19,9 +20,6 @@ namespace Server
   class CommandManager
   {
   public:
-    World *world;
-    std::map<GameData::Command::Type, void (World::*)(boost::array<char, 127>)> fcts;
-    std::vector<std::pair<boost::array<char, 127>, tcp_connection::pointer> >cmds;
     CommandManager(World *w);
  // called by Communication
     void addCommandToQueue(tcp_connection::pointer sender, boost::array<char, 127> cmd); // msgpack::sbuffer ou equivalent (suite du packet envoye apres l'id de la commande
@@ -32,6 +30,11 @@ namespace Server
     void interpretCommands();
     // on choppe l'id
     // on appelle la methode de w
+  private:
+    World *world;
+    mutable boost::mutex _m_cmds;
+    std::map<GameData::Command::Type, void (World::*)(char*)> fcts;
+    std::vector<std::pair<boost::array<char, 127>, tcp_connection::pointer> >cmds;
   };
 }
 

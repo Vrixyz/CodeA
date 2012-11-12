@@ -24,13 +24,16 @@ Server::CommandManager::CommandManager(World *w)
   fcts[GameData::Command::Shield] = &World::shield;   
 }
 
+// TODO: addCommandToSend, and interpretCommandToSend, this would become addCommandReceived
 void	Server::CommandManager::addCommandToQueue(tcp_connection::pointer sender, boost::array<char, 127> cmd)
 {
+  boost::lock_guard<boost::mutex> lock(_m_cmds);
   cmds.push_back(std::pair<boost::array<char, 127>, tcp_connection::pointer>(cmd, sender));
 }
 
 void	Server::CommandManager::interpretCommands()
 {
+  boost::lock_guard<boost::mutex> lock(_m_cmds);
   for (std::map<int, tcp_connection::pointer>::const_iterator
 	 it = this->world->communication.clients.begin(); it != this->world->communication.clients.end();
        it++)
@@ -39,14 +42,18 @@ void	Server::CommandManager::interpretCommands()
 	{
 	  if (cmds[i].second == it->second)
 	    {
+	      
+
 	      // TODO: seek directly asked unit (send unitId from client)
 	      int id;
 	      int size = 3;
 	      msgpack::unpacker pac;
 	      msgpack::unpacked result;
+
+
 	      
 	      pac.reserve_buffer(size);
-	      memcpy(pac.buffer(), (cmds[i].first).elems, size);
+	      memcpy(pac.buffer(), cmds[i].first.data(), size);
 	      pac.buffer_consumed(size);
 	      if (pac.next(&result))
 		{
@@ -55,12 +62,12 @@ void	Server::CommandManager::interpretCommands()
  		  obj.convert(&id);
 		  std::cout<<"N°:"<<id<<std::endl;
 		}
-	      ((world)->*fcts[(GameData::Command::Type)id])(cmds[i].first);
+	      ((world)->*fcts[(GameData::Command::Type)id])(cmds[i].first.data());
 	    }
 	}
-      while (cmds.size() > 0)
-	{
-	  cmds.pop_back();
-	}
+    }
+  while (cmds.size() > 0)
+    {
+      cmds.pop_back();
     }
 }

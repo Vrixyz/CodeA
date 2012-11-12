@@ -67,15 +67,15 @@ namespace Server
     void destroyBullet(int id);
     
     //fct unit
-    void fire(boost::array<char, 127>cmd);
-    void aimTo(boost::array<char, 127>cmd);
-    void moveTo(boost::array<char, 127>cmd);
-    void rotateLeft(boost::array<char, 127>cmd);
-    void rotateRight(boost::array<char, 127>cmd);
-    void rotateStop(boost::array<char, 127>cmd);
-    void shield(boost::array<char, 127>cmd);
-    void askMove(boost::array<char, 127>cmd);
-    void move(boost::array<char, 127>cmd);
+    void fire(char* cmd);
+    void aimTo(char* cmd);
+    void moveTo(char* cmd);
+    void rotateLeft(char* cmd);
+    void rotateRight(char* cmd);
+    void rotateStop(char* cmd);
+    void shield(char* cmd);
+    void askMove(char* cmd);
+    void move(char* cmd);
 
     virtual void serialize(msgpack::packer<msgpack::sbuffer>& packet) const;
     virtual bool unSerialize(msgpack::packer<msgpack::sbuffer>& packet);

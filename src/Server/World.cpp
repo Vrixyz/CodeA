@@ -55,7 +55,6 @@ void	Server::World::run()
 
 	  // FIXME: Actually, seems not, add shared_ptr please (meaning no one else will modify this connection (like closing it !)
 	   // boost::lock_guard<boost::mutex> lock(communication._m_clients);
-	  boost::lock_guard<boost::mutex> lock(communication._m_clients);
 	   // for (std::map<int, tcp_connection::pointer>::const_iterator
 	   // 	 it = communication.clients.begin(); it != communication.clients.end();
  	   //     it++)
@@ -71,32 +70,11 @@ void	Server::World::run()
 	    {
 	      (*itu)->update(TIMESTEP);
 	    }
-	  
+	  boost::lock_guard<boost::mutex> lock(communication._m_clients);	  
 	  for (std::map<int, tcp_connection::pointer>::const_iterator
 	  	  it = communication.clients.begin(); it != communication.clients.end();
 	  	it++)
 	     {
-	       // for (unsigned int i = 0; i < communication.cmds.s ize(); i++)
-	     // 	{
-	     // 	  if (communication.cmds[i].second == it->second)
-	     // 	    {
-	     // 	      // TODO: seek directly asked unit (send unitId from client)
-	     // 	      for (std::list<Server::Unit*>::iterator itu = units.begin(); itu != units.end(); itu++)
-	     // 		{
-	     // 		  if ((*itu)->ownPlayer(it->first))
-	     // 		    {
-	     // 		      c = &communication.cmds[i].first;
-	     // 		      ((*itu)->*fcts[c->getType()])(c->x, c->y);
-	     // 		      break;
-	     // 		    }
-	     // 		}
-	     // 	    }
-	     // 	}
-	     //  while (communication.cmds.size() > 0)
-	     // 	{
-	     // 	  communication.cmds.pop_back();
-	     // 	}
-	     // }
 	       msgpack::sbuffer sbuf;
 	       msgpack::packer<msgpack::sbuffer> packet(&sbuf);
 	       
@@ -124,12 +102,10 @@ void	Server::World::run()
 	       // ] DEBUG
 	     }
 	   //delete clients
-
 	   for (std::list<int>::iterator it = communication.clientsErase.begin(); it != communication.clientsErase.end(); it++)
 	     {
 	       communication.clients.erase(*it);
 	     }
-	   // FIXME: downgrade mutex here (should be at the end of sendToClient actually)
 	}
       // FIXME: think more about that sleep.
       usleep(500);
@@ -341,7 +317,7 @@ GameData::Physics Server::World::getPhysics(const b2Body* body) const
   return physics;
 }
 
-void Server::World::askMove(boost::array<char, 127>cmd)
+void Server::World::askMove(char* cmd)
 {
   int x;
   int y;
@@ -350,11 +326,16 @@ void Server::World::askMove(boost::array<char, 127>cmd)
   msgpack::unpacked result;
   msgpack::unpacker pac;
   
-  pac.reserve_buffer(3);
-  memcpy(pac.buffer(), cmd.elems, 3);
-  pac.buffer_consumed(3);
+  int size = sizeof(GameData::Command::Type); // we receive 2 ints as parameter
+
+  pac.reserve_buffer(size);
+  memcpy(pac.buffer(), cmd, size);
+  pac.buffer_consumed(size);
   
+  // // NOTE: you can check in result if the command id is ok for the function (or overriding it)
   pac.next(&result);
+  
+
   if (pac.next(&result))
     {
       obj = result.get();
@@ -369,19 +350,19 @@ void Server::World::askMove(boost::array<char, 127>cmd)
     }
 }
 
-void Server::World::fire(boost::array<char, 127>cmd)
+void Server::World::fire(char* cmd)
 {
 }
 
-void Server::World::aimTo(boost::array<char, 127>cmd)
+void Server::World::aimTo(char* cmd)
 {
 }
 
-void Server::World::moveTo(boost::array<char, 127>cmd)
+void Server::World::moveTo(char* cmd)
 {
 }
 
-void Server::World::shield(boost::array<char, 127>cmd)
+void Server::World::shield(char* cmd)
 {
   // BitField *shield = new BitField(Server::BitField::SHIELD_MAGE, Server::BitField::OBSTACLE);
   // Server::Element *e = new Server::Element(this->_world, (int)this->_world.elements.size(), false);
@@ -391,7 +372,7 @@ void Server::World::shield(boost::array<char, 127>cmd)
   // _world.elements.push_back(e); 
 }
 
-void Server::World::rotateLeft(boost::array<char, 127>cmd)
+void Server::World::rotateLeft(char* cmd)
 {
   std::list<Unit*>::iterator it = units.begin();
  
@@ -399,15 +380,15 @@ void Server::World::rotateLeft(boost::array<char, 127>cmd)
   (*it)->askRotateLeft();
 }
 
-void Server::World::rotateRight(boost::array<char, 127>cmd)
+void Server::World::rotateRight(char* cmd)
 {
   std::list<Unit*>::iterator it = units.begin();
 
   std::cout << "right" << std::endl;
   (*it)->askRotateRight();
 }
- 
-void Server::World::rotateStop(boost::array<char, 127>cmd)
+
+void Server::World::rotateStop(char* cmd)
 {
   std::list<Unit*>::iterator it = units.begin();
 

@@ -25,7 +25,7 @@ namespace Server
     GameData::Unit _data;
     b2Vec2 current;
     float rotation;
-    Unit(World& world, int id) : Object(world, Object::Unit, id), _data(id, 10), current(0, 0) {}
+    Unit(World& world, int id) : Object(world, Object::Unit, id), _data(id, 10), current(0, 0), rotation(0) {}
     virtual b2Body*	setBody(BitField *b);
     const GameData::Unit& getData() const {return _data;}
     void addPlayer(Player* p);

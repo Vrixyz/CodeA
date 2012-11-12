@@ -18,8 +18,9 @@ b2Body*	Server::Unit::setBody(BitField *b)
   uBDef.userData = this;
   uBDef.fixedRotation = false;
   uBDef.type = b2_dynamicBody;
-  uBDef.gravityScale = 1;
+  uBDef.gravityScale = 0;
   uBDef.bullet = true;
+  // NOTE: if you place an element on top of the other, valgrind dislikes.
   uBDef.position.Set(0, 0);  
   this->_body = _world._physicWorld.CreateBody(&uBDef);
   b2PolygonShape unitShape;
@@ -29,12 +30,9 @@ b2Body*	Server::Unit::setBody(BitField *b)
   fDef.shape = &unitShape;
   fDef.filter.categoryBits = b->what;
   fDef.filter.maskBits = b->collide;
+  // fDef.filter.categoryBits = -1;
+  // fDef.filter.maskBits = -1;
   this->_body->CreateFixture(&fDef);
-
-  //collision
-  // std::string *s = new std::string("mage");
-  // this->_body->SetUserData((void*)s);
-
   return this->_body;
 }
 

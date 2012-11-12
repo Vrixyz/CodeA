@@ -18,6 +18,7 @@ b2Body*	Server::Element::setBody(BitField *b, float width, float height, int x, 
   eBDef.fixedRotation = true;
   eBDef.type = b2_staticBody;
   eBDef.gravityScale = 0;
+  // NOTE: if you place an element on top of the other, valgrind dislikes.
   eBDef.position.Set(x, y);
   this->_body = _world._physicWorld.CreateBody(&eBDef);
 
@@ -26,15 +27,13 @@ b2Body*	Server::Element::setBody(BitField *b, float width, float height, int x, 
 
   b2FixtureDef fDef;
   fDef.shape = &elementShape;
+
   fDef.filter.categoryBits = b->what;
   fDef.filter.maskBits = b->collide;
+  // fDef.filter.categoryBits = -1;
+  // fDef.filter.maskBits = -1;
+
   this->_body->CreateFixture(&fDef);
-  
-  //collision
-  // std::string *s = new std::string("element");
-  // this->_body->SetUserData((void*)s);
-
-
   return this->_body;
 }
 

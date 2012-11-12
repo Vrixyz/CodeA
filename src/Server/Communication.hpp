@@ -19,7 +19,6 @@
 #include <boost/asio.hpp>
 #include <boost/asio/buffer.hpp>
 #include <boost/thread.hpp>
-#include <msgpack.hpp>
 #include <map>
 #include <vector>
 
@@ -79,12 +78,11 @@ namespace Server
 			  bind(boost::type<void>(), boost::ref(*this), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
       }
     
-      GameData::Command &getCommand(){return _command;}
+      // GameData::Command::Id &getCommand(){return _command;}
       Server::tcp_connection::pointer &getConnection(){return _connection;}
       
     private:
       boost::array<char, 127> buf;
-      GameData::Command _command;
       Server::tcp_connection::pointer _connection;
       Communication *_com;
     };

@@ -66,7 +66,7 @@ namespace Server
     void destroyElement(int id);
     void destroyBullet(int id);
     
-    //fct unit
+    //fct handling command
     void fire(char* cmd);
     void aimTo(char* cmd);
     void moveTo(char* cmd);
@@ -77,6 +77,7 @@ namespace Server
     void askMove(char* cmd);
     void move(char* cmd);
 
+    void sendUpdatesToClients();
     virtual void serialize(msgpack::packer<msgpack::sbuffer>& packet) const;
     virtual bool unSerialize(msgpack::packer<msgpack::sbuffer>& packet);
     virtual int	getClassId() const;

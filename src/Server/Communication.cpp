@@ -14,6 +14,15 @@ void	Server::Communication::init(World *w)
 {
   this->start_accept();
   _command = new CommandManager(w);
+  _command->addCallback(GameData::Command::Fire, &World::fire);
+  _command->addCallback(GameData::Command::AimTo, &World::aimTo);
+  _command->addCallback(GameData::Command::MoveTo, &World::moveTo);
+  _command->addCallback(GameData::Command::Move, &World::askMove);
+  _command->addCallback(GameData::Command::RotateLeft, &World::rotateLeft);
+  _command->addCallback(GameData::Command::RotateRight, &World::rotateRight);
+  _command->addCallback(GameData::Command::RotateStop, &World::rotateStop);
+  _command->addCallback(GameData::Command::Shield, &World::shield);
+
   thread_accept = boost::thread(&Server::Communication::accept_loop, this);
 }
 

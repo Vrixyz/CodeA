@@ -31,6 +31,7 @@ void	Server::World::init(int width, int height)
   // _physicWorld.SetContactListener(&World::myContactListenerInstance);
   
   communication.init(this);
+
 }
 
 void	Server::World::run()
@@ -47,22 +48,6 @@ void	Server::World::run()
 	  rest = timer.GetMilliseconds() + rest - TIMESTEP;
 	  timer.Reset();
 	  _physicWorld.Step(TIMESTEP, VELOCITY_ITERATION, POSITION_ITERATION);
-
-
-	  // DEBUG [
-
-	  // thread safe on communication.clients because of the const specifier (std::map is thread safe on read operations)
-
-	  // FIXME: Actually, seems not, add shared_ptr please (meaning no one else will modify this connection (like closing it !)
-	   // boost::lock_guard<boost::mutex> lock(communication._m_clients);
-	   // for (std::map<int, tcp_connection::pointer>::const_iterator
-	   // 	 it = communication.clients.begin(); it != communication.clients.end();
- 	   //     it++)
-	   //   {
-	      
-	      //Interpret cmd
- 	     //  GameData::Command *c;
-
  	    
 	  communication._command->interpretCommands();
 	  
@@ -70,38 +55,11 @@ void	Server::World::run()
 	    {
 	      (*itu)->update(TIMESTEP);
 	    }
-	  boost::lock_guard<boost::mutex> lock(communication._m_clients);	  
-	  for (std::map<int, tcp_connection::pointer>::const_iterator
-	  	  it = communication.clients.begin(); it != communication.clients.end();
-	  	it++)
-	     {
-	       msgpack::sbuffer sbuf;
-	       msgpack::packer<msgpack::sbuffer> packet(&sbuf);
-	       
-	       /// TODO: sepcify type of sent data (here: World)
-	       /// TODO: send different packet depending on client (fog of war, etc...)
-	       serialize(packet);
-	       
-	       
-	       // FIXME: sendToClient will lock_guard on clients, meaning it will deadlock if we shared_lock earlier. (solution would be to upgrade the lock (in sendToClient, and set an upgradeable lock in before this loop))
-	       if (communication.sendToClient(sbuf, it->first))
-		 {
-		  
-		   msgpack::unpacker pac;
-		   pac.reserve_buffer(sbuf.size());
-		   memcpy(pac.buffer(), sbuf.data(), sbuf.size());
-		   pac.buffer_consumed(sbuf.size());
-		  
-		   //	  now starts streaming deserialization.
-		   msgpack::unpacked result;
-		   while(pac.next(&result)) {
-		     // std::cout << result.get() << std::endl;
-		   }
-		  
-		 }
-	       // ] DEBUG
-	     }
+
+	  sendUpdatesToClients();
+	  
 	   //delete clients
+	  boost::lock_guard<boost::mutex> lock(communication._m_clients);	  
 	   for (std::list<int>::iterator it = communication.clientsErase.begin(); it != communication.clientsErase.end(); it++)
 	     {
 	       communication.clients.erase(*it);
@@ -211,6 +169,40 @@ void Server::World::destroyPlayer(int id)
 //   return destroyFromList(bullets, id);
 // }
 
+void	Server::World::sendUpdatesToClients()
+{
+  boost::lock_guard<boost::mutex> lock(communication._m_clients);
+  for (std::map<int, tcp_connection::pointer>::const_iterator
+	 it = communication.clients.begin(); it != communication.clients.end();
+       it++)
+    {
+      msgpack::sbuffer sbuf;
+      msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+	       
+      /// TODO: sepcify type of sent data (here: World)
+      /// TODO: send different packet depending on client (fog of war, etc...)
+      serialize(packet);
+	       
+	       
+      // FIXME: sendToClient will lock_guard on clients, meaning it will deadlock if we shared_lock earlier. (solution would be to upgrade the lock (in sendToClient, and set an upgradeable lock in before this loop))
+      if (communication.sendToClient(sbuf, it->first))
+	{
+		  
+	  msgpack::unpacker pac;
+	  pac.reserve_buffer(sbuf.size());
+	  memcpy(pac.buffer(), sbuf.data(), sbuf.size());
+	  pac.buffer_consumed(sbuf.size());
+		  
+	  //	  now starts streaming deserialization.
+	  msgpack::unpacked result;
+	  while(pac.next(&result)) {
+	    // std::cout << result.get() << std::endl;
+	  }
+		  
+	}
+      // ] DEBUG
+    }
+}
 void	Server::World::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
 {
   /// Packing GameData::World
@@ -326,15 +318,14 @@ void Server::World::askMove(char* cmd)
   msgpack::unpacked result;
   msgpack::unpacker pac;
   
-  int size = sizeof(GameData::Command::Type); // we receive 2 ints as parameter
+  int size = sizeof(GameData::Command::Id) + sizeof(int); // we receive 2 ints as parameter (and the commandId first)
 
   pac.reserve_buffer(size);
   memcpy(pac.buffer(), cmd, size);
   pac.buffer_consumed(size);
   
-  // // NOTE: you can check in result if the command id is ok for the function (or overriding it)
+  // NOTE: we must unpack the unnecessary commandId
   pac.next(&result);
-  
 
   if (pac.next(&result))
     {
@@ -376,7 +367,6 @@ void Server::World::rotateLeft(char* cmd)
 {
   std::list<Unit*>::iterator it = units.begin();
  
-  std::cout << "left" << std::endl;
   (*it)->askRotateLeft();
 }
 
@@ -384,7 +374,6 @@ void Server::World::rotateRight(char* cmd)
 {
   std::list<Unit*>::iterator it = units.begin();
 
-  std::cout << "right" << std::endl;
   (*it)->askRotateRight();
 }
 

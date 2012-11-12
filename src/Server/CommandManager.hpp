@@ -21,7 +21,11 @@ namespace Server
   {
   public:
     CommandManager(World *w);
- // called by Communication
+    // returns false in case of idCommand already handled. In this case, call removeCallBack first.
+    bool addCallback(GameData::Command::Id commandId, void (World::*methodToCall)(char*));
+    void removeCallback(GameData::Command::Id commandId);
+
+    // called by Communication
     void addCommandToQueue(tcp_connection::pointer sender, boost::array<char, 127> cmd); // msgpack::sbuffer ou equivalent (suite du packet envoye apres l'id de la commande
     
     // will call adequate world functions to prepare the next update (function pointer)
@@ -33,7 +37,8 @@ namespace Server
   private:
     World *world;
     mutable boost::mutex _m_cmds;
-    std::map<GameData::Command::Type, void (World::*)(char*)> fcts;
+    mutable boost::mutex _m_fcts;
+    std::map<GameData::Command::Id, void (World::*)(char*)> fcts;
     std::vector<std::pair<boost::array<char, 127>, tcp_connection::pointer> >cmds;
   };
 }

@@ -14,16 +14,26 @@
 Server::CommandManager::CommandManager(World *w)
 {
   world = w;
-  fcts[GameData::Command::Fire] = &World::fire;
-  fcts[GameData::Command::AimTo] = &World::aimTo;  
-  fcts[GameData::Command::MoveTo] = &World::moveTo;
-  fcts[GameData::Command::Move] = &World::askMove;
-  fcts[GameData::Command::RotateLeft] = &World::rotateLeft;
-  fcts[GameData::Command::RotateRight] = &World::rotateRight;
-  fcts[GameData::Command::RotateStop] = &World::rotateStop;
-  fcts[GameData::Command::Shield] = &World::shield;   
 }
 
+bool Server::CommandManager::addCallback(GameData::Command::Id commandId, void (World::*methodToCall)(char*))
+{
+  boost::lock_guard<boost::mutex> lock(_m_fcts);
+
+  if (fcts[commandId] == NULL)
+    fcts[commandId] = methodToCall;
+  else
+    return false;
+  return true;
+}
+
+void Server::CommandManager::removeCallback(GameData::Command::Id commandId)
+{
+  boost::lock_guard<boost::mutex> lock(_m_fcts);
+
+  fcts.erase(commandId);
+}
+      
 // TODO: addCommandToSend, and interpretCommandToSend, this would become addCommandReceived
 void	Server::CommandManager::addCommandToQueue(tcp_connection::pointer sender, boost::array<char, 127> cmd)
 {
@@ -34,37 +44,24 @@ void	Server::CommandManager::addCommandToQueue(tcp_connection::pointer sender, b
 void	Server::CommandManager::interpretCommands()
 {
   boost::lock_guard<boost::mutex> lock(_m_cmds);
-  for (std::map<int, tcp_connection::pointer>::const_iterator
-	 it = this->world->communication.clients.begin(); it != this->world->communication.clients.end();
-       it++)
+  for (unsigned int i = 0; i < cmds.size(); i++)
     {
-      for (unsigned int i = 0; i < cmds.size(); i++)
+      // TODO: seek directly asked unit (send unitId from client)
+      int id;
+      int size = 3;
+      msgpack::unpacker pac;
+      msgpack::unpacked result;
+      
+      pac.reserve_buffer(size);
+      memcpy(pac.buffer(), cmds[i].first.data(), size);
+      pac.buffer_consumed(size);
+      if (pac.next(&result))
 	{
-	  if (cmds[i].second == it->second)
-	    {
-	      
-
-	      // TODO: seek directly asked unit (send unitId from client)
-	      int id;
-	      int size = 3;
-	      msgpack::unpacker pac;
-	      msgpack::unpacked result;
-
-
-	      
-	      pac.reserve_buffer(size);
-	      memcpy(pac.buffer(), cmds[i].first.data(), size);
-	      pac.buffer_consumed(size);
-	      if (pac.next(&result))
-		{
-		  std::cout<<"PASS"<<std::endl;
-		  msgpack::object obj = result.get();
- 		  obj.convert(&id);
-		  std::cout<<"N°:"<<id<<std::endl;
-		}
-	      ((world)->*fcts[(GameData::Command::Type)id])(cmds[i].first.data());
-	    }
+	  msgpack::object obj = result.get();
+	  obj.convert(&id);
 	}
+      // TODO: send id of client who has sent the data. (.second)
+      ((world)->*fcts[(GameData::Command::Id)id])(cmds[i].first.data());
     }
   while (cmds.size() > 0)
     {

@@ -15,10 +15,9 @@
 
 namespace GameData
 {
-  struct Command
+  namespace Command
   {
-    // make id command
-    typedef enum e_Type
+    typedef enum e_Id
       {
 	Fire = 0,
 	AimTo = 1,
@@ -28,16 +27,8 @@ namespace GameData
 	RotateRight = 5,
 	RotateStop = 6,
 	Shield = 7
-      } Type;
-    int type;
-    //
-
-    float x;
-    float y;
-    Command() : x(0), y(0) {}
-    Type getType(){return (Type)type;}
-    MSGPACK_DEFINE(type, x, y);
-  };
+      } Id;
+  }
 }
 
 #endif

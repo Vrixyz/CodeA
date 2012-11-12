@@ -11,38 +11,102 @@
 #ifndef COMMAND_MANAGER_HPP
 # define COMMAND_MANAGER_HPP
 
-#include "tcp_connection.hpp"
-#include <msgpack.h>
+#include <boost/thread.hpp>
+
+#include <boost/array.hpp>
+
+#include <msgpack.hpp>
+
 
 namespace Server
 {
-  class World;
+  // C is the type of the (C)aller onto the callback will be called.
+  // IdCom is the identity type of a command, must be msgpack packable.
+  // IdClient is the identity type of a client, sent then to the Caller (not implemented)
+  template<typename C, typename IdCom, typename IdClient>
   class CommandManager
   {
   public:
-    CommandManager(World *w);
+    CommandManager(C *c);
     // returns false in case of idCommand already handled. In this case, call removeCallBack first.
-    bool addCallback(GameData::Command::Id commandId, void (World::*methodToCall)(char*));
-    void removeCallback(GameData::Command::Id commandId);
+    bool addCallback(IdCom commandId, void (C::*methodToCall)(char*));
+    void removeCallback(IdCom commandId);
 
     // called by Communication
-    void addCommandToQueue(tcp_connection::pointer sender, boost::array<char, 127> cmd); // msgpack::sbuffer ou equivalent (suite du packet envoye apres l'id de la commande
+    void addCommandToQueue(IdClient sender, char* cmd); // msgpack::sbuffer ou equivalent (suite du packet envoye apres l'id de la commande
     
-    // will call adequate world functions to prepare the next update (function pointer)
+    // will call adequate caller functions to prepare the next update (function pointer)
     // then will delete handled commands
-    // /!\ must be thread safe
     void interpretCommands();
-    // on choppe l'id
-    // on appelle la methode de w
   private:
-    World *world;
+    C *caller;
     mutable boost::mutex _m_cmds;
     mutable boost::mutex _m_fcts;
-    std::map<GameData::Command::Id, void (World::*)(char*)> fcts;
-    std::vector<std::pair<boost::array<char, 127>, tcp_connection::pointer> >cmds;
+    std::map<IdCom, void (C::*)(char*)> fcts;
+    std::vector<std::pair<char*, IdClient> >cmds;
   };
 }
 
-#include "World.hpp"
+template<typename C, typename IdCom, typename IdClient>
+Server::CommandManager<C, IdCom, IdClient>::CommandManager(C *c)
+{
+  caller = c;
+}
+
+template<typename C, typename IdCom, typename IdClient>
+bool Server::CommandManager<C, IdCom, IdClient>::addCallback(IdCom commandId, void (C::*methodToCall)(char*))
+{
+  boost::lock_guard<boost::mutex> lock(_m_fcts);
+
+  if (fcts[commandId] == NULL)
+    fcts[commandId] = methodToCall;
+  else
+    return false;
+  return true;
+}
+
+template<typename C, typename IdCom, typename IdClient>
+void Server::CommandManager<C, IdCom, IdClient>::removeCallback(IdCom commandId)
+{
+  boost::lock_guard<boost::mutex> lock(_m_fcts);
+
+  fcts.erase(commandId);
+}
+      
+// TODO: addCommandToSend, and interpretCommandToSend, this would become addCommandReceived
+template<typename C, typename IdCom, typename IdClient>
+void	Server::CommandManager<C, IdCom, IdClient>::addCommandToQueue(IdClient sender, char* cmd)
+{
+  boost::lock_guard<boost::mutex> lock(_m_cmds);
+  cmds.push_back(std::pair<char*, IdClient>(cmd, sender));
+}
+
+template<typename C, typename IdCom, typename IdClient>
+void	Server::CommandManager<C, IdCom, IdClient>::interpretCommands()
+{
+  boost::lock_guard<boost::mutex> lock(_m_cmds);
+  for (unsigned int i = 0; i < cmds.size(); i++)
+    {
+      IdCom id;
+      int size = sizeof(IdCom);
+      msgpack::unpacker pac;
+      msgpack::unpacked result;
+      
+      pac.reserve_buffer(size);
+      memcpy(pac.buffer(), cmds[i].first, size);
+      pac.buffer_consumed(size);
+      if (pac.next(&result))
+	{
+	  msgpack::object obj = result.get();
+	  obj.convert(&id);
+	}
+      // TODO: send id of client who has sent the data. (.second)
+      (caller->*fcts[(IdCom)id])(cmds[i].first);
+    }
+  while (cmds.size() > 0)
+    {
+      cmds.pop_back();
+    }
+}
 
 #endif

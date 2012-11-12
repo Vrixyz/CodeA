@@ -13,7 +13,7 @@
 void	Server::Communication::init(World *w)
 {
   this->start_accept();
-  _command = new CommandManager(w);
+  _command = new CommandManager<World, int, tcp_connection::pointer>(w);
   _command->addCallback(GameData::Command::Fire, &World::fire);
   _command->addCallback(GameData::Command::AimTo, &World::aimTo);
   _command->addCallback(GameData::Command::MoveTo, &World::moveTo);
@@ -89,7 +89,8 @@ void Server::Communication::handle_accept(tcp_connection::pointer& new_connectio
 
 void Server::Communication::read_socket_handler::operator()(const boost::system::error_code& ec, std::size_t size)
 {
-  _com->_command->addCommandToQueue(_connection, buf);
+  // FIXME: data() should be copied
+  _com->_command->addCommandToQueue(_connection, buf.data());
   setHandler();
 }
 

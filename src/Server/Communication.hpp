@@ -13,6 +13,8 @@
 
 #include "../GameData/Command.hpp"
 #include "tcp_connection.hpp"
+#include "CommandManager.hpp"
+
 #include <ctime>
 #include <iostream>
 #include <string>
@@ -25,15 +27,15 @@
 namespace Server
 {
   class World;
-  class CommandManager;
   class	Communication
   {
   public:
     mutable boost::mutex _m_clients;
     std::map<int, tcp_connection::pointer> clients;
     std::list<int> clientsErase;
+   // FIXME: ugly fixed size
     boost::array<char, 127> buf;
-    CommandManager *_command;
+    CommandManager<World, int, tcp_connection::pointer> *_command;
     Communication() : acceptor(io_service, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), 4242))
     {
     }
@@ -78,7 +80,6 @@ namespace Server
 			  bind(boost::type<void>(), boost::ref(*this), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
       }
     
-      // GameData::Command::Id &getCommand(){return _command;}
       Server::tcp_connection::pointer &getConnection(){return _connection;}
       
     private:
@@ -89,6 +90,5 @@ namespace Server
   };
 }
 
-#include "CommandManager.hpp"
 #include "World.hpp"
 #endif

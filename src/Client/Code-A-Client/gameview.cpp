@@ -5,7 +5,7 @@ GameView::GameView(QWidget *parent) : QGraphicsView(parent)
     status = 6;
     dvectorx = 0;
     dvectory = 0;
-    angle = 200;
+    cangle = 0;
     setObjectName(QString::fromUtf8("Gameview"));
     setGeometry(QRect(0, 0, 800, 600));
     setMouseTracking(true);
@@ -38,12 +38,13 @@ void GameView::mouseMoveEvent(QMouseEvent *e)
         a += 180;
     else if (p.x() <= 0 && p.y() >= 0)
         a += 270;
+    cangle = a;
     a -= angle;
-    if (a < 0)
+    if (a <= 0)
         a = 360 + a;
-    if (a < 350 && a >= 180)
+    if (a < 350 && a > 180)
         stat = 4;
-    else if (a > 10 && a < 180)
+    else if (a > 10 && a <= 180)
         stat = 5;
     else
         stat = 6;
@@ -51,7 +52,6 @@ void GameView::mouseMoveEvent(QMouseEvent *e)
     {
         packet.pack(stat);
         n->sendToServer(sbuf);
-        std::cout << "x : " << abs(p.x()) << " y : " << abs(p.y()) << " angle : " << a << std::endl;
         status = stat;
         if (status == 4)
             std::cout << "Go Left !" << std::endl;
@@ -65,4 +65,35 @@ void GameView::mouseMoveEvent(QMouseEvent *e)
 void GameView::bindNet(Nm *s)
 {
     n = s;
+}
+
+void GameView::rotationUpdate()
+{
+    msgpack::sbuffer sbuf;
+    msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+    int stat;
+    int a = cangle;
+    a -= angle;
+    if (a <= 0)
+        a = 360 + a;
+    if (a < 350 && a > 180)
+        stat = 4;
+    else if (a > 10 && a <= 180)
+        stat = 5;
+    else
+        stat = 6;
+    std::cout << stat << " " << a << " " << cangle << std::endl;
+    if (stat != status)
+    {
+        packet.pack(stat);
+        n->sendToServer(sbuf);
+        std::cout << a << " " << angle << std::endl;
+        status = stat;
+        if (status == 4)
+            std::cout << "Go Left ! (up)" << std::endl;
+        else if (status == 5)
+            std::cout << "Go Right ! (up)" << std::endl;
+        else
+            std::cout << "Keep Going ! (up)" << std::endl;
+    }
 }

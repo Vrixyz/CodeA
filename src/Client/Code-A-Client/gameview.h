@@ -10,8 +10,10 @@ class GameView : public QGraphicsView
 public:
     GameView(QWidget *);
     void mouseMoveEvent(QMouseEvent *);
+    void rotationUpdate();
     void bindNet(Nm *);
     Nm *n;
+    int cangle;
     int angle;
     int status;
     bool ingame;

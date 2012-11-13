@@ -82,12 +82,11 @@ void GameView::rotationUpdate()
         stat = 5;
     else
         stat = 6;
-    std::cout << stat << " " << a << " " << cangle << std::endl;
+    std::cout << "status courrant " << status << " futur status : " << stat << " angle relatif : " << a << " real angle " << cangle << std::endl;
     if (stat != status)
     {
         packet.pack(stat);
         n->sendToServer(sbuf);
-        std::cout << a << " " << angle << std::endl;
         status = stat;
         if (status == 4)
             std::cout << "Go Left ! (up)" << std::endl;

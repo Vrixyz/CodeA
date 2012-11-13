@@ -21,7 +21,6 @@
 #include <QPoint>
 #include <QLine>
 #include <cmath>
-#include "math.h"
 
 class Nm;
 

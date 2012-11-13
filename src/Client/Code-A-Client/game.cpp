@@ -64,6 +64,7 @@ void Game::drawWorld() {
             (*poly) << QPoint(c.x, c.y * -1);
             //            std::cout << c.x << " " << c.y << std::endl;
         }
+        scene->addEllipse(p.x, p.y * -1, 5, 5);
         item = scene->addPolygon(*poly);
         //        std::cout << "Bullet : " << p.x << " " << p.y << std::endl;
         item->setPos(p.x * 1, p.y * -1);

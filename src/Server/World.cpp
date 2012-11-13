@@ -324,7 +324,50 @@ GameData::Physics Server::World::getPhysics(const b2Body* body) const
   return physics;
 }
 
-void Server::World::askMove(char* cmd)
+void Server::World::fire(int idClient, char* cmd)
+{
+}
+
+void Server::World::aimTo(int idClient, char* cmd)
+{
+}
+
+void Server::World::moveTo(int idClient, char* cmd)
+{
+}
+
+void Server::World::rotateLeft(int idClient, char* cmd)
+{
+  std::list<Unit*>::iterator it = units.begin();
+ 
+  (*it)->askRotateLeft();
+}
+
+void Server::World::rotateRight(int idClient, char* cmd)
+{
+  std::list<Unit*>::iterator it = units.begin();
+
+  (*it)->askRotateRight();
+}
+
+void Server::World::rotateStop(int idClient, char* cmd)
+{
+  std::list<Unit*>::iterator it = units.begin();
+
+  (*it)->askRotateStop();
+}
+
+void Server::World::shield(int idClient, char* cmd)
+{
+  // BitField *shield = new BitField(Server::BitField::SHIELD_MAGE, Server::BitField::OBSTACLE);
+  // Server::Element *e = new Server::Element(this->_world, (int)this->_world.elements.size(), false);
+  // b2Vec2 position = this->getBody()->GetPosition();
+  
+  // e->setBody(shield, 1, 10, position.x + 10, position.y + 1);
+  // _world.elements.push_back(e); 
+}
+
+void Server::World::askMove(int idClient, char* cmd)
 {
   int x;
   int y;
@@ -354,47 +397,4 @@ void Server::World::askMove(char* cmd)
       obj.convert(&y);
       (*it)->current.y = y;
     }
-}
-
-void Server::World::fire(char* cmd)
-{
-}
-
-void Server::World::aimTo(char* cmd)
-{
-}
-
-void Server::World::moveTo(char* cmd)
-{
-}
-
-void Server::World::shield(char* cmd)
-{
-  // BitField *shield = new BitField(Server::BitField::SHIELD_MAGE, Server::BitField::OBSTACLE);
-  // Server::Element *e = new Server::Element(this->_world, (int)this->_world.elements.size(), false);
-  // b2Vec2 position = this->getBody()->GetPosition();
-  
-  // e->setBody(shield, 1, 10, position.x + 10, position.y + 1);
-  // _world.elements.push_back(e); 
-}
-
-void Server::World::rotateLeft(char* cmd)
-{
-  std::list<Unit*>::iterator it = units.begin();
- 
-  (*it)->askRotateLeft();
-}
-
-void Server::World::rotateRight(char* cmd)
-{
-  std::list<Unit*>::iterator it = units.begin();
-
-  (*it)->askRotateRight();
-}
-
-void Server::World::rotateStop(char* cmd)
-{
-  std::list<Unit*>::iterator it = units.begin();
-
-  (*it)->askRotateStop();
 }

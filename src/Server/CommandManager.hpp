@@ -29,7 +29,7 @@ namespace Server
   public:
     CommandManager(C *c);
     // returns false in case of idCommand already handled. In this case, call removeCallBack first.
-    bool addCallback(IdCom commandId, void (C::*methodToCall)(char*));
+    bool addCallback(IdCom commandId, void (C::*methodToCall)(IdClient, char*));
     void removeCallback(IdCom commandId);
 
     // called by Communication
@@ -42,7 +42,7 @@ namespace Server
     C *caller;
     mutable boost::mutex _m_cmds;
     mutable boost::mutex _m_fcts;
-    std::map<IdCom, void (C::*)(char*)> fcts;
+    std::map<IdCom, void (C::*)(IdClient, char*)> fcts;
     std::vector<std::pair<char*, IdClient> >cmds;
   };
 }
@@ -54,7 +54,7 @@ Server::CommandManager<C, IdCom, IdClient>::CommandManager(C *c)
 }
 
 template<typename C, typename IdCom, typename IdClient>
-bool Server::CommandManager<C, IdCom, IdClient>::addCallback(IdCom commandId, void (C::*methodToCall)(char*))
+bool Server::CommandManager<C, IdCom, IdClient>::addCallback(IdCom commandId, void (C::*methodToCall)(IdClient, char*))
 {
   boost::lock_guard<boost::mutex> lock(_m_fcts);
 
@@ -100,8 +100,7 @@ void	Server::CommandManager<C, IdCom, IdClient>::interpretCommands()
 	  msgpack::object obj = result.get();
 	  obj.convert(&id);
 	}
-      // TODO: send id of client who has sent the data. (.second)
-      (caller->*fcts[(IdCom)id])(cmds[i].first);
+      (caller->*fcts[(IdCom)id])(cmds[i].second, cmds[i].first);
     }
   while (cmds.size() > 0)
     {

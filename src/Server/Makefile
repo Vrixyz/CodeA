@@ -10,14 +10,12 @@
 
 SRC_SR	=	mainTest.cpp \
 		World.cpp \
-		Communication.cpp \
 		Element.cpp \
 		Unit.cpp \
 		Bullet.cpp \
 		tcp_connection.cpp \
 		BitField.cpp \
-		Object.cpp \
-		CommandManager.cpp \
+		Object.cpp
 
 
 SRC_CL	=	clientTest.cpp

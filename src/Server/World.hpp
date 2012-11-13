@@ -68,15 +68,14 @@ namespace Server
     void destroyBullet(int id);
     
     //fct handling command
-    void fire(char* cmd);
-    void aimTo(char* cmd);
-    void moveTo(char* cmd);
-    void rotateLeft(char* cmd);
-    void rotateRight(char* cmd);
-    void rotateStop(char* cmd);
-    void shield(char* cmd);
-    void askMove(char* cmd);
-    void move(char* cmd);
+    void fire(int idClient, char* cmd);
+    void aimTo(int idClient, char* cmd);
+    void moveTo(int idClient, char* cmd);
+    void rotateLeft(int idClient, char* cmd);
+    void rotateRight(int idClient, char* cmd);
+    void rotateStop(int idClient, char* cmd);
+    void shield(int idClient, char* cmd);
+    void askMove(int idClient, char* cmd);
 
     void sendUpdatesToClients();
     virtual void serialize(msgpack::packer<msgpack::sbuffer>& packet) const;

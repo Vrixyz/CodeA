@@ -42,7 +42,7 @@ namespace Server
   public:
     // static MyContactListener myContactListenerInstance;
     /// TODO: Add a trash list to remove safely the bodies
-    Communication       communication;
+    Communication<World>       communication;
     std::list<Server::Element*>	elements;
     std::list<Server::Unit*> units;
     std::list<Server::Bullet*>	bullets;
@@ -50,6 +50,7 @@ namespace Server
     b2World _physicWorld;
 
     World() : _physicWorld(b2Vec2(0, 0)) {}
+    ~World();
     void init(int width, int height);
     void run();
     void handleContact(b2Body object1, b2Body object2);
@@ -83,7 +84,7 @@ namespace Server
     virtual int	getClassId() const;
 
   private:
-
+    CommandManager<World, int, int>* _commandManager;
     GameData::Physics getPhysics(const b2Body* body) const;
   };
 }

@@ -10,9 +10,9 @@
 
 #include "tcp_connection.hpp"
 
-Server::tcp_connection::pointer Server::tcp_connection::create(Communication& com, boost::asio::io_service& io_service)
+Server::tcp_connection::pointer Server::tcp_connection::create(boost::asio::io_service& io_service)
 {
-  return pointer(new tcp_connection(com, io_service));
+  return pointer(new tcp_connection(io_service));
 }
 
 boost::asio::ip::tcp::socket& Server::tcp_connection::socket()

@@ -12,6 +12,11 @@
 
 // Server::MyContactListener Server::World::myContactListenerInstance;
 
+Server::World::~World()
+{
+  // TODO: we certainly have stuff to do there.
+}
+
 void	Server::World::init(int width, int height)
 {
   Server::Unit *u;
@@ -30,17 +35,27 @@ void	Server::World::init(int width, int height)
   
   // _physicWorld.SetContactListener(&World::myContactListenerInstance);
   
-  communication.init(this);
+  communication.init();
 
+  _commandManager = new CommandManager<World, int, int>(this);
+  _commandManager->addCallback(GameData::Command::Fire, &World::fire);
+  _commandManager->addCallback(GameData::Command::AimTo, &World::aimTo);
+  _commandManager->addCallback(GameData::Command::MoveTo, &World::moveTo);
+  _commandManager->addCallback(GameData::Command::Move, &World::askMove);
+  _commandManager->addCallback(GameData::Command::RotateLeft, &World::rotateLeft);
+  _commandManager->addCallback(GameData::Command::RotateRight, &World::rotateRight);
+  _commandManager->addCallback(GameData::Command::RotateStop, &World::rotateStop);
+  _commandManager->addCallback(GameData::Command::Shield, &World::shield);
+  communication.setCommandManager(_commandManager);
 }
 
 void	Server::World::run()
 {
-  /// FIXME: ugly infinite loop
   b2Timer timer;
   float32 rest = 0;
 
   timer.Reset();
+  /// FIXME: ugly infinite loop
   while (1)
     {
       if (timer.GetMilliseconds() + rest >= TIMESTEP)
@@ -58,7 +73,7 @@ void	Server::World::run()
 
 	  sendUpdatesToClients();
 	  
-	   //delete clients
+	   // deleting clients:
 	  boost::lock_guard<boost::mutex> lock(communication._m_clients);	  
 	   for (std::list<int>::iterator it = communication.clientsErase.begin(); it != communication.clientsErase.end(); it++)
 	     {

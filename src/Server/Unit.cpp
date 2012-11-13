@@ -75,19 +75,37 @@ void Server::Unit::move(int x, int y)
   // std::cout<<"actualLinealVelocity: " <<  actualLinearVelocity.x << ";" << actualLinearVelocity.y << std::endl;
 }
 
-void Server::Unit::askRotateLeft()
+void Server::Unit::askMove(int idPlayer, int x, int y)
 {
-  rotation = -0.001;
+  if (this->ownPlayer(idPlayer))
+    {
+      current.x = x;
+      current.y = y;
+    }
 }
 
-void Server::Unit::askRotateRight()
+void Server::Unit::askRotateLeft(int idPlayer)
 {
-  rotation = 0.001;
+  if (this->ownPlayer(idPlayer))
+    {
+      rotation = -0.001;
+    }
 }
 
-void Server::Unit::askRotateStop()
+void Server::Unit::askRotateRight(int idPlayer)
 {
-  rotation = 0;
+  if (this->ownPlayer(idPlayer))
+    {
+      rotation = 0.001;
+    }
+}
+
+void Server::Unit::askRotateStop(int idPlayer)
+{
+  if (this->ownPlayer(idPlayer))
+    {
+      rotation = 0;
+    }
 }
 
 

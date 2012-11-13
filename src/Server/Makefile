@@ -34,8 +34,7 @@ CXXFLAGS=	-W -Wall -Wextra -g
 
 CC	=	g++
 
-all		:	$(NAME_SR) \
-			$(NAME_CL)
+all		:	$(NAME_SR)
 
 $(NAME_CL)	:	$(OBJ_CL)
 			$(CC) $(OBJ_CL) $(LIBS) -o $(NAME_CL)

@@ -48,10 +48,11 @@ namespace Server
     /// return true to success, false if failed.
     bool sendToClient(const msgpack::sbuffer&packedInformation, int clientId);
 
+    void cleanClients();
+
     void start_accept();
     void handle_accept(tcp_connection::pointer& new_connection,
 		       const boost::system::error_code& error);
-    void handleRead(const boost::system::error_code& error, std::size_t size);
     void addConnection(tcp_connection::pointer&);
     
     /// For thread:
@@ -130,17 +131,14 @@ bool Server::Communication<C>::sendToClient(const msgpack::sbuffer& packedInform
   try
     {
       boost::system::error_code ignored_error;
-      // boost::lock_guard<boost::mutex> lock2(clients[clientId]->_mutex);
+      // FIXME: that aint thread safe
       boost::asio::write(clients[clientId]->socket(), boost::asio::buffer(packedInformation.data(), packedInformation.size()), ignored_error);
       if (ignored_error)
 	{
 	  /// FIXME: some errors might be more or less killing than others.
-	  // clients[clientId].swap();
-	  std::cout<<"erase..."<<std::endl;
-	  
+	  std::cout<<"prepare to erase..."<<std::endl;
 	  clientsErase.push_back(clientId);
 	  clientsErase.unique();
-	  std::cout<<"erased !"<<std::endl;
 	  return false;
 	}
     }
@@ -152,6 +150,19 @@ bool Server::Communication<C>::sendToClient(const msgpack::sbuffer& packedInform
     }
   return true;
 }
+
+template<typename C>
+void	Server::Communication<C>::cleanClients()
+{
+  boost::lock_guard<boost::mutex> lock(_m_clients);
+  for (std::list<int>::iterator it = clientsErase.begin(); it != clientsErase.end(); it++)
+    {
+      clients.erase(*it);
+      std::cout << "erased client " << *it << std::endl;
+    }
+  clientsErase.clear();
+}
+
 template<typename C>
 void Server::Communication<C>::start_accept()
 {
@@ -188,6 +199,17 @@ void Server::Communication<C>::handle_accept(tcp_connection::pointer& new_connec
 template<typename C>
 void Server::Communication<C>::read_socket_handler::operator()(const boost::system::error_code& ec, std::size_t size)
 {
+  static int i = 0;
+  for (int j = 0; j < i; j++)
+    std::cout << "L";
+  std::cout << " " << size;
+  std::cout << " " << ec;
+  i++;
+  if (i > 10)
+    i = 1;
+  std::cout << std::endl;
+  if (ec != NULL)
+    return;
   // FIXME: data() should be copied
   _com->_command->addCommandToQueue(id, buf.data());
   setHandler();

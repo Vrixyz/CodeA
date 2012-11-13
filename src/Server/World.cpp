@@ -73,12 +73,16 @@ void	Server::World::run()
 
 	  sendUpdatesToClients();
 	  
-	   // deleting clients:
-	  boost::lock_guard<boost::mutex> lock(communication._m_clients);	  
-	   for (std::list<int>::iterator it = communication.clientsErase.begin(); it != communication.clientsErase.end(); it++)
-	     {
-	       communication.clients.erase(*it);
-	     }
+
+	  communication.cleanClients();
+	  // TODO: delete client on Communication and add a handler
+	  //  // deleting clients:
+	  // boost::lock_guard<boost::mutex> lock(communication._m_clients);	  
+	  //  for (std::list<int>::iterator it = communication.clientsErase.begin(); it != communication.clientsErase.end(); it++)
+	  //    {
+	  //      std::cout << "erasing client " << *it << std::endl;
+	  //      communication.clients.erase(*it);
+	  //    }
 	}
       // FIXME: think more about that sleep.
       usleep(500);
@@ -215,6 +219,7 @@ void	Server::World::sendUpdatesToClients()
 	  }
 		  
 	}
+      
       // ] DEBUG
     }
 }
@@ -340,21 +345,21 @@ void Server::World::rotateLeft(int idClient, char* cmd)
 {
   std::list<Unit*>::iterator it = units.begin();
  
-  (*it)->askRotateLeft();
+  (*it)->askRotateLeft(idClient);
 }
 
 void Server::World::rotateRight(int idClient, char* cmd)
 {
   std::list<Unit*>::iterator it = units.begin();
 
-  (*it)->askRotateRight();
+  (*it)->askRotateRight(idClient);
 }
 
 void Server::World::rotateStop(int idClient, char* cmd)
 {
   std::list<Unit*>::iterator it = units.begin();
 
-  (*it)->askRotateStop();
+  (*it)->askRotateStop(idClient);
 }
 
 void Server::World::shield(int idClient, char* cmd)
@@ -369,8 +374,8 @@ void Server::World::shield(int idClient, char* cmd)
 
 void Server::World::askMove(int idClient, char* cmd)
 {
-  int x;
-  int y;
+  int x = 0;
+  int y = 0;
   std::list<Unit*>::iterator it = units.begin();
   msgpack::object obj;
   msgpack::unpacked result;
@@ -389,12 +394,11 @@ void Server::World::askMove(int idClient, char* cmd)
     {
       obj = result.get();
       obj.convert(&x);
-      (*it)->current.x = x;
     }
   if (pac.next(&result))
     {
       obj = result.get();
       obj.convert(&y);
-      (*it)->current.y = y;
     }
+  (*it)->askMove(idClient, x, y);
 }

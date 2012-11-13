@@ -31,9 +31,10 @@ namespace Server
     void addPlayer(Player* p);
     bool ownPlayer(int idPlayer);
     void move(int x, int y);
-    void askRotateLeft();
-    void askRotateRight();
-    void askRotateStop();
+    void askMove(int idClient, int x, int y);
+    void askRotateLeft(int idPlayer);
+    void askRotateRight(int idPlayer);
+    void askRotateStop(int idPlayer);
 
     virtual void update(float elapsedMilliseconds);
     virtual void serialize(msgpack::packer<msgpack::sbuffer>& packet) const;

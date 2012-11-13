@@ -86,11 +86,11 @@ namespace Server
       }
     
       Server::tcp_connection::pointer &getConnection(){return _connection;}
-      const int id;
     private:
       boost::array<char, 127> buf;
       Server::tcp_connection::pointer _connection;
       Communication<C> *_com;
+      const int id;
     };
   };
 }

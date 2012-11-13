@@ -16,7 +16,7 @@ b2Body*	Server::Unit::setBody(BitField *b)
 
   uBDef.type = b2_dynamicBody;
   uBDef.userData = this;
-  uBDef.fixedRotation = false;
+  uBDef.fixedRotation = true;
   uBDef.type = b2_dynamicBody;
   uBDef.gravityScale = 0;
   uBDef.bullet = true;
@@ -86,34 +86,51 @@ void Server::Unit::askMove(int idPlayer, int x, int y)
 
 void Server::Unit::askRotateLeft(int idPlayer)
 {
+  std::cout << "left rot";
   if (this->ownPlayer(idPlayer))
     {
+      std::cout << "ate";
       rotation = -0.001;
     }
+  std::cout << std::endl;
 }
 
 void Server::Unit::askRotateRight(int idPlayer)
 {
+  std::cout << "right rot";
   if (this->ownPlayer(idPlayer))
     {
+      std::cout << "ate";
       rotation = 0.001;
     }
+ std::cout << std::endl;
 }
 
 void Server::Unit::askRotateStop(int idPlayer)
 {
+  std::cout << "stop rot";
   if (this->ownPlayer(idPlayer))
     {
-      rotation = 0;
+
+      std::cout << "ate";
+      rotation = 0.0;
     }
+  std::cout << std::endl;
 }
-
-
 
 void Server::Unit::update(float elapsedMilliseconds)
 {
   // b2Vec2 curVel = _body->GetLinearVelocity();
   // if (curVel.x != current.x && curVel.y != current.y)
   this->move(current.x, current.y);
+
+
+  // TODO: do this in a function, and improve precision
+#define PI 3.14
+  std::cout << rotation << std::endl;
+  while (_body->GetAngle() > 2 * PI)
+    _body->SetTransform(_body->GetPosition(), _body->GetAngle() - 2 * PI);
+  while (_body->GetAngle() < 0)
+    _body->SetTransform(_body->GetPosition(), _body->GetAngle() + 2 * PI);
   _body->SetAngularVelocity(rotation);
 }

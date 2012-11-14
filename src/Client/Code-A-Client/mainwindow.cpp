@@ -65,13 +65,23 @@ void MainWindow::keyPressEvent(QKeyEvent *e) {
         case Qt::Key_unknown:
             std::cout << "PATRON ELLE PIQUE PAS TA VITEL !" << std::endl;
             break;
-        case Qt::Key_W:
+        case Qt::Key_B:
+            std::cout << "BULLET !" << std::endl;
+            sendable = true;
+            stat = 0;
+            break;
+        case Qt::Key_R:
+            std::cout << "shield !" << std::endl;
+            sendable = true;
+            stat = 7;
+            break;
+        case Qt::Key_Z:
             std::cout << "UP !" << std::endl;
             sendable = true;
             dvectory += 1;
             stat = 3;
             break;
-        case Qt::Key_A:
+        case Qt::Key_Q:
             std::cout << "LEFT !" << std::endl;
             sendable = true;
             dvectorx -= 1;
@@ -114,13 +124,13 @@ void MainWindow::keyReleaseEvent(QKeyEvent *e) {
         case Qt::Key_unknown:
             std::cout << "PATRON ELLE PIQUE PAS TA VITEL !" << std::endl;
             break;
-        case Qt::Key_W:
+        case Qt::Key_Z:
             std::cout << "UP !" << std::endl;
             sendable = true;
             stat = 3;
             dvectory -= 1;
             break;
-        case Qt::Key_A:
+        case Qt::Key_Q:
             std::cout << "LEFT !" << std::endl;
             sendable = true;
             stat = 3;

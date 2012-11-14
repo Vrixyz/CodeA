@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 17:37:09 2012 thierry berger
-// Last update Tue Sep 18 11:12:35 2012 mathieu leurquin
+// Last update Tue Nov 13 10:43:22 2012 mathieu leurquin
 //
 
 #ifndef SERVER_BULLET_HPP
@@ -22,7 +22,7 @@ namespace Server
     GameData::Bullet _data;
 
     Bullet(World& w, int id, int damage) : Object(w, Object::Bullet, id), _data(damage, id) {}
-    virtual b2Body*	setBody();
+    virtual b2Body*	setBody(float angle, b2Vec2 position);
     
     /// TODO: implement these functions (or delete all serialized related stuff (nah..))
     virtual void serialize(msgpack::packer<msgpack::sbuffer>& packet) const;

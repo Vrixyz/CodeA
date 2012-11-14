@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 10:46:49 2012 thierry berger
-// Last update Fri Nov  9 11:26:19 2012 mathieu leurquin
+// Last update Tue Nov 13 19:26:04 2012 mathieu leurquin
 //
 
 #ifndef SERVER_WORLD_HPP
@@ -57,7 +57,7 @@ namespace Server
     Player& createPlayer(int id);
     Server::Unit* createUnit(BitField *b);
     Server::Element* createElement(bool walkable, float width, float height, BitField *b);
-    Server::Bullet* createBullet(int damage);
+    Server::Bullet* createBullet(int damage, float angle, b2Vec2 position);
     Player* getPlayer(int id);
     Server::Unit* getUnit(int id);
     Server::Element* getElement(int id);

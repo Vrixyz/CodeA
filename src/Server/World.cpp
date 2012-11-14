@@ -5,10 +5,11 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Fri Nov  9 13:31:33 2012 mathieu leurquin
+// Last update Wed Nov 14 10:27:33 2012 mathieu leurquin
 //
 
 #include "World.hpp"
+#include <cmath>
 
 // Server::MyContactListener Server::World::myContactListenerInstance;
 
@@ -113,10 +114,10 @@ Server::Element* Server::World::createElement(bool walkable, float width, float 
   return e;
 }
 
-Server::Bullet*  Server::World::createBullet(int damage)
+Server::Bullet*  Server::World::createBullet(int damage, float angle, b2Vec2 pos)
 {
   Server::Bullet* b = new Bullet(*this, (int)elements.size(), damage);
-  b->setBody();
+  b->setBody(angle, pos);
   bullets.push_back(b);
   return b;
 }
@@ -318,6 +319,7 @@ GameData::Physics Server::World::getPhysics(const b2Body* body) const
   physics.x = position.x;
   physics.y = position.y;
   physics.angle = body->GetAngle();
+
   /// assuming that shapes are only simple rectangles (real simple, centered at 0)
   const b2PolygonShape* shape = static_cast<const b2PolygonShape*>(body->GetFixtureList()->GetShape());
   for (int i = 0; i < shape->GetVertexCount(); ++i)
@@ -331,6 +333,24 @@ GameData::Physics Server::World::getPhysics(const b2Body* body) const
 
 void Server::World::fire(int idClient, char* cmd)
 {
+  std::list<Unit*>::iterator it = units.begin();
+  Bullet *b = createBullet(10, (*it)->getBody()->GetAngle(), (*it)->getBody()->GetPosition());
+  float angle;
+
+
+  angle = (*it)->getBody()->GetAngle() * 57.2957795;
+  angle = (int)angle % (int)360;
+  angle = angle  < 0 ? -angle : angle;
+
+  std::cout<<"angle : "<<angle<<std::endl;
+  if (angle >= 0 && angle < 90)
+    b->getBody()->ApplyLinearImpulse(b2Vec2(1, 1 / (tan(b->getBody()->GetAngle()))), b->getBody()->GetWorldCenter());
+  else if (angle >= 90 && angle < 180)
+    b->getBody()->ApplyLinearImpulse(b2Vec2(1, (-1) * tan(b->getBody()->GetAngle() - 1.5707963267949)), b->getBody()->GetWorldCenter());
+  else if (angle >= 180 && angle < 270)
+    b->getBody()->ApplyLinearImpulse(b2Vec2(-1, -1 / (tan(b->getBody()->GetAngle() - 3.1415926535898))), b->getBody()->GetWorldCenter());
+  else
+    b->getBody()->ApplyLinearImpulse(b2Vec2(-1, (tan(b->getBody()->GetAngle() - 4.7123889803847))), b->getBody()->GetWorldCenter());
 }
 
 void Server::World::aimTo(int idClient, char* cmd)
@@ -364,12 +384,15 @@ void Server::World::rotateStop(int idClient, char* cmd)
 
 void Server::World::shield(int idClient, char* cmd)
 {
-  // BitField *shield = new BitField(Server::BitField::SHIELD_MAGE, Server::BitField::OBSTACLE);
-  // Server::Element *e = new Server::Element(this->_world, (int)this->_world.elements.size(), false);
-  // b2Vec2 position = this->getBody()->GetPosition();
+  BitField *shield = new BitField(Server::BitField::SHIELD_MAGE, Server::BitField::OBSTACLE);
+  Server::Element *e = new Server::Element(*this, (int)elements.size(), false);
   
-  // e->setBody(shield, 1, 10, position.x + 10, position.y + 1);
-  // _world.elements.push_back(e); 
+  std::list<Unit*>::iterator it = units.begin();
+  b2Vec2 position = (*it)->getBody()->GetPosition();
+  
+  e->setBody(shield, 1, 10, position.x + 10, position.y + 1);
+  e->getBody()->SetTransform(position, (*it)->getBody()->GetAngle());
+  elements.push_back(e); 
 }
 
 void Server::World::askMove(int idClient, char* cmd)

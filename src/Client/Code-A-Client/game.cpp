@@ -35,6 +35,7 @@ void Game::drawWorld() {
             //            std::cout << c.x << " " << c.y << std::endl;
         }
         item = scene->addPolygon(*poly);
+        item->setRotation(p.angle);
 //        std::cout << "Elem : " << p.x << " " << p.y << std::endl;
         item->setPos(p.x * 1, p.y * -1);
     }

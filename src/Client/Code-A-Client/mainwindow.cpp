@@ -58,7 +58,7 @@ void MainWindow::on_loginb_pressed()
 void MainWindow::keyPressEvent(QKeyEvent *e) {
     bool sendable = false;
     if (ingame && !(e->isAutoRepeat())) {
-        int stat;
+        int stat = 0;
         msgpack::sbuffer sbuf;
         msgpack::packer<msgpack::sbuffer> packet(&sbuf);
         switch (e->key()) {
@@ -75,13 +75,13 @@ void MainWindow::keyPressEvent(QKeyEvent *e) {
             sendable = true;
             stat = 7;
             break;
-        case Qt::Key_Z:
+        case Qt::Key_W:
             std::cout << "UP !" << std::endl;
             sendable = true;
             dvectory += 1;
             stat = 3;
             break;
-        case Qt::Key_Q:
+        case Qt::Key_A:
             std::cout << "LEFT !" << std::endl;
             sendable = true;
             dvectorx -= 1;
@@ -124,13 +124,13 @@ void MainWindow::keyReleaseEvent(QKeyEvent *e) {
         case Qt::Key_unknown:
             std::cout << "PATRON ELLE PIQUE PAS TA VITEL !" << std::endl;
             break;
-        case Qt::Key_Z:
+        case Qt::Key_W:
             std::cout << "UP !" << std::endl;
             sendable = true;
             stat = 3;
             dvectory -= 1;
             break;
-        case Qt::Key_Q:
+        case Qt::Key_A:
             std::cout << "LEFT !" << std::endl;
             sendable = true;
             stat = 3;

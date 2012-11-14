@@ -96,3 +96,20 @@ void GameView::rotationUpdate()
             std::cout << "Keep Going ! (up)" << std::endl;
     }
 }
+
+void GameView::mousePressEvent(QMouseEvent *event)
+{
+    msgpack::sbuffer sbuf;
+    msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+    switch (event->button())
+    {
+    case Qt::LeftButton:
+        packet.pack(0);
+        n->sendToServer(sbuf);
+        break;
+
+    default:
+        std::cout << "nothing" << std::endl;
+        break;
+    }
+}

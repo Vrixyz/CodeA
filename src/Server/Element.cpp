@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 17:53:20 2012 thierry berger
-// Last update Mon Nov  5 11:00:02 2012 mathieu leurquin
+// Last update Wed Nov 14 17:04:20 2012 mathieu leurquin
 //
 
 #include "Element.hpp"
@@ -40,6 +40,7 @@ b2Body*	Server::Element::setBody(BitField *b, float width, float height, int x, 
 void Server::Element::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
 {
   packet.pack(_data);
+  packet.pack(this->getPhysics());
 }
 
 bool Server::Element::unSerialize(msgpack::packer<msgpack::sbuffer>& packet)

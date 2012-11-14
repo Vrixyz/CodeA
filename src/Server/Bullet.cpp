@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Fri Sep 14 10:40:12 2012 thierry berger
-// Last update Tue Nov 13 10:44:44 2012 mathieu leurquin
+// Last update Wed Nov 14 17:04:20 2012 mathieu leurquin
 //
 
 #include "Bullet.hpp"
@@ -35,4 +35,5 @@ b2Body*	Server::Bullet::setBody(float angle, b2Vec2 position)
 void	Server::Bullet::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
 {
   packet.pack(_data);
+  packet.pack(this->getPhysics());
 }

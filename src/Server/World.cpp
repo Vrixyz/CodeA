@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Wed Nov 14 10:27:33 2012 mathieu leurquin
+// Last update Wed Nov 14 17:20:11 2012 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -239,7 +239,7 @@ void	Server::World::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
     {
       toPack = static_cast<Serializable const*>(((*it)->getBody())->GetUserData());
       toPack->serialize(packet);
-      packet.pack(getPhysics((*it)->getBody()));
+      // packet.pack(getPhysics((*it)->getBody()));
     }
   /// Packing units
   for (std::list<Unit*>::const_iterator it = units.begin(); it != units.end(); it++)
@@ -252,7 +252,7 @@ void	Server::World::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
     {
       toPack = static_cast<Serializable const*>(((*it)->getBody())->GetUserData());
       toPack->serialize(packet);
-      packet.pack(getPhysics((*it)->getBody()));
+      // packet.pack(getPhysics((*it)->getBody()));
     }
 }
 
@@ -312,24 +312,24 @@ void Server::World::destroyElement(int id)
   return;
 }
 
-GameData::Physics Server::World::getPhysics(const b2Body* body) const
-{
-  GameData::Physics physics;
-  b2Vec2 position = body->GetPosition();
-  physics.x = position.x;
-  physics.y = position.y;
-  physics.angle = body->GetAngle();
+// GameData::Physics Server::World::getPhysics(const b2Body* body) const
+// {
+//   GameData::Physics physics;
+//   b2Vec2 position = body->GetPosition();
+//   physics.x = position.x;
+//   physics.y = position.y;
+//   physics.angle = body->GetAngle();
 
-  /// assuming that shapes are only simple rectangles (real simple, centered at 0)
-  const b2PolygonShape* shape = static_cast<const b2PolygonShape*>(body->GetFixtureList()->GetShape());
-  for (int i = 0; i < shape->GetVertexCount(); ++i)
-    {
-      b2Vec2 vertice = shape->GetVertex(i);
+//   /// assuming that shapes are only simple rectangles (real simple, centered at 0)
+//   const b2PolygonShape* shape = static_cast<const b2PolygonShape*>(body->GetFixtureList()->GetShape());
+//   for (int i = 0; i < shape->GetVertexCount(); ++i)
+//     {
+//       b2Vec2 vertice = shape->GetVertex(i);
 
-      physics.vertices.push_back(GameData::Physics::Coord(vertice.x, vertice.y));
-    }
-  return physics;
-}
+//       physics.vertices.push_back(GameData::Physics::Coord(vertice.x, vertice.y));
+//     }
+//   return physics;
+// }
 
 void Server::World::fire(int idClient, char* cmd)
 {
@@ -337,12 +337,9 @@ void Server::World::fire(int idClient, char* cmd)
   Bullet *b = createBullet(10, (*it)->getBody()->GetAngle(), (*it)->getBody()->GetPosition());
   float angle;
 
-
   angle = (*it)->getBody()->GetAngle() * 57.2957795;
   angle = (int)angle % (int)360;
   angle = angle  < 0 ? -angle : angle;
-
-  std::cout<<"angle : "<<angle<<std::endl;
   if (angle >= 0 && angle < 90)
     b->getBody()->ApplyLinearImpulse(b2Vec2(1, 1 / (tan(b->getBody()->GetAngle()))), b->getBody()->GetWorldCenter());
   else if (angle >= 90 && angle < 180)
@@ -385,12 +382,12 @@ void Server::World::rotateStop(int idClient, char* cmd)
 void Server::World::shield(int idClient, char* cmd)
 {
   BitField *shield = new BitField(Server::BitField::SHIELD_MAGE, Server::BitField::OBSTACLE);
-  Server::Element *e = new Server::Element(*this, (int)elements.size(), false);
+  Server::Element *e = new Server::Element(*this, (int)elements.size(), true);
   
   std::list<Unit*>::iterator it = units.begin();
   b2Vec2 position = (*it)->getBody()->GetPosition();
-  
-  e->setBody(shield, 1, 10, position.x + 10, position.y + 1);
+
+  e->setBody(shield,10 , 1,  position.x, position.y);
   e->getBody()->SetTransform(position, (*it)->getBody()->GetAngle());
   elements.push_back(e); 
 }

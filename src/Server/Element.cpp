@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 17:53:20 2012 thierry berger
-// Last update Wed Nov 14 17:04:20 2012 mathieu leurquin
+// Last update Sat Nov 17 09:49:21 2012 mathieu leurquin
 //
 
 #include "Element.hpp"
@@ -51,4 +51,9 @@ bool Server::Element::unSerialize(msgpack::packer<msgpack::sbuffer>& packet)
 int	Server::Element::getClassId() const
 {
   return 0;
+}
+
+Server::Element::~Element()
+{
+  _body->GetWorld()->DestroyBody(_body);
 }

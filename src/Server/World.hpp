@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 10:46:49 2012 thierry berger
-// Last update Tue Nov 13 19:26:04 2012 mathieu leurquin
+// Last update Sat Nov 17 10:46:37 2012 mathieu leurquin
 //
 
 #ifndef SERVER_WORLD_HPP
@@ -25,7 +25,7 @@
 #include "Unit.hpp"
 #include "BitField.hpp"
 #include <list>
-
+#include <set>
 #define VELOCITY_ITERATION 6
 #define POSITION_ITERATION 2
 #define TIMESTEP 16.666666666667
@@ -46,6 +46,9 @@ namespace Server
     std::list<Server::Element*>	elements;
     std::list<Server::Unit*> units;
     std::list<Server::Bullet*>	bullets;
+    std::set<Server::Element*>	elementsErase;
+    std::set<Server::Unit*> unitsErase;
+    std::set<Server::Bullet*>	bulletsErase;
     std::list<Player*>	players;
     b2World _physicWorld;
 
@@ -56,16 +59,16 @@ namespace Server
     void handleContact(b2Body object1, b2Body object2);
     Player& createPlayer(int id);
     Server::Unit* createUnit(BitField *b);
-    Server::Element* createElement(bool walkable, float width, float height, BitField *b);
-    Server::Bullet* createBullet(int damage, float angle, b2Vec2 position);
+    Server::Element* createElement(bool walkable, float width, float height, BitField *b, int idUnit);
+    Server::Bullet* createBullet(int damage, float angle, b2Vec2 position, int idUnit);
     Player* getPlayer(int id);
     Server::Unit* getUnit(int id);
     Server::Element* getElement(int id);
     Server::Bullet* getBullet(int id);
-    void destroyPlayer(int id);
-    void destroyUnit(int id);
-    void destroyElement(int id);
-    void destroyBullet(int id);
+    void destroyPlayer(int);
+    void destroyUnit();
+    void destroyElement();
+    void destroyBullet();
     
     //fct handling command
     void fire(int idClient, char* cmd);

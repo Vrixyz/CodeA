@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Sun Oct 28 12:04:50 2012 thierry berger
-// Last update Sun Oct 28 12:13:46 2012 thierry berger
+// Last update Tue Nov 13 21:05:00 2012 mathieu leurquin
 //
 
 #include "Object.hpp"

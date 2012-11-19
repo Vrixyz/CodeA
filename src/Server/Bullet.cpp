@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Fri Sep 14 10:40:12 2012 thierry berger
-// Last update Wed Nov 14 17:04:20 2012 mathieu leurquin
+// Last update Sat Nov 17 09:49:47 2012 mathieu leurquin
 //
 
 #include "Bullet.hpp"
@@ -36,4 +36,9 @@ void	Server::Bullet::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
 {
   packet.pack(_data);
   packet.pack(this->getPhysics());
+}
+
+Server::Bullet::~Bullet()
+{
+  _body->GetWorld()->DestroyBody(_body);
 }

@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Wed Nov 14 17:20:11 2012 mathieu leurquin
+// Last update Sat Nov 17 10:54:06 2012 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -31,7 +31,7 @@ void	Server::World::init(int width, int height)
 
   u = this->createUnit(b);
    u->addPlayer(&this->createPlayer(0));
-  this->createElement(true, 100, 100, obs);
+   this->createElement(true, 100, 100, obs, -1);
   // this->createElement(true, 1, 10, shield);
   
   // _physicWorld.SetContactListener(&World::myContactListenerInstance);
@@ -66,7 +66,6 @@ void	Server::World::run()
 	  _physicWorld.Step(TIMESTEP, VELOCITY_ITERATION, POSITION_ITERATION);
  	    
 	  communication._command->interpretCommands();
-	  
 	  for (std::list<Server::Unit*>::iterator itu = units.begin(); itu != units.end(); itu++)
 	    {
 	      (*itu)->update(TIMESTEP);
@@ -74,7 +73,7 @@ void	Server::World::run()
 
 	  sendUpdatesToClients();
 	  
-
+	  
 	  communication.cleanClients();
 	  // TODO: delete client on Communication and add a handler
 	  //  // deleting clients:
@@ -84,6 +83,9 @@ void	Server::World::run()
 	  //      std::cout << "erasing client " << *it << std::endl;
 	  //      communication.clients.erase(*it);
 	  //    }
+	
+	  destroyBullet();
+	  destroyElement();
 	}
       // FIXME: think more about that sleep.
       usleep(500);
@@ -106,17 +108,17 @@ Server::Unit* Server::World::createUnit(BitField *b)
   return u;
 }
 
-Server::Element* Server::World::createElement(bool walkable, float width, float height, BitField *b)
+Server::Element* Server::World::createElement(bool walkable, float width, float height, BitField *b, int idU)
 {
-  Server::Element* e = new Element(*this, (int)elements.size(), walkable);
+  Server::Element* e = new Element(*this, (int)elements.size(), walkable, idU);
   e->setBody(b, width, height);
   elements.push_back(e);  
   return e;
 }
 
-Server::Bullet*  Server::World::createBullet(int damage, float angle, b2Vec2 pos)
+Server::Bullet*  Server::World::createBullet(int damage, float angle, b2Vec2 pos, int idUnit)
 {
-  Server::Bullet* b = new Bullet(*this, (int)elements.size(), damage);
+  Server::Bullet* b = new Bullet(*this, (int)elements.size(), damage, idUnit);
   b->setBody(angle, pos);
   bullets.push_back(b);
   return b;
@@ -144,21 +146,21 @@ Server::Unit* Server::World::getUnit(int id)
   return NULL;
 }
 
-Server::Element* Server::World::getElement(int id)
+Server::Element* Server::World::getElement(int idU)
 {
   for (std::list<Element*>::iterator it = elements.begin(); it != elements.end(); it++)
     {
-      if ((*it)->id == id)
+      if ((*it)->idUnit == idU)
 	return (*it);
     }
   return NULL;
 }
 
-Server::Bullet* Server::World::getBullet(int id)
+Server::Bullet* Server::World::getBullet(int idU)
 {
   for (std::list<Bullet*>::iterator it = bullets.begin(); it != bullets.end(); it++)
     {
-      if ((*it)->id == id)
+      if ((*it)->idUnit == idU)
 	return (*it);
     }
   return NULL;
@@ -261,56 +263,57 @@ bool Server::World::unSerialize(msgpack::packer<msgpack::sbuffer>& packet) {retu
 int	Server::World::getClassId() const {return 0;}
 
 
-void Server::World::destroyUnit(int id)
+void Server::World::destroyUnit()
 {
-  for (std::list<Unit*>::iterator it = units.begin(); it != units.end(); it++)
-    {
-      if ((*it)->id == id)
-	{
-	  /// TODO: put that in a list to delete later (it may cause problem if deletion in timestep)
-	  _physicWorld.DestroyBody((*it)->getBody());
-	  units.erase(it);
-	  return;
-	}
-      else
-	it++;
-    }
-  return;
+  std::set<Unit*>::iterator it = unitsErase.begin();
+  std::set<Unit*>::iterator end = unitsErase.end();
+  for (; it!=end; ++it) {
+    Unit* dyingUnit = *it;
+    
+    delete dyingUnit;
+    
+    //... and remove it from main list of balls
+    std::list<Unit*>::iterator it = std::find(units.begin(), units.end(), dyingUnit);
+    if (it != units.end())
+      units.erase(it);
+  } 
+  unitsErase.clear();
 }
 
-void Server::World::destroyBullet(int id)
-{
-  for (std::list<Bullet*>::iterator it = bullets.begin(); it != bullets.end(); it++)
-    {
-      if ((*it)->id == id)
-	{
-	  /// TODO: put that in a list to delete later (it may cause problem if deletion in timestep)
-	  _physicWorld.DestroyBody((*it)->getBody());
-	  bullets.erase(it);
-	  return;
-	}
-      else
-	it++;
-    }
-  return;
+void Server::World::destroyBullet()
+{  
+  std::set<Bullet*>::iterator it = bulletsErase.begin();
+  std::set<Bullet*>::iterator end = bulletsErase.end();
+  for (; it!=end; ++it) {
+    Bullet* dyingBullet = *it;
+    
+    delete dyingBullet;
+    
+    //... and remove it from main list of balls
+    std::list<Bullet*>::iterator it = std::find(bullets.begin(), bullets.end(), dyingBullet);
+    if (it != bullets.end())
+      bullets.erase(it);
+  } 
+  bulletsErase.clear();
 }
 
-void Server::World::destroyElement(int id)
+void Server::World::destroyElement()
 {
-  for (std::list<Element*>::iterator it = elements.begin(); it != elements.end(); it++)
-    {
-      if ((*it)->id == id)
-	{
-	  /// TODO: put that in a list to delete later (it may cause problem if deletion in timestep)
-	  _physicWorld.DestroyBody((*it)->getBody());
-	  elements.erase(it);
-	  return;
-	}
-      else
-	it++;
-    }
-  return;
+  std::set<Element*>::iterator it = elementsErase.begin();
+  std::set<Element*>::iterator end = elementsErase.end();
+  for (; it!=end; ++it) {
+    Element* dyingElement = *it;
+  
+    delete dyingElement;
+  
+    //... and remove it from main list of balls
+    std::list<Element*>::iterator it = std::find(elements.begin(), elements.end(), dyingElement);
+    if (it != elements.end())
+      elements.erase(it);
+  } 
+  elementsErase.clear();
 }
+
 
 // GameData::Physics Server::World::getPhysics(const b2Body* body) const
 // {
@@ -334,7 +337,10 @@ void Server::World::destroyElement(int id)
 void Server::World::fire(int idClient, char* cmd)
 {
   std::list<Unit*>::iterator it = units.begin();
-  Bullet *b = createBullet(10, (*it)->getBody()->GetAngle(), (*it)->getBody()->GetPosition());
+  std::vector<float>::iterator fire = (*it)->spellTimer.begin();
+  if ((*fire) != 0)
+    return;
+  Bullet *b = createBullet(10, (*it)->getBody()->GetAngle(), (*it)->getBody()->GetPosition(), (*it)->id);
   float angle;
 
   angle = (*it)->getBody()->GetAngle() * 57.2957795;
@@ -348,6 +354,7 @@ void Server::World::fire(int idClient, char* cmd)
     b->getBody()->ApplyLinearImpulse(b2Vec2(-1, -1 / (tan(b->getBody()->GetAngle() - 3.1415926535898))), b->getBody()->GetWorldCenter());
   else
     b->getBody()->ApplyLinearImpulse(b2Vec2(-1, (tan(b->getBody()->GetAngle() - 4.7123889803847))), b->getBody()->GetWorldCenter());
+  (*fire) = -1;
 }
 
 void Server::World::aimTo(int idClient, char* cmd)
@@ -381,15 +388,20 @@ void Server::World::rotateStop(int idClient, char* cmd)
 
 void Server::World::shield(int idClient, char* cmd)
 {
-  BitField *shield = new BitField(Server::BitField::SHIELD_MAGE, Server::BitField::OBSTACLE);
-  Server::Element *e = new Server::Element(*this, (int)elements.size(), true);
-  
   std::list<Unit*>::iterator it = units.begin();
+  std::vector<float>::iterator sh = (*it)->spellTimer.end();
+  if ((*sh) != 0)
+    return;
+  BitField *shield = new BitField(Server::BitField::SHIELD_MAGE, Server::BitField::OBSTACLE);
+  Server::Element *e = new Server::Element(*this, (int)elements.size(), true, (*it)->id);
+  
+
   b2Vec2 position = (*it)->getBody()->GetPosition();
 
   e->setBody(shield,10 , 1,  position.x, position.y);
   e->getBody()->SetTransform(position, (*it)->getBody()->GetAngle());
   elements.push_back(e); 
+  (*sh) = -1;
 }
 
 void Server::World::askMove(int idClient, char* cmd)

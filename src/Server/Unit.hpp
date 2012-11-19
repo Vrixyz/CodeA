@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:00:00 2012 mathieu leurquin
-// Last update Fri Nov  9 10:14:23 2012 mathieu leurquin
+// Last update Sat Nov 17 10:33:49 2012 mathieu leurquin
 //
 
 #ifndef SERVER_UNIT_HPP
@@ -16,6 +16,7 @@
 #include "Object.hpp"
 #include "Player.hpp"
 #include "BitField.hpp"
+#include <vector>
 
 namespace Server
 {
@@ -25,7 +26,11 @@ namespace Server
     GameData::Unit _data;
     b2Vec2 current;
     float rotation;
-    Unit(World& world, int id) : Object(world, Object::Unit, id), _data(id, 10), current(0, 0), rotation(0) {}
+    std::vector<float>spellTimer;
+    Unit(World& world, int id) : Object(world, Object::Unit, id), _data(id, 10), current(0, 0), rotation(0) {
+      spellTimer.push_back(0);
+      spellTimer.push_back(0);
+    }
     virtual b2Body*	setBody(BitField *b);
     const GameData::Unit& getData() const {return _data;}
     void addPlayer(Player* p);

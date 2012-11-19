@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 13:21:11 2012 thierry berger
-// Last update Fri Nov  9 13:37:24 2012 mathieu leurquin
+// Last update Sat Nov 17 10:53:53 2012 mathieu leurquin
 //
 
 #include "Unit.hpp"
@@ -123,11 +123,40 @@ void Server::Unit::update(float elapsedMilliseconds)
   // b2Vec2 curVel = _body->GetLinearVelocity();
   // if (curVel.x != current.x && curVel.y != current.y)
   this->move(current.x, current.y);
+  std::vector<float>::iterator fire = this->spellTimer.begin();
+  std::vector<float>::iterator shield = this->spellTimer.end();
 
+   //update timer
+  
+  if ((*fire) > 0)
+    (*fire) += elapsedMilliseconds;
+  if ((*shield) > 0)
+    (*shield) += elapsedMilliseconds;
+ 
+  
+  //shield, fire active ?
+  
+  if ((*fire) == -1)
+    (*fire) += 1 + elapsedMilliseconds;
+  if ((*shield) == -1)
+    (*shield) += 1 + elapsedMilliseconds;
+  
+  //shiled, fire finish ?
+
+  if ((*fire) > 1000)
+    {
+      _world.bulletsErase.insert(_world.getBullet(this->id));
+      (*fire) = 0;
+    }
+  if ((*shield) > 5000)
+    {
+      _world.elementsErase.insert(_world.getElement(this->id));
+      (*shield) = 0;
+    }
+  
 
   // TODO: do this in a function, and improve precision
 #define PI 3.14
-  std::cout << rotation << std::endl;
   while (_body->GetAngle() > 2 * PI)
     _body->SetTransform(_body->GetPosition(), _body->GetAngle() - 2 * PI);
   while (_body->GetAngle() < 0)

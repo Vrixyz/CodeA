@@ -58,7 +58,7 @@ namespace Server
     void run();
     void handleContact(b2Body object1, b2Body object2);
     Player& createPlayer(int id);
-    Server::Unit* createUnit(BitField *b);
+    Server::Unit* createUnit(BitField *b, Player* p = NULL);
     Server::Element* createElement(bool walkable, float width, float height, BitField *b, int idUnit);
     Server::Bullet* createBullet(int damage, float angle, b2Vec2 position, int idUnit);
     Player* getPlayer(int id);
@@ -79,6 +79,7 @@ namespace Server
     void rotateStop(int idClient, char* cmd);
     void shield(int idClient, char* cmd);
     void askMove(int idClient, char* cmd);
+    void addPlayer(int idClient, char* cmd);
 
     void sendUpdatesToClients();
     virtual void serialize(msgpack::packer<msgpack::sbuffer>& packet) const;

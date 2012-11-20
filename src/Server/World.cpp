@@ -22,16 +22,15 @@ void	Server::World::init(int width, int height)
 {
   Server::Unit *u;
  
-  // FIXME: we must create the player and the unit at the connection !
-  BitField *b = new  BitField(Server::BitField::MAGE, Server::BitField::MAGE);
+  // // FIXME: we must create the player and the unit at the connection !
+  // BitField *b = new  BitField(Server::BitField::MAGE, Server::BitField::MAGE);
   
   BitField *obs = new BitField(Server::BitField::OBSTACLE, Server::BitField::MAGE);
   
-  // BitField *shield = new BitField(Server::BitField::SHIELD_MAGE, Server::BitField::OBSTACLE);
+  // u = this->createUnit(b);
+  // u->addPlayer(&this->createPlayer(0));
 
-  u = this->createUnit(b);
-   u->addPlayer(&this->createPlayer(0));
-   this->createElement(true, 100, 100, obs, -1);
+  this->createElement(true, 100, 100, obs, -1);
   // this->createElement(true, 1, 10, shield);
   
   // _physicWorld.SetContactListener(&World::myContactListenerInstance);
@@ -47,6 +46,7 @@ void	Server::World::init(int width, int height)
   _commandManager->addCallback(GameData::Command::RotateRight, &World::rotateRight);
   _commandManager->addCallback(GameData::Command::RotateStop, &World::rotateStop);
   _commandManager->addCallback(GameData::Command::Shield, &World::shield);
+  _commandManager->addCallback(GameData::Command::BePlayer, &World::addPlayer);
   communication.setCommandManager(_commandManager);
 }
 
@@ -100,10 +100,12 @@ Server::Player&	Server::World::createPlayer(int id)
   return *p;
 }
 
-Server::Unit* Server::World::createUnit(BitField *b)
+Server::Unit* Server::World::createUnit(BitField *b, Player* p)
 {
   Server::Unit* u = new Server::Unit(*this, (int)units.size());
   u->setBody(b);
+  if (p != NULL)
+    u->addPlayer(p);
   units.push_back(u);
   return u;
 }
@@ -191,6 +193,7 @@ void Server::World::destroyPlayer(int id)
 //   return destroyFromList(bullets, id);
 // }
 
+// TODO: iterate on players, rather than clients, and instaure command queuing for communication Server->Communication
 void	Server::World::sendUpdatesToClients()
 {
   boost::lock_guard<boost::mutex> lock(communication._m_clients);
@@ -433,4 +436,18 @@ void Server::World::askMove(int idClient, char* cmd)
       obj.convert(&y);
     }
   (*it)->askMove(idClient, x, y);
+}
+
+void	Server::World::addPlayer(int idClient, char*)
+{
+  std::list<Player*>::const_iterator it;
+  // TODO: check if there's room for a new player
+  for (it = players.begin(); it != players.end(); it++)
+    {
+      if ((*it)->id == idClient)
+	return ; // TODO: send to client that he is already a player.
+    }
+  BitField *b = new  BitField(Server::BitField::MAGE, Server::BitField::MAGE);
+  // TODO: we might want to wait all players before creating the units
+  this->createUnit(b, &(createPlayer(idClient)));
 }

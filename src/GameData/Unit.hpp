@@ -21,7 +21,7 @@ namespace GameData
   {
     Unit(uint32_t _id, uint32_t _health) :
       id(_id), health(_health), aimRotation(0) {}
-    std::list<uint32_t> playersId;
+    std::list<uint32_t> playersId; // FIXME: useless list.
     uint32_t	id;
     uint32_t	health;
     float	aimRotation;

@@ -41,6 +41,15 @@ void MainWindow::NewGame()
     view->bindNet(n);
     n->connectToServer();
     ui->Loginpage->hide();
+
+    // Sending information "I want to be a player"
+    msgpack::sbuffer sbuf;
+    msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+
+    packet.pack((int)GameData::Command::BePlayer);
+    n->sendToServer(sbuf);
+    //
+
 }
 
 void MainWindow::on_loginb_pressed()

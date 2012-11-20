@@ -100,7 +100,8 @@ void	Server::CommandManager<C, IdCom, IdClient>::interpretCommands()
 	  msgpack::object obj = result.get();
 	  obj.convert(&id);
 	}
-      (caller->*fcts[(IdCom)id])(cmds[i].second, cmds[i].first);
+      if (fcts[(IdCom)id])
+	(caller->*fcts[(IdCom)id])(cmds[i].second, cmds[i].first);
     }
   while (cmds.size() > 0)
     {

@@ -26,7 +26,8 @@ namespace GameData
 	RotateLeft = 4,
 	RotateRight = 5,
 	RotateStop = 6,
-	Shield = 7
+	Shield = 7,
+	BePlayer = 8
       } Id;
   }
 }

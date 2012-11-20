@@ -27,9 +27,15 @@ namespace Server
   class CommandManager
   {
   public:
+    class	ICallback
+    {
+    public:
+      virtual void call(C* caller, IdClient, char* data) const = 0;
+    };
+
     CommandManager(C *c);
     // returns false in case of idCommand already handled. In this case, call removeCallBack first.
-    bool addCallback(IdCom commandId, void (C::*methodToCall)(IdClient, char*));
+    bool addCallback(IdCom commandId, ICallback* callback);
     void removeCallback(IdCom commandId);
 
     // called by Communication
@@ -38,12 +44,76 @@ namespace Server
     // will call adequate caller functions to prepare the next update (function pointer)
     // then will delete handled commands
     void interpretCommands();
+
+    template<typename ArgType>
+    ICallback* createCallback(void (C::*methodToCall)(IdClient, ArgType)) const
+    {
+      return new Callback<ArgType>(methodToCall);
+    }
+
+    ICallback* createCallback(void (C::*methodToCall)(IdClient)) const
+    {
+      return new CallbackNoArg(methodToCall);
+    }
+
+
   private:
     C *caller;
     mutable boost::mutex _m_cmds;
     mutable boost::mutex _m_fcts;
-    std::map<IdCom, void (C::*)(IdClient, char*)> fcts;
+    std::map<IdCom, ICallback*> fcts;
     std::vector<std::pair<char*, IdClient> >cmds;
+
+
+    template<typename ArgType>
+    class	Callback : public ICallback
+    {
+    private:
+      void (C::*callback)(IdClient, ArgType);
+    public:
+      Callback<ArgType>(void (C::*methodToCall)(IdClient, ArgType))
+      {
+	callback = methodToCall;
+      }
+
+      virtual void call(C* caller, IdClient idClient, char* data) const
+      {
+	ArgType arg;
+
+	msgpack::unpacker pac;
+	msgpack::unpacked result;
+
+	int size = sizeof(IdCom) + sizeof(ArgType);      
+	pac.reserve_buffer(size);
+	memcpy(pac.buffer(), data, size);
+	pac.buffer_consumed(size);
+	pac.next(&result); // bypass already parsed index
+	if (sizeof(arg) > sizeof(int))
+	if (pac.next(&result))
+	  {
+	    msgpack::object obj = result.get();
+	    obj = result.get();
+	    obj.convert(&arg);
+	  }
+	(caller->*callback)(idClient, arg);
+      }
+    };
+
+    class	CallbackNoArg : public ICallback
+    {
+    private:
+      void (C::*callback)(IdClient);
+    public:
+      CallbackNoArg(void (C::*methodToCall)(IdClient))
+      {
+	callback = methodToCall;
+      }
+
+      virtual void call(C* caller, IdClient idClient, char* data) const
+      {
+	(caller->*callback)(idClient);
+      }
+    };
   };
 }
 
@@ -54,12 +124,12 @@ Server::CommandManager<C, IdCom, IdClient>::CommandManager(C *c)
 }
 
 template<typename C, typename IdCom, typename IdClient>
-bool Server::CommandManager<C, IdCom, IdClient>::addCallback(IdCom commandId, void (C::*methodToCall)(IdClient, char*))
+bool Server::CommandManager<C, IdCom, IdClient>::addCallback(IdCom commandId, ICallback* callback)
 {
   boost::lock_guard<boost::mutex> lock(_m_fcts);
 
   if (fcts[commandId] == NULL)
-    fcts[commandId] = methodToCall;
+    fcts[commandId] = callback;
   else
     return false;
   return true;
@@ -101,7 +171,7 @@ void	Server::CommandManager<C, IdCom, IdClient>::interpretCommands()
 	  obj.convert(&id);
 	}
       if (fcts[(IdCom)id])
-	(caller->*fcts[(IdCom)id])(cmds[i].second, cmds[i].first);
+	fcts[(IdCom)id]->call(caller, cmds[i].second, cmds[i].first);
     }
   while (cmds.size() > 0)
     {

@@ -51,6 +51,7 @@ void GameView::mouseMoveEvent(QMouseEvent *e)
     if (stat != status)
     {
         packet.pack(stat);
+        packet.pack(GameData::CommandStruct::Rotate());
         n->sendToServer(sbuf);
         status = stat;
         if (status == 4)
@@ -82,7 +83,7 @@ void GameView::rotationUpdate()
         stat = 5;
     else
         stat = 6;
-    std::cout << "status courrant " << status << " futur status : " << stat << " angle relatif : " << a << " real angle " << cangle << std::endl;
+    // std::cout << "status courrant " << status << " futur status : " << stat << " angle relatif : " << a << " real angle " << cangle << std::endl;
     if (stat != status)
     {
         packet.pack(stat);

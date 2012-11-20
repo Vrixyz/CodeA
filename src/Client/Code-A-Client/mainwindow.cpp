@@ -75,11 +75,13 @@ void MainWindow::keyPressEvent(QKeyEvent *e) {
         case Qt::Key_B:
             std::cout << "BULLET !" << std::endl;
             packet.pack((int)GameData::Command::Fire);
+            packet.pack(GameData::CommandStruct::Fire());
             n->sendToServer(sbuf);
             break;
         case Qt::Key_R:
             std::cout << "shield !" << std::endl;
             packet.pack((int)GameData::Command::Shield);
+            packet.pack(GameData::CommandStruct::Shield());
             n->sendToServer(sbuf);
             break;
         case Qt::Key_W:

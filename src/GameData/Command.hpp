@@ -34,6 +34,7 @@ namespace GameData
   // "Command" would have been a better name, but I'm lazy to change the enum namespace.
   namespace CommandStruct
   {
+    typedef int Unused;
 
     // NOTE: not used (yet?)
     struct Fire
@@ -46,7 +47,13 @@ namespace GameData
     };
 
     // AimTo not implemented
-    // MoveTo not implemented
+    struct Aim
+    {
+      
+      MSGPACK_DEFINE();
+    };
+    
+    // MoveTo not implemented (fakes use of a Move)
 
     struct Move
     {
@@ -58,8 +65,22 @@ namespace GameData
     };
 
     // No args for Rotation* (yet?)
+    struct Rotate
+    {
+      MSGPACK_DEFINE();
+    };
+
     // No args for Shield (yet?)
-    // No args for BePlayer (yet?)
+    struct Shield
+    {
+      MSGPACK_DEFINE();
+    };
+
+    // // No args for BePlayer (yet?)
+    // struct BePlayer
+    // {
+    //   MSGPACK_DEFINE();
+    // };
 
   }
 }

@@ -38,15 +38,27 @@ void	Server::World::init(int width, int height)
   communication.init();
 
   _commandManager = new CommandManager<World, int, int>(this);
-  _commandManager->addCallback(GameData::Command::Fire, &World::fire);
-  _commandManager->addCallback(GameData::Command::AimTo, &World::aimTo);
-  _commandManager->addCallback(GameData::Command::MoveTo, &World::moveTo);
-  _commandManager->addCallback(GameData::Command::Move, &World::askMove);
-  _commandManager->addCallback(GameData::Command::RotateLeft, &World::rotateLeft);
-  _commandManager->addCallback(GameData::Command::RotateRight, &World::rotateRight);
-  _commandManager->addCallback(GameData::Command::RotateStop, &World::rotateStop);
-  _commandManager->addCallback(GameData::Command::Shield, &World::shield);
-  _commandManager->addCallback(GameData::Command::BePlayer, &World::addPlayer);
+  // TODO: commandManager a factory !
+  _commandManager->addCallback(GameData::Command::Fire,
+			       _commandManager->createCallback(&World::fire));
+  _commandManager->addCallback(GameData::Command::AimTo,
+			       _commandManager->createCallback(&World::aimTo));
+  _commandManager->addCallback(GameData::Command::MoveTo,
+			       _commandManager->createCallback(&World::moveTo));
+
+  _commandManager->
+    addCallback(GameData::Command::Move,
+		_commandManager->createCallback(&World::askMove));
+
+  _commandManager->addCallback(GameData::Command::RotateLeft, _commandManager->createCallback(&World::rotateLeft));
+  _commandManager->addCallback(GameData::Command::RotateRight,
+			       _commandManager->createCallback(&World::rotateRight));
+  _commandManager->addCallback(GameData::Command::RotateStop,
+			       _commandManager->createCallback(&World::rotateStop));
+  _commandManager->addCallback(GameData::Command::Shield,
+			       _commandManager->createCallback(&World::shield));
+  _commandManager->addCallback(GameData::Command::BePlayer,
+			       _commandManager->createCallback(&World::addPlayer));
   communication.setCommandManager(_commandManager);
 }
 
@@ -337,7 +349,7 @@ void Server::World::destroyElement()
 //   return physics;
 // }
 
-void Server::World::fire(int idClient, char* cmd)
+void Server::World::fire(int idClient, GameData::CommandStruct::Fire)
 {
   std::list<Unit*>::iterator it = units.begin();
   std::vector<float>::iterator fire = (*it)->spellTimer.begin();
@@ -360,36 +372,36 @@ void Server::World::fire(int idClient, char* cmd)
   (*fire) = -1;
 }
 
-void Server::World::aimTo(int idClient, char* cmd)
+void Server::World::aimTo(int idClient, GameData::CommandStruct::Aim)
 {
 }
 
-void Server::World::moveTo(int idClient, char* cmd)
+void Server::World::moveTo(int idClient, GameData::CommandStruct::Move)
 {
 }
 
-void Server::World::rotateLeft(int idClient, char* cmd)
+void Server::World::rotateLeft(int idClient, GameData::CommandStruct::Rotate)
 {
   std::list<Unit*>::iterator it = units.begin();
  
   (*it)->askRotateLeft(idClient);
 }
 
-void Server::World::rotateRight(int idClient, char* cmd)
+void Server::World::rotateRight(int idClient, GameData::CommandStruct::Rotate)
 {
   std::list<Unit*>::iterator it = units.begin();
 
   (*it)->askRotateRight(idClient);
 }
 
-void Server::World::rotateStop(int idClient, char* cmd)
+void Server::World::rotateStop(int idClient, GameData::CommandStruct::Rotate)
 {
   std::list<Unit*>::iterator it = units.begin();
 
   (*it)->askRotateStop(idClient);
 }
 
-void Server::World::shield(int idClient, char* cmd)
+void Server::World::shield(int idClient, GameData::CommandStruct::Shield)
 {
   std::list<Unit*>::iterator it = units.begin();
   std::vector<float>::iterator sh = (*it)->spellTimer.end();
@@ -407,48 +419,16 @@ void Server::World::shield(int idClient, char* cmd)
   (*sh) = -1;
 }
 
-void Server::World::askMove(int idClient, char* cmd)
+void Server::World::askMove(int idClient, GameData::CommandStruct::Move arg)
 {
-  int x = 0;
-  int y = 0;
-  msgpack::object obj;
-  msgpack::unpacked result;
-  msgpack::unpacker pac;
-  
-  int size = sizeof(GameData::Command::Id) + sizeof(int); // we receive 2 ints as parameter (and the commandId first)
-
-  pac.reserve_buffer(size);
-  memcpy(pac.buffer(), cmd, size);
-  pac.buffer_consumed(size);
-  
-  // NOTE: we must unpack the unnecessary commandId
-  pac.next(&result);
-  // if (pac.next(&result))
-  //   {
-  //     obj = result.get();
-  //     obj.convert(&x);
-  //   }
-  // if (pac.next(&result))
-  //   {
-  //     obj = result.get();
-  //     obj.convert(&y);
-  //   }
-
-  GameData::CommandStruct::Move m;
-  if (pac.next(&result))
-    {
-      obj = result.get();
-      obj.convert(&m);
-    }
-
   std::list<Unit*>::iterator it = units.begin();
 
-  // TODO: seek right unit
-  // TODO: check if idClient has the right here.
-  (*it)->askMove(idClient, m.x, m.y);
+  // TODO: seek right unit (arg.idUnit)
+  // TODO: check if idClient has the right to move this unit.
+  (*it)->askMove(idClient, arg.x, arg.y);
 }
 
-void	Server::World::addPlayer(int idClient, char*)
+void	Server::World::addPlayer(int idClient)
 {
   std::list<Player*>::const_iterator it;
   // TODO: check if there's room for a new player

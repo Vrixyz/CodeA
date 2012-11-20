@@ -71,15 +71,15 @@ namespace Server
     void destroyBullet();
     
     //fct handling command
-    void fire(int idClient, char* cmd);
-    void aimTo(int idClient, char* cmd);
-    void moveTo(int idClient, char* cmd);
-    void rotateLeft(int idClient, char* cmd);
-    void rotateRight(int idClient, char* cmd);
-    void rotateStop(int idClient, char* cmd);
-    void shield(int idClient, char* cmd);
-    void askMove(int idClient, char* cmd);
-    void addPlayer(int idClient, char* cmd);
+    void fire(int idClient, GameData::CommandStruct::Fire);
+    void aimTo(int idClient, GameData::CommandStruct::Aim);
+    void moveTo(int idClient, GameData::CommandStruct::Move);
+    void rotateLeft(int idClient, GameData::CommandStruct::Rotate);
+    void rotateRight(int idClient, GameData::CommandStruct::Rotate);
+    void rotateStop(int idClient, GameData::CommandStruct::Rotate);
+    void shield(int idClient, GameData::CommandStruct::Shield);
+    void askMove(int idClient, GameData::CommandStruct::Move cmd);
+    void addPlayer(int idClient);
 
     void sendUpdatesToClients();
     virtual void serialize(msgpack::packer<msgpack::sbuffer>& packet) const;

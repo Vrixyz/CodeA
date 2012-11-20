@@ -15,6 +15,7 @@
 
 namespace GameData
 {
+  // we should always pluralize namespaces.
   namespace Command
   {
     typedef enum e_Id
@@ -30,6 +31,39 @@ namespace GameData
 	BePlayer = 8
       } Id;
   }
+  // "Command" would have been a better name, but I'm lazy to change the enum namespace.
+  namespace CommandStruct
+  {
+
+    // NOTE: not used (yet?)
+    struct Fire
+    {
+      int x;
+      int y;
+      int idUnit;
+      
+      MSGPACK_DEFINE(x, y, idUnit);
+    };
+
+    // AimTo not implemented
+    // MoveTo not implemented
+
+    struct Move
+    {
+      int x;
+      int y;
+      int idUnit;
+      
+      MSGPACK_DEFINE(x, y, idUnit);
+    };
+
+    // No args for Rotation* (yet?)
+    // No args for Shield (yet?)
+    // No args for BePlayer (yet?)
+
+  }
 }
+
+
 
 #endif

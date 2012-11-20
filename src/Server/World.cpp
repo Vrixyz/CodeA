@@ -411,7 +411,6 @@ void Server::World::askMove(int idClient, char* cmd)
 {
   int x = 0;
   int y = 0;
-  std::list<Unit*>::iterator it = units.begin();
   msgpack::object obj;
   msgpack::unpacked result;
   msgpack::unpacker pac;
@@ -424,18 +423,29 @@ void Server::World::askMove(int idClient, char* cmd)
   
   // NOTE: we must unpack the unnecessary commandId
   pac.next(&result);
+  // if (pac.next(&result))
+  //   {
+  //     obj = result.get();
+  //     obj.convert(&x);
+  //   }
+  // if (pac.next(&result))
+  //   {
+  //     obj = result.get();
+  //     obj.convert(&y);
+  //   }
 
+  GameData::CommandStruct::Move m;
   if (pac.next(&result))
     {
       obj = result.get();
-      obj.convert(&x);
+      obj.convert(&m);
     }
-  if (pac.next(&result))
-    {
-      obj = result.get();
-      obj.convert(&y);
-    }
-  (*it)->askMove(idClient, x, y);
+
+  std::list<Unit*>::iterator it = units.begin();
+
+  // TODO: seek right unit
+  // TODO: check if idClient has the right here.
+  (*it)->askMove(idClient, m.x, m.y);
 }
 
 void	Server::World::addPlayer(int idClient, char*)

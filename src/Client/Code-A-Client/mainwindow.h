@@ -40,6 +40,7 @@ public:
     // WARNING : arrows key cannot be used
     void keyReleaseEvent(QKeyEvent *);
     void keyPressEvent(QKeyEvent *);
+    void setMove(int, int);
     
 private slots:
     void Playagain();

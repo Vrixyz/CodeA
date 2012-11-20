@@ -69,8 +69,6 @@ void MainWindow::keyPressEvent(QKeyEvent *e) {
         msgpack::sbuffer sbuf;
         msgpack::packer<msgpack::sbuffer> packet(&sbuf);
         switch (e->key()) {
-        GameData::CommandStruct::Move m;
-
         case Qt::Key_unknown:
             std::cout << "PATRON ELLE PIQUE PAS TA VITEL !" << std::endl;
             break;
@@ -85,44 +83,20 @@ void MainWindow::keyPressEvent(QKeyEvent *e) {
             n->sendToServer(sbuf);
             break;
         case Qt::Key_W:
+            setMove(0, 1);
             std::cout << "UP !" << std::endl;
-            dvectory += 1;
-            packet.pack((int)GameData::Command::Move);
-            m.x = dvectorx;
-            m.y = dvectory;
-            m.idUnit = 0;
-            packet.pack(m);
-            n->sendToServer(sbuf);
             break;
         case Qt::Key_A:
             std::cout << "LEFT !" << std::endl;
-            dvectorx -= 1;
-            packet.pack((int)GameData::Command::Move);
-            m.x = dvectorx;
-            m.y = dvectory;
-            m.idUnit = 0;
-            packet.pack(m);
-            n->sendToServer(sbuf);
+            setMove(-1, 0);
             break;
         case Qt::Key_S:
             std::cout << "DOWN !" << std::endl;
-            dvectory -= 1;
-            packet.pack((int)GameData::Command::Move);
-            m.x = dvectorx;
-            m.y = dvectory;
-            m.idUnit = 0;
-            packet.pack(m);
-            n->sendToServer(sbuf);
+            setMove(0, -1);
             break;
         case Qt::Key_D:
             std::cout << "RIGHT !" << std::endl;
-            dvectorx += 1;
-            packet.pack((int)GameData::Command::Move);
-            m.x = dvectorx;
-            m.y = dvectory;
-            m.idUnit = 0;
-            packet.pack(m);
-            n->sendToServer(sbuf);
+            setMove(1, 0);
             break;
         default:
             std::cout << "Left = " << Qt::Key_Left << ", Right = " << Qt::Key_Right << ", Value = " << e->key() << std::endl;
@@ -134,53 +108,25 @@ void MainWindow::keyPressEvent(QKeyEvent *e) {
 
 void MainWindow::keyReleaseEvent(QKeyEvent *e) {
     if (ingame && !(e->isAutoRepeat())) {
-        msgpack::sbuffer sbuf;
-        msgpack::packer<msgpack::sbuffer> packet(&sbuf);
         switch (e->key()) {
-        GameData::CommandStruct::Move m;
-
         case Qt::Key_unknown:
             std::cout << "PATRON ELLE PIQUE PAS TA VITEL !" << std::endl;
             break;
         case Qt::Key_W:
+            setMove(0, -1);
             std::cout << "UP !" << std::endl;
-            dvectory -= 1;
-            packet.pack((int)GameData::Command::Move);
-            m.x = dvectorx;
-            m.y = dvectory;
-            m.idUnit = 0;
-            packet.pack(m);
-            n->sendToServer(sbuf);
             break;
         case Qt::Key_A:
             std::cout << "LEFT !" << std::endl;
-            dvectorx += 1;
-            packet.pack((int)GameData::Command::Move);
-            m.x = dvectorx;
-            m.y = dvectory;
-            m.idUnit = 0;
-            packet.pack(m);
-            n->sendToServer(sbuf);
+            setMove(1, 0);
             break;
         case Qt::Key_S:
             std::cout << "DOWN !" << std::endl;
-            dvectory += 1;
-            packet.pack((int)GameData::Command::Move);
-            m.x = dvectorx;
-            m.y = dvectory;
-            m.idUnit = 0;
-            packet.pack(m);
-            n->sendToServer(sbuf);
+            setMove(0, 1);
             break;
         case Qt::Key_D:
             std::cout << "RIGHT !" << std::endl;
-            dvectorx -= 1;
-            packet.pack((int)GameData::Command::Move);
-            m.x = dvectorx;
-            m.y = dvectory;
-            m.idUnit = 0;
-            packet.pack(m);
-            n->sendToServer(sbuf);
+            setMove(-1, 0);
             break;
         default:
             std::cout << "Left = " << Qt::Key_Left << ", Right = " << Qt::Key_Right << ", Value = " << e->key() << std::endl;
@@ -188,4 +134,19 @@ void MainWindow::keyReleaseEvent(QKeyEvent *e) {
         }
         std::cout << "release => vector : (" << dvectorx << ", " << dvectory << ")" << std::endl;
     }
+}
+
+void MainWindow::setMove(int x, int y)
+{
+    msgpack::sbuffer sbuf;
+    msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+    GameData::CommandStruct::Move m;
+    dvectorx += x;
+    dvectory += y;
+    packet.pack((int)GameData::Command::Move);
+    m.x = dvectorx;
+    m.y = dvectory;
+    m.idUnit = 0;
+    packet.pack(m);
+    n->sendToServer(sbuf);
 }

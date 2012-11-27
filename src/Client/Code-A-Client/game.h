@@ -6,6 +6,7 @@
 #include "../../GameData/Unit.hpp"
 #include "../../GameData/Bullet.hpp"
 #include "../../GameData/Element.hpp"
+#include "../../GameData/Information.hpp"
 #include "mainwindow.h"
 
 class MainWindow;
@@ -20,6 +21,8 @@ class Game
 public:
     Game(MainWindow *, GameView *);
     void drawWorld();
+    void setPlayerDefinition(const GameData::Information::PlayerDefinition &);
+    void setSelection(int unitId);
     void setWorld(GameData::World);
     int angle;
     GameData::World getWorld();
@@ -32,6 +35,8 @@ public:
     GameView *view;
     MainWindow *ui;
 
+    GameData::Information::PlayerDefinition* playerDefinition;
+    int selectedUnit;
 private:
     GameData::World world;
 };

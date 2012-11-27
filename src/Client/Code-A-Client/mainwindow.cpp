@@ -31,6 +31,7 @@ void MainWindow::Playagain()
     // music->play();
 }
 
+
 void MainWindow::NewGame()
 {
     ingame = true;

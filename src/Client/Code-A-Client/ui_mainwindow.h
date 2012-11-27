@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Tue Oct 30 14:13:21 2012
-**      by: Qt User Interface Compiler version 4.8.1
+** Created: Mon Nov 26 15:06:23 2012
+**      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -16,7 +16,6 @@
 #include <QtGui/QButtonGroup>
 #include <QtGui/QCheckBox>
 #include <QtGui/QFormLayout>
-#include <QtGui/QGraphicsView>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
@@ -45,7 +44,6 @@ public:
     QSpacerItem *verticalSpacer;
     QPushButton *create;
     QLabel *Title;
-    QGraphicsView *Gameview;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -57,6 +55,7 @@ public:
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(MainWindow->sizePolicy().hasHeightForWidth());
         MainWindow->setSizePolicy(sizePolicy);
+        MainWindow->setMouseTracking(false);
         Main = new QWidget(MainWindow);
         Main->setObjectName(QString::fromUtf8("Main"));
         Main->setEnabled(true);
@@ -141,16 +140,7 @@ public:
         Title->setTextFormat(Qt::AutoText);
         Title->setScaledContents(false);
         Title->setAlignment(Qt::AlignCenter);
-        Gameview = new QGraphicsView(Main);
-        Gameview->setObjectName(QString::fromUtf8("Gameview"));
-        Gameview->setGeometry(QRect(0, 0, 800, 600));
-        Gameview->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-        Gameview->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-        Gameview->setInteractive(true);
-        Gameview->setSceneRect(QRectF(0, 0, 200, 200));
         MainWindow->setCentralWidget(Main);
-        Gameview->raise();
-        Loginpage->raise();
         QWidget::setTabOrder(logini, passwordi);
         QWidget::setTabOrder(passwordi, Remember);
         QWidget::setTabOrder(Remember, loginb);

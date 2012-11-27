@@ -93,7 +93,14 @@ namespace Server
 	  {
 	    msgpack::object obj = result.get();
 	    obj = result.get();
-	    obj.convert(&arg);
+	    try{
+	      obj.convert(&arg);
+	    }
+	    catch(std::exception e)
+	      {
+		std::cout << "fuck you: " << (void*)callback << std::endl;
+		return ;
+	      }
 	  }
 	(caller->*callback)(idClient, arg);
       }

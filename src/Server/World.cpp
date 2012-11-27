@@ -39,24 +39,30 @@ void	Server::World::init(int width, int height)
 
   _commandManager = new CommandManager<World, int, int>(this);
   // TODO: commandManager a factory !
+  std::cout << "fire:        " << (void*)&World::fire << std::endl;
   _commandManager->addCallback(GameData::Command::Fire,
 			       _commandManager->createCallback(&World::fire));
+  std::cout << "aimTo:       " << (void*)&World::aimTo << std::endl;
   _commandManager->addCallback(GameData::Command::AimTo,
 			       _commandManager->createCallback(&World::aimTo));
+  std::cout << "moveTo:      " << (void*)&World::moveTo << std::endl;
   _commandManager->addCallback(GameData::Command::MoveTo,
 			       _commandManager->createCallback(&World::moveTo));
-
-  _commandManager->
-    addCallback(GameData::Command::Move,
-		_commandManager->createCallback(&World::askMove));
-
+  std::cout << "askMove:     " << (void*)&World::askMove << std::endl;
+  _commandManager->addCallback(GameData::Command::Move,
+			       _commandManager->createCallback(&World::askMove));
+  std::cout << "rotateLeft:  " << (void*)&World::rotateLeft << std::endl;
   _commandManager->addCallback(GameData::Command::RotateLeft, _commandManager->createCallback(&World::rotateLeft));
+  std::cout << "rotateRight: " << (void*)&World::rotateRight << std::endl;
   _commandManager->addCallback(GameData::Command::RotateRight,
 			       _commandManager->createCallback(&World::rotateRight));
+  std::cout << "rotateStop:  " << (void*)&World::rotateStop << std::endl;
   _commandManager->addCallback(GameData::Command::RotateStop,
 			       _commandManager->createCallback(&World::rotateStop));
+  std::cout << "shield:      " << (void*)&World::shield << std::endl;
   _commandManager->addCallback(GameData::Command::Shield,
 			       _commandManager->createCallback(&World::shield));
+  std::cout << "addPlayer:   " << (void*)&World::addPlayer << std::endl;
   _commandManager->addCallback(GameData::Command::BePlayer,
 			       _commandManager->createCallback(&World::addPlayer));
   communication.setCommandManager(_commandManager);
@@ -216,7 +222,8 @@ void	Server::World::sendUpdatesToClients()
       msgpack::sbuffer sbuf;
       msgpack::packer<msgpack::sbuffer> packet(&sbuf);
 	       
-      /// TODO: sepcify type of sent data (here: World)
+
+      packet.pack((int)GameData::InformationId::EntireWorld);
       /// TODO: send different packet depending on client (fog of war, etc...)
       serialize(packet);
 	       
@@ -440,4 +447,20 @@ void	Server::World::addPlayer(int idClient)
   BitField *b = new  BitField(Server::BitField::MAGE, Server::BitField::MAGE);
   // TODO: we might want to wait all players before creating the units
   this->createUnit(b, &(createPlayer(idClient)));
+
+
+  // FIXME: use a fucking QueueSendToServer !
+  msgpack::sbuffer sbuf;
+  msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+  
+  /// TODO: sepcify type of sent data (here: World)
+  packet.pack((int)GameData::InformationId::PlayerDefinition);
+  GameData::Information::PlayerDefinition playerDefinition;
+
+  playerDefinition.idPlayer = idClient;
+
+  packet.pack(playerDefinition);
+	       
+	       
+  communication.sendToClient(sbuf, idClient);
 }

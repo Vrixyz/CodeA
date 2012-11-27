@@ -105,7 +105,12 @@ void GameView::mousePressEvent(QMouseEvent *event)
     switch (event->button())
     {
     case Qt::LeftButton:
-        packet.pack(0);
+        packet.pack((int)GameData::Command::Fire);
+        GameData::CommandStruct::Fire f;
+        f.x = 0;
+        f.y = 0;
+        f.idUnit = 0;
+        packet.pack(f);
         n->sendToServer(sbuf);
         break;
 

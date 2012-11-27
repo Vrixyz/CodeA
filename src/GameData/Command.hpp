@@ -20,7 +20,7 @@ namespace GameData
   {
     typedef enum e_Id
       {
-	Fire = 0,
+	Fire = 9,
 	AimTo = 1,
 	MoveTo = 2, /// for RTS
 	Move = 3,
@@ -49,8 +49,9 @@ namespace GameData
     // AimTo not implemented
     struct Aim
     {
+      int idUnit;
       
-      MSGPACK_DEFINE();
+      MSGPACK_DEFINE(idUnit);
     };
     
     // MoveTo not implemented (fakes use of a Move)
@@ -67,13 +68,17 @@ namespace GameData
     // No args for Rotation* (yet?)
     struct Rotate
     {
-      MSGPACK_DEFINE();
+      int idUnit;
+      
+      MSGPACK_DEFINE(idUnit);
     };
 
     // No args for Shield (yet?)
     struct Shield
     {
-      MSGPACK_DEFINE();
+      int idUnit;
+      
+      MSGPACK_DEFINE(idUnit);
     };
 
     // // No args for BePlayer (yet?)

@@ -19,6 +19,7 @@
 #include "../GameData/Physics.hpp"
 #include "../GameData/Unit.hpp"
 #include "../GameData/Command.hpp"
+#include "../GameData/Information.hpp"
 #include "../GameData/Serializable.hpp"
 #include "Element.hpp"
 #include "Bullet.hpp"

@@ -86,36 +86,36 @@ void Server::Unit::askMove(int idPlayer, int x, int y)
 
 void Server::Unit::askRotateLeft(int idPlayer)
 {
-  std::cout << "left rot";
+  // std::cout << "left rot";
   if (this->ownPlayer(idPlayer))
     {
-      std::cout << "ate";
+      // std::cout << "ate";
       rotation = -0.001;
     }
-  std::cout << std::endl;
+  // std::cout << std::endl;
 }
 
 void Server::Unit::askRotateRight(int idPlayer)
 {
-  std::cout << "right rot";
+  // std::cout << "right rot";
   if (this->ownPlayer(idPlayer))
     {
-      std::cout << "ate";
+      // std::cout << "ate";
       rotation = 0.001;
     }
- std::cout << std::endl;
+ // std::cout << std::endl;
 }
 
 void Server::Unit::askRotateStop(int idPlayer)
 {
-  std::cout << "stop rot";
+  // std::cout << "stop rot";
   if (this->ownPlayer(idPlayer))
     {
 
-      std::cout << "ate";
+      // std::cout << "ate";
       rotation = 0.0;
     }
-  std::cout << std::endl;
+  // std::cout << std::endl;
 }
 
 void Server::Unit::update(float elapsedMilliseconds)

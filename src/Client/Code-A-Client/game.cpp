@@ -6,6 +6,8 @@ Game::Game(MainWindow *u, GameView *v)
     angle = 0;
     ui = u;
     view = v;
+    playerDefinition = NULL;
+    selectedUnit = -1;
 }
 
 void Game::setWorld(GameData::World w) {
@@ -74,4 +76,15 @@ void Game::drawWorld() {
     view->show();
 //    ui->ui->Gameview->setScene(scene);
 //    ui->ui->Gameview->show();
+}
+
+void Game::setPlayerDefinition(const GameData::Information::PlayerDefinition& pd)
+{
+    delete playerDefinition;
+    playerDefinition = new GameData::Information::PlayerDefinition(pd);
+}
+
+void Game::setSelection(int unitId)
+{
+    selectedUnit = unitId;
 }

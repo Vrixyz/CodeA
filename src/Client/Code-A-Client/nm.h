@@ -16,6 +16,7 @@ public:
     void connectToServer();
     void sendToServer(const msgpack::sbuffer&);
     void updateWorld(QByteArray);
+    void updatePlayerDefinition(QByteArray line);
 public slots:
     void ReceiveFromServer();
 private:

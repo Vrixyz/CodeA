@@ -5,12 +5,12 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Fri Sep 14 10:40:12 2012 thierry berger
-// Last update Sat Nov 17 09:49:47 2012 mathieu leurquin
+// Last update Wed Dec 12 12:40:10 2012 mathieu leurquin
 //
 
 #include "Bullet.hpp"
 
-b2Body*	Server::Bullet::setBody(float angle, b2Vec2 position)
+b2Body*	Server::Bullet::setBody(float angle, b2Vec2 position, BitField *b)
 {
   b2BodyDef bBDef;
 
@@ -28,6 +28,11 @@ b2Body*	Server::Bullet::setBody(float angle, b2Vec2 position)
 
   b2FixtureDef fDef;
   fDef.shape = &bulletShape;
+
+  fDef.filter.categoryBits = b->what;
+  fDef.filter.maskBits = b->collide;
+
+
   this->_body->CreateFixture(&fDef);
   return this->_body;
 }
@@ -41,4 +46,30 @@ void	Server::Bullet::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
 Server::Bullet::~Bullet()
 {
   _body->GetWorld()->DestroyBody(_body);
+}
+
+void Server::Bullet::intraCollision(Object *o)
+{
+  _world.bulletsErase.insert(this);
+  if (o->getType() == Object::Element)
+    this->intraCollisionElement(o);
+  else if(o->getType() == Object::Bullet)
+    this->intraCollisionBullet(o);
+  else if(o->getType() == Object::Unit)
+    this->intraCollisionUnit(o);
+}
+
+void Server::Bullet::intraCollisionUnit(Object *o)
+{
+  std::cout<<"Bullet::Collision with a bullet and unit!"<<std::endl;
+}
+
+void Server::Bullet::intraCollisionElement(Object *o)
+{
+  std::cout<<"Bullet::Collision with a bullet and elemnt!"<<std::endl;
+}
+
+void Server::Bullet::intraCollisionBullet(Object *o)
+{
+  std::cout<<"Bullet::Collision with a bullet and bullet!"<<std::endl;
 }

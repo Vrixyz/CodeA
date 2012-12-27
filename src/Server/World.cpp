@@ -5,13 +5,13 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Sat Nov 17 10:54:06 2012 mathieu leurquin
+// Last update Tue Dec 18 16:24:48 2012 mathieu leurquin
 //
 
 #include "World.hpp"
 #include <cmath>
 
-// Server::MyContactListener Server::World::myContactListenerInstance;
+MyContactListener Server::World::myContactListenerInstance;
 
 Server::World::~World()
 {
@@ -24,8 +24,9 @@ void	Server::World::init(int width, int height)
  
   // // FIXME: we must create the player and the unit at the connection !
   // BitField *b = new  BitField(Server::BitField::MAGE, Server::BitField::MAGE);
-  
-  BitField *obs = new BitField(Server::BitField::OBSTACLE, Server::BitField::MAGE);
+    
+  BitField *obs = new BitField(Server::BitField::OBSTACLE, Server::BitField::TEAM1_UNIT | Server::BitField::TEAM1_BULLET
+			       );
   
   // u = this->createUnit(b);
   // u->addPlayer(&this->createPlayer(0));
@@ -136,10 +137,11 @@ Server::Element* Server::World::createElement(bool walkable, float width, float 
   return e;
 }
 
-Server::Bullet*  Server::World::createBullet(int damage, float angle, b2Vec2 pos, int idUnit)
+Server::Bullet*  Server::World::createBullet(int damage, float angle, b2Vec2 pos, int idUnit, BitField *bit)
 {
   Server::Bullet* b = new Bullet(*this, (int)elements.size(), damage, idUnit);
-  b->setBody(angle, pos);
+
+  b->setBody(angle, pos, bit);
   bullets.push_back(b);
   return b;
 }
@@ -362,7 +364,12 @@ void Server::World::fire(int idClient, GameData::CommandStruct::Fire)
   std::vector<float>::iterator fire = (*it)->spellTimer.begin();
   if ((*fire) != 0)
     return;
-  Bullet *b = createBullet(10, (*it)->getBody()->GetAngle(), (*it)->getBody()->GetPosition(), (*it)->id);
+
+  //check friendly or not
+  BitField *bullet = new BitField(Server::BitField::TEAM1_BULLET, Server::BitField::OBSTACLE);
+
+
+  Bullet *b = createBullet(10, (*it)->getBody()->GetAngle(), (*it)->getBody()->GetPosition(), (*it)->id, bullet);
   float angle;
 
   angle = (*it)->getBody()->GetAngle() * 57.2957795;
@@ -414,7 +421,8 @@ void Server::World::shield(int idClient, GameData::CommandStruct::Shield)
   std::vector<float>::iterator sh = (*it)->spellTimer.end();
   if ((*sh) != 0)
     return;
-  BitField *shield = new BitField(Server::BitField::SHIELD_MAGE, Server::BitField::OBSTACLE);
+  //check friendly or not
+  BitField *shield = new BitField(Server::BitField::TEAM1_SHIELD, Server::BitField::OBSTACLE);
   Server::Element *e = new Server::Element(*this, (int)elements.size(), true, (*it)->id);
   
 
@@ -444,7 +452,12 @@ void	Server::World::addPlayer(int idClient)
       if ((*it)->id == idClient)
 	return ; // TODO: send to client that he is already a player.
     }
-  BitField *b = new  BitField(Server::BitField::MAGE, Server::BitField::MAGE);
+
+  //check friendly or not
+  BitField *b = new  BitField(Server::BitField::TEAM1_UNIT, Server::BitField::OBSTACLE);
+
+
+
   // TODO: we might want to wait all players before creating the units
   this->createUnit(b, &(createPlayer(idClient)));
 
@@ -460,7 +473,6 @@ void	Server::World::addPlayer(int idClient)
   playerDefinition.idPlayer = idClient;
 
   packet.pack(playerDefinition);
-	       
 	       
   communication.sendToClient(sbuf, idClient);
 }

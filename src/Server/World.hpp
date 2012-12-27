@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 10:46:49 2012 thierry berger
-// Last update Sat Nov 17 10:46:37 2012 mathieu leurquin
+// Last update Wed Dec 12 12:28:21 2012 mathieu leurquin
 //
 
 #ifndef SERVER_WORLD_HPP
@@ -21,6 +21,7 @@
 #include "../GameData/Command.hpp"
 #include "../GameData/Information.hpp"
 #include "../GameData/Serializable.hpp"
+#include "myContactListener.hpp"
 #include "Element.hpp"
 #include "Bullet.hpp"
 #include "Unit.hpp"
@@ -52,8 +53,11 @@ namespace Server
     std::set<Server::Bullet*>	bulletsErase;
     std::list<Player*>	players;
     b2World _physicWorld;
+    static MyContactListener myContactListenerInstance;
 
-    World() : _physicWorld(b2Vec2(0, 0)) {}
+    World() : _physicWorld(b2Vec2(0, 0)) {
+      _physicWorld.SetContactListener(&myContactListenerInstance);
+    }
     ~World();
     void init(int width, int height);
     void run();
@@ -61,7 +65,7 @@ namespace Server
     Player& createPlayer(int id);
     Server::Unit* createUnit(BitField *b, Player* p = NULL);
     Server::Element* createElement(bool walkable, float width, float height, BitField *b, int idUnit);
-    Server::Bullet* createBullet(int damage, float angle, b2Vec2 position, int idUnit);
+    Server::Bullet* createBullet(int damage, float angle, b2Vec2 position, int idUnit, BitField *b);
     Player* getPlayer(int id);
     Server::Unit* getUnit(int id);
     Server::Element* getElement(int id);

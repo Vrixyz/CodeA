@@ -23,12 +23,14 @@ void Game::drawWorld() {
     GameData::Physics::Coord c;
     QGraphicsScene *scene = new QGraphicsScene(0, 0, 800, 600, ui);
     GameData::Physics p;
+    GameData::Unit u(0, 0);
     //    De quoi vous faire un petit repaire
     QLine ly(0, -300, 0, 300);
     QLine lx(-400, 0, 400, 0);
     scene->addLine(lx);
     scene->addLine(ly);
-    for (std::list<GameData::Physics>::iterator it = pelem.begin(); it != pelem.end(); it++) {
+    std::list<GameData::Unit>::iterator unitit = unit.begin();
+    for (std::list<GameData::Physics>::iterator it = pelem.begin(); it != pelem.end(); it++) { // elems physics loop
         QPolygon *poly = new QPolygon();
         p = *it;
         for (std::list<GameData::Physics::Coord>::iterator ite = p.vertices.begin(); ite != p.vertices.end(); ite++) {
@@ -38,28 +40,31 @@ void Game::drawWorld() {
         }
         item = scene->addPolygon(*poly);
         item->setRotation(p.angle);
-//        std::cout << "Elem : " << p.x << " " << p.y << std::endl;
+        //        std::cout << "Elem : " << p.x << " " << p.y << std::endl;
         item->setPos(p.x * 1, p.y * -1);
     }
-    for (std::list<GameData::Physics>::iterator it = punit.begin(); it != punit.end(); it++) {
+    unitit = unit.begin();
+    for (std::list<GameData::Physics>::iterator it = punit.begin(); it != punit.end(); it++, unitit++) { // units physics loop
         p = *it;
+        u = *unitit;
         QPolygon *poly = new QPolygon();
         for (std::list<GameData::Physics::Coord>::iterator ite = p.vertices.begin(); ite != p.vertices.end(); ite++) {
             c = *ite;
             (*poly) << QPoint(c.x, c.y * -1);
             //            std::cout << c.x << " " << c.y << std::endl;
         }
-        view->angle = p.angle;
-        view->rotationUpdate();
         item = scene->addPolygon(*poly);
-        item->setRotation(view->angle);
-//        std::cout << view->angle << std::endl;
-        view->setSceneRect(p.x - 400., -300. - p.y, 800, 600);
-//        ui->ui->Gameview->setSceneRect(p.x - 400., -300. - p.y, 800, 600);
-//        std::cout << "Unit : " << p.x << " " << p.y << std::endl;
+        if (u.id == selectedUnit)
+        {
+            view->angle = p.angle;
+            view->rotationUpdate();
+            item->setRotation(view->angle);
+            view->setSceneRect(p.x - 400., -300. - p.y, 800, 600);
+        }
+        //        std::cout << "Unit : " << p.x << " " << p.y << std::endl;
         item->setPos(p.x * 1, p.y * -1);
     }
-    for (std::list<GameData::Physics>::iterator it = pbullet.begin(); it != pbullet.end(); it++) {
+    for (std::list<GameData::Physics>::iterator it = pbullet.begin(); it != pbullet.end(); it++) { // bullets physics loop
         p = *it;
         QPolygon *poly = new QPolygon();
         for (std::list<GameData::Physics::Coord>::iterator ite = p.vertices.begin(); ite != p.vertices.end(); ite++) {
@@ -74,8 +79,6 @@ void Game::drawWorld() {
     }
     view->setScene(scene);
     view->show();
-//    ui->ui->Gameview->setScene(scene);
-//    ui->ui->Gameview->show();
 }
 
 void Game::setPlayerDefinition(const GameData::Information::PlayerDefinition& pd)

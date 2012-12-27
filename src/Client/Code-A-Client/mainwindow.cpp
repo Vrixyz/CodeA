@@ -74,12 +74,16 @@ void MainWindow::keyPressEvent(QKeyEvent *e) {
             std::cout << "PATRON ELLE PIQUE PAS TA VITEL !" << std::endl;
             break;
         case Qt::Key_B:
+            GameData::CommandStruct::Fire f;
+            f.idUnit = n->game->selectedUnit;
             std::cout << "BULLET !" << std::endl;
             packet.pack((int)GameData::Command::Fire);
-            packet.pack(GameData::CommandStruct::Fire());
+            packet.pack(f);
             n->sendToServer(sbuf);
             break;
         case Qt::Key_R:
+            GameData::CommandStruct::Shield s;
+            s.idUnit = n->game->selectedUnit;
             std::cout << "shield !" << std::endl;
             packet.pack((int)GameData::Command::Shield);
             packet.pack(GameData::CommandStruct::Shield());
@@ -149,7 +153,8 @@ void MainWindow::setMove(int x, int y)
     packet.pack((int)GameData::Command::Move);
     m.x = dvectorx;
     m.y = dvectory;
-    m.idUnit = 0;
+    m.idUnit = n->game->selectedUnit;
+    std::cout << "unit id : " << m.idUnit << std::endl;
     packet.pack(m);
     n->sendToServer(sbuf);
 }

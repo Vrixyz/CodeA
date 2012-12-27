@@ -36,7 +36,7 @@ public:
     MainWindow *ui;
 
     GameData::Information::PlayerDefinition* playerDefinition;
-    int selectedUnit;
+    unsigned int selectedUnit;
 private:
     GameData::World world;
 };

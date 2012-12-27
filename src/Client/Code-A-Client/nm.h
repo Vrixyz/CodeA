@@ -17,13 +17,13 @@ public:
     void sendToServer(const msgpack::sbuffer&);
     void updateWorld(QByteArray);
     void updatePlayerDefinition(QByteArray line);
+    Game *game;
 public slots:
     void ReceiveFromServer();
 private:
     int port;
     QString host;
     QTcpSocket soc;
-    Game *game;
 };
 
 #endif // NM_H

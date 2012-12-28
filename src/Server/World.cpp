@@ -387,52 +387,57 @@ void Server::World::moveTo(int idClient, GameData::CommandStruct::Move)
 {
 }
 
-void Server::World::rotateLeft(int idClient, GameData::CommandStruct::Rotate)
+void Server::World::rotateLeft(int idClient, GameData::CommandStruct::Rotate arg)
 {
-  std::list<Unit*>::iterator it = units.begin();
- 
-  (*it)->askRotateLeft(idClient);
+  Unit* u = getUnit(arg.idUnit);
+
+  if (u != NULL)
+    u->askRotateLeft(idClient);
 }
 
-void Server::World::rotateRight(int idClient, GameData::CommandStruct::Rotate)
+void Server::World::rotateRight(int idClient, GameData::CommandStruct::Rotate arg)
 {
-  std::list<Unit*>::iterator it = units.begin();
+  Unit* u = getUnit(arg.idUnit);
 
-  (*it)->askRotateRight(idClient);
+  if (u != NULL)
+    u->askRotateRight(idClient);
 }
 
-void Server::World::rotateStop(int idClient, GameData::CommandStruct::Rotate)
+void Server::World::rotateStop(int idClient, GameData::CommandStruct::Rotate arg)
 {
-  std::list<Unit*>::iterator it = units.begin();
-
-  (*it)->askRotateStop(idClient);
+  Unit* u = getUnit(arg.idUnit);
+  
+  if (u != NULL)
+    u->askRotateStop(idClient);
 }
 
-void Server::World::shield(int idClient, GameData::CommandStruct::Shield)
+void Server::World::shield(int idClient, GameData::CommandStruct::Shield arg)
 {
-  std::list<Unit*>::iterator it = units.begin();
-  std::vector<float>::iterator sh = (*it)->spellTimer.end();
+  Unit* u = getUnit(arg.idUnit);
+
+  if (u == NULL)
+    return;
+  std::vector<float>::iterator sh = u->spellTimer.end();
   if ((*sh) != 0)
     return;
   BitField *shield = new BitField(Server::BitField::SHIELD_MAGE, Server::BitField::OBSTACLE);
-  Server::Element *e = new Server::Element(*this, (int)elements.size(), true, (*it)->id);
+  Server::Element *e = new Server::Element(*this, (int)elements.size(), true,u->id);
   
 
-  b2Vec2 position = (*it)->getBody()->GetPosition();
+  b2Vec2 position = u->getBody()->GetPosition();
 
   e->setBody(shield,10 , 1,  position.x, position.y);
-  e->getBody()->SetTransform(position, (*it)->getBody()->GetAngle());
+  e->getBody()->SetTransform(position, u->getBody()->GetAngle());
   elements.push_back(e); 
   (*sh) = -1;
 }
 
 void Server::World::askMove(int idClient, GameData::CommandStruct::Move arg)
 {
-  std::list<Unit*>::iterator it = units.begin();
+  Unit* u = getUnit(arg.idUnit);
 
-  // TODO: seek right unit (arg.idUnit)
-  // TODO: check if idClient has the right to move this unit.
-  (*it)->askMove(idClient, arg.x, arg.y);
+  if (u != NULL)
+    u->askMove(idClient, arg.x, arg.y);
 }
 
 void	Server::World::addPlayer(int idClient)

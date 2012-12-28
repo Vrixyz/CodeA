@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 17:53:20 2012 thierry berger
-// Last update Sat Nov 17 09:49:21 2012 mathieu leurquin
+// Last update Wed Dec 12 12:28:20 2012 mathieu leurquin
 //
 
 #include "Element.hpp"
@@ -30,6 +30,7 @@ b2Body*	Server::Element::setBody(BitField *b, float width, float height, int x, 
 
   fDef.filter.categoryBits = b->what;
   fDef.filter.maskBits = b->collide;
+
   // fDef.filter.categoryBits = -1;
   // fDef.filter.maskBits = -1;
 
@@ -56,4 +57,29 @@ int	Server::Element::getClassId() const
 Server::Element::~Element()
 {
   _body->GetWorld()->DestroyBody(_body);
+}
+
+void Server::Element::intraCollision(Object *o)
+{
+  if (o->getType() == Object::Element)
+    this->intraCollisionElement(o);
+  else if(o->getType() == Object::Bullet)
+    this->intraCollisionBullet(o);
+  else if(o->getType() == Object::Unit)
+    this->intraCollisionUnit(o);
+}
+
+void Server::Element::intraCollisionUnit(Object *o)
+{
+  std::cout<<"element::Collision with a Element and Unit!"<<std::endl;
+}
+
+void Server::Element::intraCollisionElement(Object *o)
+{
+  std::cout<<"elemtn::Collision with a element and Element!"<<std::endl;
+}
+
+void Server::Element::intraCollisionBullet(Object *o)
+{
+  std::cout<<"element::Collision with a element and Bullet!"<<std::endl;
 }

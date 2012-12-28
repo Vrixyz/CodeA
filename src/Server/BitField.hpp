@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Tue Sep 18 10:58:04 2012 mathieu leurquin
-// Last update Sat Nov  3 13:39:52 2012 mathieu leurquin
+// Last update Tue Dec 18 16:22:50 2012 mathieu leurquin
 //
 
 #ifndef SERVER_BITFIELD_HPP
@@ -19,13 +19,13 @@ namespace Server
     uint16_t what;
     uint16_t collide;
     enum cat {
-      FRIENDLY_BULLET =	0x0001,
-      ENNEMY_BULLET =	0x0002,  
-      SHIELD_MAGE =     0x0004,
-      FRIENDLY =	0x0006,
-      ENNEMY =		0x0008,
-      OBSTACLE =	0x0010,
-      MAGE =		0x0012,
+      OBSTACLE       = 1,
+      TEAM2_BULLET   = 2,  
+      TEAM2_SHIELD   = 4,
+      TEAM2_UNIT     = 8,
+      TEAM1_BULLET   = 16,
+      TEAM1_SHIELD   = 32,
+      TEAM1_UNIT     = 64,
     };
     
     BitField(uint16_t w, uint16_t c) :  what(w), collide(c) {}

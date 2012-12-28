@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Fri Sep 14 12:40:33 2012 thierry berger
-// Last update Mon Oct 22 16:47:13 2012 mathieu leurquin
+// Last update Thu Nov  8 14:07:28 2012 mathieu leurquin
 //
 
 #include <iostream>

@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 13:21:11 2012 thierry berger
-// Last update Sat Nov 17 10:53:53 2012 mathieu leurquin
+// Last update Wed Dec 12 12:46:44 2012 mathieu leurquin
 //
 
 #include "Unit.hpp"
@@ -28,8 +28,10 @@ b2Body*	Server::Unit::setBody(BitField *b)
   
   b2FixtureDef fDef;
   fDef.shape = &unitShape;
+
   fDef.filter.categoryBits = b->what;
   fDef.filter.maskBits = b->collide;
+
   // fDef.filter.categoryBits = -1;
   // fDef.filter.maskBits = -1;
   this->_body->CreateFixture(&fDef);
@@ -143,7 +145,7 @@ void Server::Unit::update(float elapsedMilliseconds)
   
   //shiled, fire finish ?
 
-  if ((*fire) > 1000)
+  if ((*fire) > 3000)
     {
       _world.bulletsErase.insert(_world.getBullet(this->id));
       (*fire) = 0;
@@ -162,4 +164,29 @@ void Server::Unit::update(float elapsedMilliseconds)
   while (_body->GetAngle() < 0)
     _body->SetTransform(_body->GetPosition(), _body->GetAngle() + 2 * PI);
   _body->SetAngularVelocity(rotation);
+}
+
+void Server::Unit::intraCollision(Object *o)
+{
+  if (o->getType() == Object::Element)
+    this->intraCollisionElement(o);
+  else if(o->getType() == Object::Bullet)
+    this->intraCollisionBullet(o);
+  else if(o->getType() == Object::Unit)
+    this->intraCollisionUnit(o);
+}
+
+void Server::Unit::intraCollisionUnit(Object *o)
+{
+  std::cout<<"Unit:!:Collision with a unit and unit!"<<std::endl;
+}
+
+void Server::Unit::intraCollisionElement(Object *o)
+{
+  std::cout<<"Unit::Collision with a unit and element!"<<std::endl;
+}
+
+void Server::Unit::intraCollisionBullet(Object *o)
+{
+  std::cout<<"Unit::Collision with a unit and bullet!"<<std::endl;
 }

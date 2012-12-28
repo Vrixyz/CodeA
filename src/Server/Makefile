@@ -5,7 +5,7 @@
 ## Login   <berger_t@epitech.net>
 ## 
 ## Started on  Fri Sep 14 10:58:16 2012 thierry berger
-## Last update Thu Nov  8 11:13:52 2012 mathieu leurquin
+## Last update Wed Dec 12 10:57:28 2012 mathieu leurquin
 ##
 
 SRC_SR	=	mainTest.cpp \
@@ -17,7 +17,6 @@ SRC_SR	=	mainTest.cpp \
 		BitField.cpp \
 		Object.cpp
 
-
 SRC_CL	=	clientTest.cpp
 
 NAME_CL =	client
@@ -28,7 +27,7 @@ OBJ_CL	=	$(SRC_CL:.cpp=.o)
 
 OBJ_SR	=	$(SRC_SR:.cpp=.o)
 
-LIBS	=	-lboost_system -lmsgpack -lBox2D -lboost_thread -lpthread
+LIBS	=	-lboost_system -lmsgpack -lBox2D -lboost_thread -lpthread -lm
 
 CXXFLAGS=	-W -Wall -Wextra -g
 

@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:16:58 2012 mathieu leurquin
-// Last update Sat Nov 17 10:37:45 2012 mathieu leurquin
+// Last update Wed Dec 12 10:35:56 2012 mathieu leurquin
 //
 
 #ifndef SERVER_ELEMENT_HPP
@@ -31,6 +31,11 @@ namespace Server
     virtual void serialize(msgpack::packer<msgpack::sbuffer>& packet) const;
     virtual bool unSerialize(msgpack::packer<msgpack::sbuffer>& packet);
     virtual int	getClassId() const;
+  private:
+    void intraCollision(Object *o);
+    void intraCollisionUnit(Object *o);
+    void intraCollisionBullet(Object *o);
+    void intraCollisionElement(Object *o);
   };
 }
 

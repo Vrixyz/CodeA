@@ -88,7 +88,6 @@ namespace Server
 	memcpy(pac.buffer(), data, size);
 	pac.buffer_consumed(size);
 	pac.next(&result); // bypass already parsed index
-	if (sizeof(arg) > sizeof(int))
 	if (pac.next(&result))
 	  {
 	    msgpack::object obj = result.get();

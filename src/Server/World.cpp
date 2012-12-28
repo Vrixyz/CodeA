@@ -429,7 +429,7 @@ void Server::World::shield(int idClient, GameData::CommandStruct::Shield arg)
     return;
   //check friendly or not
   BitField *shield = new BitField(Server::BitField::TEAM1_SHIELD, Server::BitField::OBSTACLE);
-  Server::Element *e = new Server::Element(*this, (int)elements.size(), true, (*it)->id);
+  Server::Element *e = new Server::Element(*this, (int)elements.size(), true, u->id);
   
 
   b2Vec2 position = u->getBody()->GetPosition();

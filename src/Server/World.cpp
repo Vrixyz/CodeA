@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Tue Dec 18 16:24:48 2012 mathieu leurquin
+// Last update Fri Dec 28 18:59:01 2012 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -182,8 +182,8 @@ Server::Bullet* Server::World::getBullet(int idU)
 {
   for (std::list<Bullet*>::iterator it = bullets.begin(); it != bullets.end(); it++)
     {
-      if ((*it)->idUnit == idU)
-	return (*it);
+      // if ((*it)->idUnit == idU)
+      // 	return (*it);
     }
   return NULL;
 }
@@ -369,10 +369,10 @@ void Server::World::fire(int idClient, GameData::CommandStruct::Fire)
   BitField *bullet = new BitField(Server::BitField::TEAM1_BULLET, Server::BitField::OBSTACLE);
 
 
-  Bullet *b = createBullet(10, (*it)->getBody()->GetAngle(), (*it)->getBody()->GetPosition(), (*it)->id, bullet);
+  Bullet *b = createBullet(10, getUnit(idClient)->getBody()->GetAngle(), getUnit(idClient)->getBody()->GetPosition(), idClient, bullet);
   float angle;
 
-  angle = (*it)->getBody()->GetAngle() * 57.2957795;
+  angle = getUnit(idClient)->getBody()->GetAngle() * 57.2957795;
   angle = (int)angle % (int)360;
   angle = angle  < 0 ? -angle : angle;
   if (angle >= 0 && angle < 90)
@@ -405,6 +405,8 @@ void Server::World::rotateLeft(int idClient, GameData::CommandStruct::Rotate arg
 void Server::World::rotateRight(int idClient, GameData::CommandStruct::Rotate arg)
 {
   Unit* u = getUnit(arg.idUnit);
+
+  std::cout<<"test : "<<arg.idUnit<<std::endl;
 
   if (u != NULL)
     u->askRotateRight(idClient);
@@ -444,6 +446,7 @@ void Server::World::askMove(int idClient, GameData::CommandStruct::Move arg)
 {
   Unit* u = getUnit(arg.idUnit);
 
+  std::cout<<"move!! "<<arg.idUnit<<std::endl;
   if (u != NULL)
     u->askMove(idClient, arg.x, arg.y);
 }

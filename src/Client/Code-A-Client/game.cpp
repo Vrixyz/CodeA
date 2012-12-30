@@ -63,6 +63,7 @@ void Game::drawWorld() {
         }
         //        std::cout << "Unit : " << p.x << " " << p.y << std::endl;
         item->setPos(p.x * 1, p.y * -1);
+        item->setRotation(p.angle);
     }
     for (std::list<GameData::Physics>::iterator it = pbullet.begin(); it != pbullet.end(); it++) { // bullets physics loop
         p = *it;

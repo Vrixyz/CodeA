@@ -40,30 +40,22 @@ void	Server::World::init(int width, int height)
 
   _commandManager = new CommandManager<World, int, int>(this);
   // TODO: commandManager a factory !
-  std::cout << "fire:        " << (void*)&World::fire << std::endl;
   _commandManager->addCallback(GameData::Command::Fire,
 			       _commandManager->createCallback(&World::fire));
-  std::cout << "aimTo:       " << (void*)&World::aimTo << std::endl;
   _commandManager->addCallback(GameData::Command::AimTo,
 			       _commandManager->createCallback(&World::aimTo));
-  std::cout << "moveTo:      " << (void*)&World::moveTo << std::endl;
   _commandManager->addCallback(GameData::Command::MoveTo,
 			       _commandManager->createCallback(&World::moveTo));
-  std::cout << "askMove:     " << (void*)&World::askMove << std::endl;
   _commandManager->addCallback(GameData::Command::Move,
 			       _commandManager->createCallback(&World::askMove));
-  std::cout << "rotateLeft:  " << (void*)&World::rotateLeft << std::endl;
-  _commandManager->addCallback(GameData::Command::RotateLeft, _commandManager->createCallback(&World::rotateLeft));
-  std::cout << "rotateRight: " << (void*)&World::rotateRight << std::endl;
+  _commandManager->addCallback(GameData::Command::RotateLeft,
+			       _commandManager->createCallback(&World::rotateLeft));
   _commandManager->addCallback(GameData::Command::RotateRight,
 			       _commandManager->createCallback(&World::rotateRight));
-  std::cout << "rotateStop:  " << (void*)&World::rotateStop << std::endl;
   _commandManager->addCallback(GameData::Command::RotateStop,
 			       _commandManager->createCallback(&World::rotateStop));
-  std::cout << "shield:      " << (void*)&World::shield << std::endl;
   _commandManager->addCallback(GameData::Command::Shield,
 			       _commandManager->createCallback(&World::shield));
-  std::cout << "addPlayer:   " << (void*)&World::addPlayer << std::endl;
   _commandManager->addCallback(GameData::Command::BePlayer,
 			       _commandManager->createCallback(&World::addPlayer));
   communication.setCommandManager(_commandManager);
@@ -398,33 +390,34 @@ void Server::World::rotateLeft(int idClient, GameData::CommandStruct::Rotate arg
 {
   Unit* u = getUnit(arg.idUnit);
 
-  if (u != NULL)
-    u->askRotateLeft(idClient);
+  if (u == NULL || u->belongsToPlayer(idClient) == false)
+    return;
+  u->setRotateLeft();
 }
 
 void Server::World::rotateRight(int idClient, GameData::CommandStruct::Rotate arg)
 {
   Unit* u = getUnit(arg.idUnit);
 
-  std::cout<<"test : "<<arg.idUnit<<std::endl;
-
-  if (u != NULL)
-    u->askRotateRight(idClient);
+  if (u == NULL || u->belongsToPlayer(idClient) == false)
+    return;
+  u->setRotateRight();
 }
 
 void Server::World::rotateStop(int idClient, GameData::CommandStruct::Rotate arg)
 {
   Unit* u = getUnit(arg.idUnit);
   
-  if (u != NULL)
-    u->askRotateStop(idClient);
+  if (u == NULL || u->belongsToPlayer(idClient) == false)
+    return;
+  u->setRotateStop();
 }
 
 void Server::World::shield(int idClient, GameData::CommandStruct::Shield arg)
 {
   Unit* u = getUnit(arg.idUnit);
 
-  if (u == NULL)
+  if (u == NULL || u->belongsToPlayer(idClient) == false)
     return;
   std::vector<float>::iterator sh = u->spellTimer.end();
   if ((*sh) != 0)
@@ -446,9 +439,9 @@ void Server::World::askMove(int idClient, GameData::CommandStruct::Move arg)
 {
   Unit* u = getUnit(arg.idUnit);
 
-  std::cout<<"move!! "<<arg.idUnit<<std::endl;
-  if (u != NULL)
-    u->askMove(idClient, arg.x, arg.y);
+  if (u == NULL || u->belongsToPlayer(idClient) == false)
+    return;
+  u->setMove(arg);
 }
 
 void	Server::World::addPlayer(int idClient)

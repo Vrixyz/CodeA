@@ -97,8 +97,7 @@ namespace Server
 	    }
 	    catch(std::exception e)
 	      {
-		std::cout << "fuck you: " << (void*)callback << std::endl;
-		return ;
+		return ; // FIXME: if you happen to be there, the communication might be broken thereafter.
 	      }
 	  }
 	(caller->*callback)(idClient, arg);

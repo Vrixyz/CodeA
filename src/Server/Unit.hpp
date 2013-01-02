@@ -27,31 +27,40 @@ namespace Server
     b2Vec2 current;
     float rotation;
     std::vector<float>spellTimer;
+
+
     Unit(World& world, int id) : Object(world, Object::Unit, id), _data(id, 10), current(0, 0), rotation(0) {
       // timer used for fire
       spellTimer.push_back(0);
       // timer used for shield
       spellTimer.push_back(0);
     }
+
+    void addPlayer(Player* p);
+    bool belongsToPlayer(int idPlayer) const;
+
+    void setMove(const GameData::CommandStruct::Move&);
+    void setRotateLeft();
+    void setRotateRight();
+    void setRotateStop();
+    
+    // TODO: setFire(...);
+
+
     virtual b2Body*	setBody(BitField *b);
     const GameData::Unit& getData() const {return _data;}
-    void addPlayer(Player* p);
-    bool ownPlayer(int idPlayer);
-    void move(int x, int y);
-    void askMove(int idClient, int x, int y);
-    void askRotateLeft(int idPlayer);
-    void askRotateRight(int idPlayer);
-    void askRotateStop(int idPlayer);
-
     virtual void update(float elapsedMilliseconds);
     virtual void serialize(msgpack::packer<msgpack::sbuffer>& packet) const;
     virtual bool unSerialize(msgpack::packer<msgpack::sbuffer>& packet) {return false;}
     virtual int	getClassId() const {return 0;}
-  private:
-    void intraCollision(Object *o);
-    void intraCollisionUnit(Object *o);
-    void intraCollisionBullet(Object *o);
-    void intraCollisionElement(Object *o);
+
+  protected:
+    void move();
+
+    virtual void intraCollision(Object *o);
+    virtual void intraCollisionUnit(Object *o);
+    virtual void intraCollisionBullet(Object *o);
+    virtual void intraCollisionElement(Object *o);
   };
 }
 

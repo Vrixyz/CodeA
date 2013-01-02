@@ -43,9 +43,9 @@ void	Server::Unit::addPlayer(Player* p)
   _data.playersId.push_back(p->id);
 }
 
-bool	Server::Unit::ownPlayer(int idPlayer)
+bool	Server::Unit::belongsToPlayer(int idPlayer) const
 {
-   for (std::list<uint32_t>::iterator it = _data.playersId.begin(); it != _data.playersId.end(); it++)
+   for (std::list<uint32_t>::const_iterator it = _data.playersId.begin(); it != _data.playersId.end(); it++)
     {
       if ((*it) == idPlayer)
 	return true;
@@ -60,71 +60,46 @@ void	Server::Unit::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
   packet.pack(this->getPhysics());
 }
 
-void Server::Unit::move(int x, int y)
+void Server::Unit::move()
 {
   float impulseX;
   float impulseY;
   b2Vec2 actualLinearVelocity;
 
   actualLinearVelocity = _body->GetLinearVelocity();
-  impulseX = _body->GetMass() * x - actualLinearVelocity.x;
-  impulseY = _body->GetMass() * y - actualLinearVelocity.y;
+  impulseX = _body->GetMass() * current.x - actualLinearVelocity.x;
+  impulseY = _body->GetMass() * current.y - actualLinearVelocity.y;
 
-  // std::cout<<"actualLinealVelocity: " <<  actualLinearVelocity.x << ";" << actualLinearVelocity.y << std::endl;
   _body->ApplyLinearImpulse(b2Vec2(impulseX, impulseY), _body->GetWorldCenter());
-  // std::cout<<"Move" << impulseX << ";" << impulseY <<std::endl;
   actualLinearVelocity = _body->GetLinearVelocity();
-  // std::cout<<"actualLinealVelocity: " <<  actualLinearVelocity.x << ";" << actualLinearVelocity.y << std::endl;
 }
 
-void Server::Unit::askMove(int idPlayer, int x, int y)
+void Server::Unit::setMove(const GameData::CommandStruct::Move& arg)
 {
-  if (this->ownPlayer(idPlayer))
-    {
-      current.x = x;
-      current.y = y;
-    }
+  current.x = arg.x;
+  current.y = arg.y;
 }
 
-void Server::Unit::askRotateLeft(int idPlayer)
+void Server::Unit::setRotateLeft()
 {
-  // std::cout << "left rot";
-  if (this->ownPlayer(idPlayer))
-    {
-      // std::cout << "ate";
-      rotation = -0.001;
-    }
-  // std::cout << std::endl;
+  rotation = -0.001;
 }
 
-void Server::Unit::askRotateRight(int idPlayer)
+void Server::Unit::setRotateRight()
 {
-  // std::cout << "right rot";
-  if (this->ownPlayer(idPlayer))
-    {
-      // std::cout << "ate";
-      rotation = 0.001;
-    }
- // std::cout << std::endl;
+  rotation = 0.001;
 }
 
-void Server::Unit::askRotateStop(int idPlayer)
+void Server::Unit::setRotateStop()
 {
-  // std::cout << "stop rot";
-  if (this->ownPlayer(idPlayer))
-    {
-
-      // std::cout << "ate";
-      rotation = 0.0;
-    }
-  // std::cout << std::endl;
+  rotation = 0.0;
 }
 
 void Server::Unit::update(float elapsedMilliseconds)
 {
   // b2Vec2 curVel = _body->GetLinearVelocity();
   // if (curVel.x != current.x && curVel.y != current.y)
-  this->move(current.x, current.y);
+  this->move();
   std::vector<float>::iterator fire = this->spellTimer.begin();
   std::vector<float>::iterator shield = this->spellTimer.end();
 

@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Fri Dec 28 18:59:01 2012 mathieu leurquin
+// Last update Thu Jan  3 13:27:49 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -350,32 +350,13 @@ void Server::World::destroyElement()
 //   return physics;
 // }
 
-void Server::World::fire(int idClient, GameData::CommandStruct::Fire)
+void Server::World::fire(int idClient, GameData::CommandStruct::Fire arg)
 {
-  std::list<Unit*>::iterator it = units.begin();
-  std::vector<float>::iterator fire = (*it)->spellTimer.begin();
-  if ((*fire) != 0)
+  Unit* u = getUnit(arg.idUnit);
+  
+  if (u == NULL || u->belongsToPlayer(idClient) == false)
     return;
-
-  //check friendly or not
-  BitField *bullet = new BitField(Server::BitField::TEAM1_BULLET, Server::BitField::OBSTACLE);
-
-
-  Bullet *b = createBullet(10, getUnit(idClient)->getBody()->GetAngle(), getUnit(idClient)->getBody()->GetPosition(), idClient, bullet);
-  float angle;
-
-  angle = getUnit(idClient)->getBody()->GetAngle() * 57.2957795;
-  angle = (int)angle % (int)360;
-  angle = angle  < 0 ? -angle : angle;
-  if (angle >= 0 && angle < 90)
-    b->getBody()->ApplyLinearImpulse(b2Vec2(1, 1 / (tan(b->getBody()->GetAngle()))), b->getBody()->GetWorldCenter());
-  else if (angle >= 90 && angle < 180)
-    b->getBody()->ApplyLinearImpulse(b2Vec2(1, (-1) * tan(b->getBody()->GetAngle() - 1.5707963267949)), b->getBody()->GetWorldCenter());
-  else if (angle >= 180 && angle < 270)
-    b->getBody()->ApplyLinearImpulse(b2Vec2(-1, -1 / (tan(b->getBody()->GetAngle() - 3.1415926535898))), b->getBody()->GetWorldCenter());
-  else
-    b->getBody()->ApplyLinearImpulse(b2Vec2(-1, (tan(b->getBody()->GetAngle() - 4.7123889803847))), b->getBody()->GetWorldCenter());
-  (*fire) = -1;
+  u->setFire(arg);
 }
 
 void Server::World::aimTo(int idClient, GameData::CommandStruct::Aim)

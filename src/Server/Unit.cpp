@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 13:21:11 2012 thierry berger
-// Last update Thu Jan  3 13:22:19 2013 mathieu leurquin
+// Last update Thu Jan  3 14:32:31 2013 mathieu leurquin
 //
 
 #include "Unit.hpp"
@@ -102,9 +102,17 @@ void Server::Unit::setFire(const GameData::CommandStruct::Fire &arg)
     return;
 
   //check friendly or not
-  BitField *bullet = new BitField(Server::BitField::TEAM1_BULLET, Server::BitField::OBSTACLE);
-  
-  
+  BitField *bullet;
+  if (this->id == 0)
+    {
+      bullet = new BitField(Server::BitField::TEAM1_BULLET, Server::BitField::TEAM2_UNIT | Server::BitField::OBSTACLE);
+      std::cout<<"team 1"<<std::endl;
+    }
+  else
+    {
+      bullet = new BitField(Server::BitField::TEAM2_BULLET, Server::BitField::TEAM1_UNIT | Server::BitField::OBSTACLE);
+      std::cout<<"team 2"<<std::endl;
+    }
   Server::Bullet *b = _world.createBullet(10, this->getBody()->GetAngle(), this->getBody()->GetPosition(), arg.idUnit, bullet);
   float angle;
 
@@ -142,7 +150,7 @@ void Server::Unit::update(float elapsedMilliseconds)
   
   if ((*fire) == -1)
     (*fire) += 1 + elapsedMilliseconds;
-  if ((*shield) == -1)
+  if ((*shield) != -1)
     (*shield) += 1 + elapsedMilliseconds;
   
   //shiled, fire finish ?

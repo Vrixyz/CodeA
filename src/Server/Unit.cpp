@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 13:21:11 2012 thierry berger
-// Last update Thu Jan  3 14:32:31 2013 mathieu leurquin
+// Last update Sat Jan  5 18:22:36 2013 mathieu leurquin
 //
 
 #include "Unit.hpp"
@@ -105,12 +105,12 @@ void Server::Unit::setFire(const GameData::CommandStruct::Fire &arg)
   BitField *bullet;
   if (this->id == 0)
     {
-      bullet = new BitField(Server::BitField::TEAM1_BULLET, Server::BitField::TEAM2_UNIT | Server::BitField::OBSTACLE);
+      bullet = new BitField(Server::BitField::TEAM1_BULLET, Server::BitField::TEAM2_UNIT | Server::BitField::OBSTACLE | Server::BitField::TEAM2_SHIELD);
       std::cout<<"team 1"<<std::endl;
     }
   else
     {
-      bullet = new BitField(Server::BitField::TEAM2_BULLET, Server::BitField::TEAM1_UNIT | Server::BitField::OBSTACLE);
+      bullet = new BitField(Server::BitField::TEAM2_BULLET, Server::BitField::TEAM1_UNIT | Server::BitField::OBSTACLE | Server::BitField::TEAM1_SHIELD);
       std::cout<<"team 2"<<std::endl;
     }
   Server::Bullet *b = _world.createBullet(10, this->getBody()->GetAngle(), this->getBody()->GetPosition(), arg.idUnit, bullet);
@@ -128,6 +128,30 @@ void Server::Unit::setFire(const GameData::CommandStruct::Fire &arg)
   else
     b->getBody()->ApplyLinearImpulse(b2Vec2(-1, (tan(b->getBody()->GetAngle() - 4.7123889803847))), b->getBody()->GetWorldCenter());
   (*fire) = -1;
+}
+
+void Server::Unit::setShield(const GameData::CommandStruct::Shield arg)
+{
+  std::vector<float>::iterator sh = this->spellTimer.end();
+  std::cout<<*sh<<std::endl;
+  // if ((*sh) != 0)
+  //   return;
+  //check friendly or not
+  BitField *shield;
+  if (this->id == 0)
+    shield = new BitField(Server::BitField::TEAM1_SHIELD, Server::BitField::OBSTACLE | Server::BitField::TEAM2_BULLET);
+  else
+    shield = new BitField(Server::BitField::TEAM2_SHIELD, Server::BitField::OBSTACLE | Server::BitField::TEAM1_BULLET);
+  
+  b2Vec2 position = this->getBody()->GetPosition();
+  
+  Server::Element *e = _world.createElement(true, (float)10, (float)1, shield, this->id);
+    // Server::Element *e = new Server::Element(*this, (int)elements.size(), true, this->id);
+  
+  e->setBody(shield, 10 , 1,  position.x, position.y);
+  e->getBody()->SetTransform(position, this->getBody()->GetAngle());
+  _world.elements.push_back(e); 
+  (*sh) = -1;
 }
 
 void Server::Unit::update(float elapsedMilliseconds)

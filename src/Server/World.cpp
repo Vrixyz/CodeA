@@ -77,7 +77,7 @@ void	Server::World::run()
 	  _physicWorld.Step(TIMESTEP, VELOCITY_ITERATION, POSITION_ITERATION);
  	    
 	  communication._command->interpretCommands();
-	  for (std::list<Server::Unit*>::iterator itu = units.begin(); itu != units.end(); itu++)
+	  for (std::list<Server::IUnit*>::iterator itu = units.begin(); itu != units.end(); itu++)
 	    {
 	      (*itu)->update(TIMESTEP);
 	    }
@@ -150,9 +150,9 @@ Server::Player* Server::World::getPlayer(int id)
   return 0;
 }
 
-Server::Unit* Server::World::getUnit(int id)
+Server::IUnit* Server::World::getUnit(int id)
 {
-  for (std::list<Unit*>::iterator it = units.begin(); it != units.end(); it++)
+  for (std::list<IUnit*>::iterator it = units.begin(); it != units.end(); it++)
     {
       if ((*it)->id == id)
 	return (*it);

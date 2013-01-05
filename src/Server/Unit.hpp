@@ -13,6 +13,7 @@
 
 #include <msgpack.hpp>
 #include "../GameData/Unit.hpp"
+#include "IUnit.hpp"
 #include "Object.hpp"
 #include "Player.hpp"
 #include "BitField.hpp"
@@ -20,7 +21,7 @@
 
 namespace Server
 {
-  class	Unit : public Object
+  class	Unit : public IUnit, public Object
   {
   public:
     GameData::Unit _data;

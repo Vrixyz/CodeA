@@ -11,11 +11,12 @@
 #ifndef SERVER_I_UNIT_HPP_
 # define SERVER_I_UNIT_HPP_
 
-#include "Object.hpp"
+#include "Player.hpp"
+
 
 namespace Server
 {
-  class IUnit : public Object // Ok, it's not an interface, since object is not either, but fuck you purist. Call it abstract and don't bother me.
+  class IUnit
   {
     virtual void addPlayer(Player* p) = 0;
     virtual bool belongsToPlayer(int idPlayer) const = 0;

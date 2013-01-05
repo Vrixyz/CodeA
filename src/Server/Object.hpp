@@ -33,7 +33,15 @@ namespace Server
 
     Type getType() const {return _type;}
     // void die() = 0;
-    /// TODO: a method contact(Unit) / contact(Element) / etc...
+
+    virtual void update(float elapsedMilliseconds) {};
+
+    b2Body* getBody(){return _body;}
+    void collision(Object *o)
+    {
+      intraCollision(o);
+      o->intraCollision(this);
+    }
 
   protected:
     Type _type; /// put that in Serializable
@@ -47,7 +55,6 @@ namespace Server
       // intraCollisionTab[Element] = &Object::intraCollisionElement;
       // intraCollisionTab[Bullet] = &Object::intraCollisionBullet;
     }
-    virtual void update(float elapsedMilliseconds) {};
     virtual void intraCollision(Object *o)
     {
       if (o->getType() == Element)
@@ -57,14 +64,6 @@ namespace Server
       else if(o->getType() == Unit)
 	this->intraCollisionUnit(o);
 	// (*intraCollisionTab[o->getType()])(o);
-    }
-
-  public:   
-    b2Body* getBody(){return _body;}
-    void collision(Object *o)
-    {
-      intraCollision(o);
-      o->intraCollision(this);
     }
   private:
     

@@ -25,6 +25,7 @@
 #include "Element.hpp"
 #include "Bullet.hpp"
 #include "Unit.hpp"
+#include "IUnit.hpp"
 #include "BitField.hpp"
 #include <list>
 #include <set>
@@ -46,10 +47,10 @@ namespace Server
     /// TODO: Add a trash list to remove safely the bodies
     Communication<World>       communication;
     std::list<Server::Element*>	elements;
-    std::list<Server::Unit*> units;
+    std::list<Server::IUnit*> units;
     std::list<Server::Bullet*>	bullets;
     std::set<Server::Element*>	elementsErase;
-    std::set<Server::Unit*> unitsErase;
+    std::set<Server::IUnit*> unitsErase;
     std::set<Server::Bullet*>	bulletsErase;
     std::list<Player*>	players;
     b2World _physicWorld;
@@ -67,7 +68,7 @@ namespace Server
     Server::Element* createElement(bool walkable, float width, float height, BitField *b, int idUnit);
     Server::Bullet* createBullet(int damage, float angle, b2Vec2 position, int idUnit, BitField *b);
     Player* getPlayer(int id);
-    Server::Unit* getUnit(int id);
+    Server::IUnit* getUnit(int id);
     Server::Element* getElement(int id);
     Server::Bullet* getBullet(int id);
     void destroyPlayer(int);

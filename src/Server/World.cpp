@@ -260,7 +260,7 @@ void	Server::World::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
       // packet.pack(getPhysics((*it)->getBody()));
     }
   /// Packing units
-  for (std::list<Unit*>::const_iterator it = units.begin(); it != units.end(); it++)
+  for (std::list<IUnit*>::const_iterator it = units.begin(); it != units.end(); it++)
     {
       toPack = static_cast<Serializable const*>(((*it)->getBody())->GetUserData());
       toPack->serialize(packet);
@@ -281,15 +281,15 @@ int	Server::World::getClassId() const {return 0;}
 
 void Server::World::destroyUnit()
 {
-  std::set<Unit*>::iterator it = unitsErase.begin();
-  std::set<Unit*>::iterator end = unitsErase.end();
+  std::set<IUnit*>::iterator it = unitsErase.begin();
+  std::set<IUnit*>::iterator end = unitsErase.end();
   for (; it!=end; ++it) {
-    Unit* dyingUnit = *it;
+    IUnit* dyingUnit = *it;
     
     delete dyingUnit;
     
     //... and remove it from main list of balls
-    std::list<Unit*>::iterator it = std::find(units.begin(), units.end(), dyingUnit);
+    std::list<IUnit*>::iterator it = std::find(units.begin(), units.end(), dyingUnit);
     if (it != units.end())
       units.erase(it);
   } 
@@ -369,7 +369,7 @@ void Server::World::moveTo(int idClient, GameData::CommandStruct::Move)
 
 void Server::World::rotateLeft(int idClient, GameData::CommandStruct::Rotate arg)
 {
-  Unit* u = getUnit(arg.idUnit);
+  IUnit* u = getUnit(arg.idUnit);
 
   if (u == NULL || u->belongsToPlayer(idClient) == false)
     return;
@@ -378,7 +378,7 @@ void Server::World::rotateLeft(int idClient, GameData::CommandStruct::Rotate arg
 
 void Server::World::rotateRight(int idClient, GameData::CommandStruct::Rotate arg)
 {
-  Unit* u = getUnit(arg.idUnit);
+  IUnit* u = getUnit(arg.idUnit);
 
   if (u == NULL || u->belongsToPlayer(idClient) == false)
     return;
@@ -387,7 +387,7 @@ void Server::World::rotateRight(int idClient, GameData::CommandStruct::Rotate ar
 
 void Server::World::rotateStop(int idClient, GameData::CommandStruct::Rotate arg)
 {
-  Unit* u = getUnit(arg.idUnit);
+  IUnit* u = getUnit(arg.idUnit);
   
   if (u == NULL || u->belongsToPlayer(idClient) == false)
     return;
@@ -396,7 +396,7 @@ void Server::World::rotateStop(int idClient, GameData::CommandStruct::Rotate arg
 
 void Server::World::shield(int idClient, GameData::CommandStruct::Shield arg)
 {
-  Unit* u = getUnit(arg.idUnit);
+  IUnit* u = getUnit(arg.idUnit);
 
   if (u == NULL || u->belongsToPlayer(idClient) == false)
     return;
@@ -418,7 +418,7 @@ void Server::World::shield(int idClient, GameData::CommandStruct::Shield arg)
 
 void Server::World::askMove(int idClient, GameData::CommandStruct::Move arg)
 {
-  Unit* u = getUnit(arg.idUnit);
+  IUnit* u = getUnit(arg.idUnit);
 
   if (u == NULL || u->belongsToPlayer(idClient) == false)
     return;

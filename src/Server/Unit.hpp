@@ -22,7 +22,7 @@
 
 namespace Server
 {
-  class	Unit : public IUnit, public Object
+  class	Unit : public IUnit
   {
   public:
     GameData::Unit _data;
@@ -30,7 +30,7 @@ namespace Server
     float rotation;
     std::vector<float>spellTimer;
 
-    Unit(World& world, int id) : Object(world, Object::Unit, id), _data(id, 10), current(0, 0), rotation(0) {
+    Unit(World& world, int id) : IUnit(world, id), _data(id, 10), current(0, 0), rotation(0) {
       // timer used for fire
       spellTimer.push_back(0);
       // timer used for shield

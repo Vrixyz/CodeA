@@ -43,6 +43,8 @@ namespace Server
       o->intraCollision(this);
     }
 
+    virtual ~Object() {} // we should delete the body here.
+
   protected:
     Type _type; /// put that in Serializable
     World& _world;
@@ -65,6 +67,7 @@ namespace Server
 	this->intraCollisionUnit(o);
 	// (*intraCollisionTab[o->getType()])(o);
     }
+    
   private:
     
     void intraCollisionUnit(Object *o)

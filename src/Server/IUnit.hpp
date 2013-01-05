@@ -1,5 +1,5 @@
 //
-// Unit.hpp for  in /home/berger_t/Documents/CodeA/src/Server
+// IUnit.hpp for  in /home/berger_t/Documents/CodeA/src/Server
 // 
 // Made by thierry berger
 // Login   <berger_t@epitech.net>
@@ -12,12 +12,16 @@
 # define SERVER_I_UNIT_HPP_
 
 #include "Player.hpp"
+#include "Object.hpp"
 
 
 namespace Server
 {
-  class IUnit
+  class IUnit : public Object
   {
+  public:
+    IUnit(World& w, int id) : Object(w, Object::Unit, id) {}
+    virtual ~IUnit() {}
     virtual void addPlayer(Player* p) = 0;
     virtual bool belongsToPlayer(int idPlayer) const = 0;
 
@@ -30,7 +34,7 @@ namespace Server
     virtual void setRotateStop() = 0;
 
     virtual void setFire(const GameData::CommandStruct::Fire& arg) = 0;
-
+    virtual void setShield(const GameData::CommandStruct::Shield arg) = 0;
   };
 }
 

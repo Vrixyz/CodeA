@@ -37,6 +37,7 @@ namespace Server
 {
   class Player;
   class Unit;
+  class IUnit;
   class Element;
   class Bullet;
   // class MyContactListener;

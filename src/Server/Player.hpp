@@ -24,6 +24,7 @@ namespace Server
     int id;
 
     Player(World& world, int playerId) : id(playerId) {}
+    virtual ~Player() {}
 
     virtual void* serialize(int& finalLength) const {return 0;};
     virtual int	getClassId() const {return 0;}

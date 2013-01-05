@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:00:00 2012 mathieu leurquin
-// Last update Wed Dec 12 10:35:57 2012 mathieu leurquin
+// Last update Thu Jan  3 13:21:04 2013 mathieu leurquin
 //
 
 #ifndef SERVER_UNIT_HPP
@@ -17,6 +17,7 @@
 #include "Object.hpp"
 #include "Player.hpp"
 #include "BitField.hpp"
+#include "Bullet.hpp"
 #include <vector>
 
 namespace Server
@@ -28,7 +29,6 @@ namespace Server
     b2Vec2 current;
     float rotation;
     std::vector<float>spellTimer;
-
 
     Unit(World& world, int id) : Object(world, Object::Unit, id), _data(id, 10), current(0, 0), rotation(0) {
       // timer used for fire
@@ -44,7 +44,7 @@ namespace Server
     void setRotateLeft();
     void setRotateRight();
     void setRotateStop();
-    
+    void setFire(const GameData::CommandStruct::Fire&);
     // TODO: setFire(...);
 
 

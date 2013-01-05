@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Thu Jan  3 14:32:01 2013 mathieu leurquin
+// Last update Sat Jan  5 18:31:50 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -399,21 +399,9 @@ void Server::World::shield(int idClient, GameData::CommandStruct::Shield arg)
   Unit* u = getUnit(arg.idUnit);
 
   if (u == NULL || u->belongsToPlayer(idClient) == false)
-    return;
-  std::vector<float>::iterator sh = u->spellTimer.end();
-  if ((*sh) != 0)
-    return;
-  //check friendly or not
-  BitField *shield = new BitField(Server::BitField::TEAM1_SHIELD, Server::BitField::OBSTACLE);
-  Server::Element *e = new Server::Element(*this, (int)elements.size(), true, u->id);
-  
-
-  b2Vec2 position = u->getBody()->GetPosition();
-
-  e->setBody(shield,10 , 1,  position.x, position.y);
-  e->getBody()->SetTransform(position, u->getBody()->GetAngle());
-  elements.push_back(e); 
-  (*sh) = -1;
+      return;
+  std::cout<<"shield"<<std::endl;
+  u->setShield(arg);
 }
 
 void Server::World::askMove(int idClient, GameData::CommandStruct::Move arg)

@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:00:00 2012 mathieu leurquin
-// Last update Thu Jan  3 13:21:04 2013 mathieu leurquin
+// Last update Sat Jan  5 18:01:02 2013 mathieu leurquin
 //
 
 #ifndef SERVER_UNIT_HPP
@@ -17,6 +17,7 @@
 #include "Player.hpp"
 #include "BitField.hpp"
 #include "Bullet.hpp"
+#include "Element.hpp"
 #include <vector>
 
 namespace Server
@@ -44,7 +45,7 @@ namespace Server
     void setRotateRight();
     void setRotateStop();
     void setFire(const GameData::CommandStruct::Fire&);
-    // TODO: setFire(...);
+    void setShield(const GameData::CommandStruct::Shield arg);
 
 
     virtual b2Body*	setBody(BitField *b);

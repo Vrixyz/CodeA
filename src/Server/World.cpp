@@ -352,7 +352,7 @@ void Server::World::destroyElement()
 
 void Server::World::fire(int idClient, GameData::CommandStruct::Fire arg)
 {
-  Unit* u = getUnit(arg.idUnit);
+  IUnit* u = getUnit(arg.idUnit);
   
   if (u == NULL || u->belongsToPlayer(idClient) == false)
     return;

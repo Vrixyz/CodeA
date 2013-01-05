@@ -36,6 +36,7 @@ namespace Server
       // timer used for shield
       spellTimer.push_back(0);
     }
+    virtual ~Unit() {}
 
     void addPlayer(Player* p);
     bool belongsToPlayer(int idPlayer) const;

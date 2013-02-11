@@ -1,4 +1,4 @@
-#include "Define.hh"
+#include "./../include/Define.hh"
 
 void	step (int i)
 {
@@ -29,11 +29,11 @@ void	step (int i)
      
 int	callback(void *lokis, int nbCol, char **data, char **nomCol)
 {
-  // for (int i = 0; i < nbCol; i++)
-  //   {
-  //     printf ("%s \t", data[i]);
-  //   }
-  // printf ("\n");
+  for (int i = 0; i < nbCol; i++)
+    {
+      printf ("%s \t", data[i]);
+    }
+  printf ("\n");
   return 0;
 }
 
@@ -42,12 +42,7 @@ int	main(int argc, char **argv)
   sqlite3 *db;
   char *zErrMsg = 0;
   int rc;
-     
-  if (argc != 3)
-    {
-      fprintf (stderr, "Usage: %s DATABASE SQL-STATEMENT\n", argv[0]);
-    }
-     
+
   rc = sqlite3_open ("bdd.db", &db);
   if (rc)
     {
@@ -55,22 +50,21 @@ int	main(int argc, char **argv)
       sqlite3_close (db);
       exit (1);
     }
+
   /*-------------------------------- Créer une table ---------------------------*/
   // char *requete0 = "CREATE TABLE table1 (id INTEGER, login varchar(30), pass varchar(30));";
   // if (sqlite3_exec (db, requete0, callback, 0, &zErrMsg) != SQLITE_OK)
   //   {
   //     printf ("0:(\n");
   //   }
-     
-     
+
   /*------------------------------- Créer un enregistrement première méthode ---*/
   // char *requete1 = "INSERT INTO table1 values (0, 'trax', 'plop');";
   // if (sqlite3_exec (db, requete1, callback, 0, &zErrMsg) != SQLITE_OK)
   //   {
   //     printf ("1:(\n");
   //   }
-     
-     
+
   /*------------------------------- Créer un enregistrement deuxième méthode ---*/
   // char *requete2 = "INSERT INTO table1 values(?, ?, ?);";
   // sqlite3_stmt *stmt = NULL;
@@ -83,12 +77,11 @@ int	main(int argc, char **argv)
   // sqlite3_bind_text (stmt, 2, "traxou", 7, NULL);
   // sqlite3_bind_text (stmt, 3, "plip", 5, NULL);
   // step(sqlite3_step(stmt));
-  // sqlite3_reset (stmt);
-     
+  // sqlite3_reset (stmt);     
      
   /*------------------------------- Lecture d'enregistrement -------------------*/
-  char *requete3 = "SELECT * FROM table1;";
-  if (sqlite3_exec (db, requete3, callback, 0, &zErrMsg) != SQLITE_OK)
+  std::string requete3 = "SELECT * FROM table1;";
+  if (sqlite3_exec (db, requete3.c_str(), callback, 0, &zErrMsg) != SQLITE_OK)
     {
       printf ("3:(\n");
     }

@@ -1,26 +1,31 @@
-CC		=	g++
+NAME			=	test_sql
 
-NAME		=	master
+CC			=	g++
 
-SRC		= 	$(wildcard src/*.cpp)
+SRC			=	src/main.cpp \
+				src/Login.cpp
 
-OBJ		=	$(SRC:.cpp=.o)
+OBJ			=	$(SRC:.cpp=.o)
 
-INC		=	-I./include
+LIB			=	-lsqlite3
 
-LIB		=	-lsqlite3
+DEBUG			=	no
 
-CXXFLAGS	=	-W $(INC)
+ifeq ($(DEBUG),yes)
+	XXFLAGS	=	-W -Wall -ansi -pedantic -g
+else
+	XXFLAGS	=	-W -Wall -ansi -pedantic
+endif
 
-$(NAME):	all
+all                     :       $(NAME)
 
-all:		$(OBJ)
-		$(CC) -o $(NAME) $(LIB) $(OBJ)
+$(NAME)                 :       $(OBJ)
+				$(CC) -o $(NAME) $(OBJ) $(XXFLAGS) $(LIB)
 
-clean:		
-		rm -f $(OBJ) src/*~ include/*~
+clean                   :
+				rm -f $(OBJ) src/*~ include/*~
 
-cleanf:		clean
-		rm -f $(NAME)
+fclean			:	clean
+				rm -f $(NAME)
 
-re:		cleanf all
+re			:	fclean all

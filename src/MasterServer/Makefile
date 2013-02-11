@@ -18,7 +18,7 @@ all:		$(OBJ)
 		$(CC) -o $(NAME) $(LIB) $(OBJ)
 
 clean:		
-		rm -f $(OBJ)
+		rm -f $(OBJ) src/*~ include/*~
 
 cleanf:		clean
 		rm -f $(NAME)

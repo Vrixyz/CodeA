@@ -1,5 +1,6 @@
-#include "Client.hh"
-#include "Server.hh"
+#include "./../include/Client.hh"
+#include "./../include/Define.hh"
+#include "./../include/Server.hh"
 
 int	main(int ac, char **av)
 {
@@ -107,7 +108,10 @@ void Server::ManageClient()
 	(*it)->getSocket()->RecvString(50, message);
 	if (message.length() == 0)
 	  DelClient(*it);
+
+	checkLogs("toto42:titi42");
 	//TU FERA TON SPLIT ET TES DEMANDE SQL
+
       }
 }
 

@@ -44,7 +44,7 @@ int	callback(void *lokis, int nbCol, char **data, char **nomCol)
   return 0;
 }
 
-int	main(int argc, char **argv)
+int	checkLogs(std::string toCheck)
 {  
   Login *test;
   char *zErrMsg = 0;
@@ -52,11 +52,9 @@ int	main(int argc, char **argv)
 
   test = new Login();
 
+  std::cout << "logs to check " << toCheck << std::endl;
+
   test->coDB();
-  test->createUsersTable();
-  test->insertElem("toto42", "titi42");
-  test->insertElem("toto77", "titi77");
-  test->insertElem("toto33", "titi33");
   test->printLog();
   test->dcDB();
 

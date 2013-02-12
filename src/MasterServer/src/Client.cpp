@@ -1,5 +1,5 @@
-#include "Socket.hh"
-#include "Client.hh"
+#include "./../include/Socket.hh"
+#include "./../include/Client.hh"
 
 Client::~Client()
 {

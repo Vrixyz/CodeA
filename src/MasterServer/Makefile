@@ -1,9 +1,12 @@
-NAME			=	test_sql
+NAME			=	MasterServer
 
 CC			=	g++
 
-SRC			=	src/main.cpp \
-				src/Login.cpp
+SRC			=	src/OpSQL.cpp \
+				src/Login.cpp \
+				src/Client.cpp \
+				src/Server.cpp \
+				src/Socket.cpp \
 
 OBJ			=	$(SRC:.cpp=.o)
 

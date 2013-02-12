@@ -109,8 +109,7 @@ void Server::ManageClient()
 	if (message.length() == 0)
 	  DelClient(*it);
 
-	checkLogs("toto42:titi42");
-	//TU FERA TON SPLIT ET TES DEMANDE SQL
+	checkLogs(message);
 
       }
 }

@@ -44,7 +44,7 @@ int	Login::createUsersTable()
   char		*zErrMsg;
   std::string requete0 = "CREATE TABLE table1 (login varchar(30), pass varchar(30));";
 
-  if (sqlite3_exec(_db, requete0.c_str(), callback, 0, &zErrMsg) != SQLITE_OK)
+  if (sqlite3_exec(_db, requete0.c_str(), 0, 0, &zErrMsg) != SQLITE_OK)
     {
       std::cerr << "[WARNING] Erreur dans la creation d'une table. (ou table deja creee)" << std::endl;
       return (-1);
@@ -90,4 +90,31 @@ int	Login::modifElem()
 int	Login::delElem()
 {
 
+}
+
+int	Login::splitAndCheck(std::string toCheck)
+{
+  int		i;
+  int		j;
+  int		k;
+  char		*zErrMsg;
+  std::string	name;
+  std::string	pass;
+  std::string	requete = "SELECT * FROM table1;";
+
+  name = "";
+  pass = "";
+  for (i = 0; toCheck[i] != ':'; i++)
+    name += toCheck[i];
+  i++;
+  for (; i < toCheck.size(); i++)
+    pass += toCheck[i];
+
+  if (sqlite3_exec(_db, requete.c_str(), callback, 0, &zErrMsg) != SQLITE_OK)
+    {
+      std::cerr << "[ERROR] Erreur dans lors du retour des login/passw." << std::endl;
+      return (-1);
+    }
+
+  return (0);
 }

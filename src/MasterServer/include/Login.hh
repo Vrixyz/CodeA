@@ -22,6 +22,7 @@ public:
   int modifElem();
   int insertElem(std::string, std::string);
   sqlite3 *getDB();
+  int splitAndCheck(std::string);
   sqlite3 **getPtrDB();
   int createUsersTable();
 };

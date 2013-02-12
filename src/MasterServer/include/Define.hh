@@ -8,6 +8,6 @@
 
 int	step(int);
 int	callback(void *, int, char **, char **);
-int	checkLogs(std::string);
+void	*checkLogs(std::string);
 
 #endif

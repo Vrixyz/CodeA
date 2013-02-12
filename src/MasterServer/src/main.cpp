@@ -1,29 +1,36 @@
 #include "./../include/Define.hh"
+#include "./../include/Login.hh"
 
-void	step (int i)
+int	step(int i)
 {
-  printf("step : ");
+  printf("[STEP] ");
   switch (i)
     {
     case SQLITE_DONE:
-      printf ("ok ");
+      std::cout << "OK" << std::endl;
+      return (1);
       break;
     case SQLITE_BUSY:
-      printf ("oqp ");
+      std::cout << "BUSY" << std::endl;
+      return (-1);
       break;
     case SQLITE_ERROR:
-      printf ("err ");
+      std::cout << "ERROR" << std::endl;
+      return (-1);
       break;
     case SQLITE_ROW:
-      printf ("row ");
+      std::cout << "ROW" << std::endl;
+      return (-1);
       break;
     case SQLITE_MISUSE:
-      printf ("mis ");
+      std::cout << "MISUSE" << std::endl;
+      return (-1);
       break;
     default:
-      printf ("??? ");
+      std::cout << std::endl;
+      return (1);
     }
-  printf("\n");
+  std::cout << std::endl;
      
 }
      
@@ -38,54 +45,18 @@ int	callback(void *lokis, int nbCol, char **data, char **nomCol)
 }
 
 int	main(int argc, char **argv)
-{
-  sqlite3 *db;
+{  
+  Login *test;
   char *zErrMsg = 0;
   int rc;
 
-  rc = sqlite3_open ("bdd.db", &db);
-  if (rc)
-    {
-      fprintf (stderr, "Can't open database: %s\n", sqlite3_errmsg (db));
-      sqlite3_close (db);
-      exit (1);
-    }
+  test = new Login();
 
-  /*-------------------------------- Créer une table ---------------------------*/
-  // char *requete0 = "CREATE TABLE table1 (id INTEGER, login varchar(30), pass varchar(30));";
-  // if (sqlite3_exec (db, requete0, callback, 0, &zErrMsg) != SQLITE_OK)
-  //   {
-  //     printf ("0:(\n");
-  //   }
+  test->coDB();
+  test->createUsersTable();
+  //  test->insertElem("toto42", "titi42");
+  test->printLog();
+  test->dcDB();
 
-  /*------------------------------- Créer un enregistrement première méthode ---*/
-  // char *requete1 = "INSERT INTO table1 values (0, 'trax', 'plop');";
-  // if (sqlite3_exec (db, requete1, callback, 0, &zErrMsg) != SQLITE_OK)
-  //   {
-  //     printf ("1:(\n");
-  //   }
-
-  /*------------------------------- Créer un enregistrement deuxième méthode ---*/
-  // char *requete2 = "INSERT INTO table1 values(?, ?, ?);";
-  // sqlite3_stmt *stmt = NULL;
-  // if (sqlite3_prepare_v2 (db, requete2, 50, &stmt, NULL) != SQLITE_OK)
-  //   {
-  //     printf ("2:(\n");
-  //   }
-     
-  // sqlite3_bind_int (stmt, 1, 42);
-  // sqlite3_bind_text (stmt, 2, "traxou", 7, NULL);
-  // sqlite3_bind_text (stmt, 3, "plip", 5, NULL);
-  // step(sqlite3_step(stmt));
-  // sqlite3_reset (stmt);     
-     
-  /*------------------------------- Lecture d'enregistrement -------------------*/
-  std::string requete3 = "SELECT * FROM table1;";
-  if (sqlite3_exec (db, requete3.c_str(), callback, 0, &zErrMsg) != SQLITE_OK)
-    {
-      printf ("3:(\n");
-    }
-     
-  sqlite3_close (db);
   return 0;
 }

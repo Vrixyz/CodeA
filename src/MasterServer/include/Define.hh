@@ -6,4 +6,7 @@
 #include <iostream>
 #include <sqlite3.h>
 
+int	step(int);
+int	callback(void *, int, char **, char **);
+
 #endif

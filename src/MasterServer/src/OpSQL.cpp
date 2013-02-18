@@ -1,5 +1,5 @@
 #include "./../include/Define.hh"
-#include "./../include/Login.hh"
+#include "./../include/SQLManager.hh"
 
 int	step(int i)
 {
@@ -47,11 +47,11 @@ int	callback(void *lokis, int nbCol, char **data, char **nomCol)
 
 void	*checkLogs(std::string toCheck)
 {  
-  Login *test;
+  SQLManager *test;
   char *zErrMsg = 0;
   int rc;
 
-  test = new Login();
+  test = new SQLManager();
 
   std::cout << "logs to check " << toCheck << std::endl;
 

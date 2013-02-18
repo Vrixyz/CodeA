@@ -1,3 +1,4 @@
+
 //
 // BitField.cpp for  in /home/leurqu_m//Documents/tek3/pfa/CodeA/src/Server
 // 
@@ -5,7 +6,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Tue Sep 18 11:09:03 2012 mathieu leurquin
-// Last update Sat Nov  3 13:03:05 2012 mathieu leurquin
+// Last update Fri Jan  4 15:18:45 2013 mathieu leurquin
 //
 
 #include "BitField.hpp"

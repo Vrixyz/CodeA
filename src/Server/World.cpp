@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Sat Jan  5 18:31:50 2013 mathieu leurquin
+// Last update Tue Feb  5 12:34:24 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -20,7 +20,7 @@ Server::World::~World()
 
 void	Server::World::init(int width, int height)
 {
-  Server::Unit *u;
+  Server::Mage *u;
  
   // // FIXME: we must create the player and the unit at the connection !
   // BitField *b = new  BitField(Server::BitField::MAGE, Server::BitField::MAGE);
@@ -94,7 +94,7 @@ void	Server::World::run()
 	  //      std::cout << "erasing client " << *it << std::endl;
 	  //      communication.clients.erase(*it);
 	  //    }
-	
+	  destroyUnit();
 	  destroyBullet();
 	  destroyElement();
 	}
@@ -111,9 +111,9 @@ Server::Player&	Server::World::createPlayer(int id)
   return *p;
 }
 
-Server::Unit* Server::World::createUnit(BitField *b, Player* p)
+Server::Mage* Server::World::createUnit(BitField *b, Player* p)
 {
-  Server::Unit* u = new Server::Unit(*this, (int)units.size());
+  Server::Mage* u = new Server::Mage(*this, (int)units.size());
   u->setBody(b);
   if (p != NULL)
     u->addPlayer(p);
@@ -192,6 +192,18 @@ void Server::World::destroyPlayer(int id)
 	}
       else
 	it++;
+    }
+}
+
+void Server::World::addPlayerToDestroy(Server::IUnit *u)
+{
+  for (std::list<IUnit*>::iterator it = units.begin(); it != units.end(); it++)
+    {
+      if ((*it) == u)
+	{
+	  std::cout<<"T MORT"<<std::endl;
+	  unitsErase.insert(*it);
+	}
     }
 }
 
@@ -286,14 +298,15 @@ void Server::World::destroyUnit()
   for (; it!=end; ++it) {
     IUnit* dyingUnit = *it;
     
-    delete dyingUnit;
-    
-    //... and remove it from main list of balls
+    //  delete dyingUnit;
+    // ... and remove it from main list of balls
     std::list<IUnit*>::iterator it = std::find(units.begin(), units.end(), dyingUnit);
     if (it != units.end())
       units.erase(it);
+    unitsErase.erase(*it);
   } 
-  unitsErase.clear();
+
+  //unitsErase.clear();
 }
 
 void Server::World::destroyBullet()
@@ -356,7 +369,7 @@ void Server::World::fire(int idClient, GameData::CommandStruct::Fire arg)
   
   if (u == NULL || u->belongsToPlayer(idClient) == false)
     return;
-  u->setFire(arg);
+  u->spell1(arg);
 }
 
 void Server::World::aimTo(int idClient, GameData::CommandStruct::Aim)
@@ -401,7 +414,7 @@ void Server::World::shield(int idClient, GameData::CommandStruct::Shield arg)
   if (u == NULL || u->belongsToPlayer(idClient) == false)
       return;
   std::cout<<"shield"<<std::endl;
-  u->setShield(arg);
+  u->spell2(arg);
 }
 
 void Server::World::askMove(int idClient, GameData::CommandStruct::Move arg)

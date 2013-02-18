@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 10:46:49 2012 thierry berger
-// Last update Sat Jan  5 18:00:43 2013 mathieu leurquin
+// Last update Tue Feb  5 12:23:01 2013 mathieu leurquin
 //
 
 #ifndef SERVER_WORLD_HPP
@@ -24,7 +24,7 @@
 #include "myContactListener.hpp"
 #include "Element.hpp"
 #include "Bullet.hpp"
-#include "Unit.hpp"
+#include "Mage.hpp"
 #include "IUnit.hpp"
 #include "BitField.hpp"
 #include <list>
@@ -36,7 +36,7 @@
 namespace Server
 {
   class Player;
-  class Unit;
+  class Mage;
   class IUnit;
   class Element;
   class Bullet;
@@ -65,13 +65,16 @@ namespace Server
     void run();
     void handleContact(b2Body object1, b2Body object2);
     Player& createPlayer(int id);
-    Server::Unit* createUnit(BitField *b, Player* p = NULL);
+    Server::Mage* createUnit(BitField *b, Player* p = NULL);
     Server::Element* createElement(bool walkable, float width, float height, BitField *b, int idUnit);
     Server::Bullet* createBullet(int damage, float angle, b2Vec2 position, int idUnit, BitField *b);
     Player* getPlayer(int id);
     Server::IUnit* getUnit(int id);
     Server::Element* getElement(int id);
     Server::Bullet* getBullet(int id);
+
+    void addPlayerToDestroy(Server::IUnit*);
+
     void destroyPlayer(int);
     void destroyUnit();
     void destroyElement();

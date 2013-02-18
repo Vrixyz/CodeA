@@ -22,14 +22,23 @@ void    MyWindow::checkCo()
 
     toSendLogin = login.toUtf8().constData();
     toSendPassw = passw.toUtf8().constData();
+    _soc = new Network("127.0.0.1", _port);
+    _soc->connectToServer();
 
-    std::cout << "dat login " << toSendLogin << " -- dat passw " << toSendPassw << std::endl;
+    msgpack::sbuffer sbuf;
+    msgpack::packer<msgpack::sbuffer> packet(&sbuf);
 
-    // FONCTION OU SEND LES MACHINS POUR LES TRUCS DE CONNEXION AU BORDEL
+    packet.pack((int)MasterData::Command::CONNECT_CLIENT);
+    MasterData::CoClient cli(toSendLogin, toSendPassw);
+    packet.pack(cli);
 
-    if ((toSendLogin.compare("toto42") == 0) && (toSendPassw.compare("passw") == 0))
-        cleanAndShow();
-    passwEdit->clear();
+    _soc->sendToServer(sbuf);
+    //    std::cout << "dat login " << toSendLogin << " -- dat passw " << toSendPassw << std::endl;
+
+
+    // if ((toSendLogin.compare("toto42") == 0) && (toSendPassw.compare("passw") == 0))
+    //        cleanAndShow();
+    // passwEdit->clear();
 }
 
 void    MyWindow::cleanAndShow()

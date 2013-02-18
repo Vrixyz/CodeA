@@ -4,6 +4,7 @@
 #include <QApplication>
 #include <QPushButton>
 #include <QLineEdit>
+#include <QTcpSocket>
 #include <QLabel>
 #include <QList>
 #include <QFont>
@@ -12,9 +13,14 @@
 #include <QListWidget>
 #include <QHBoxLayout>
 #include <QWidget>
-
+#include "Network.h"
 #include <iostream>
 #include <list>
+#include "../../MasterData/MasterData.hpp"
+#include "../../MasterData/Command.hpp"
+#include "../../MasterData/Co.hpp"
+
+class Network;
 
 struct s_game
 {
@@ -36,11 +42,13 @@ public:
     void cleanAndShow();
     void showGames();
     void initGames();
+    void setPort(int p) {_port = p;}
 
 public slots:
     void checkCo();
 
 private:
+    int _port;
     std::list<t_game> allGames;
 
     QListWidget *list;
@@ -52,6 +60,7 @@ private:
     QLineEdit* passwEdit;
     QLabel* loginLabel;
     QLabel* passwLabel;
+    Network *_soc;
 };
 
 std::string intToString(int);

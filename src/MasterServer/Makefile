@@ -10,7 +10,7 @@ SRC			=	src/OpSQL.cpp \
 
 OBJ			=	$(SRC:.cpp=.o)
 
-LIB			=	-lsqlite3
+LIB			=	-lsqlite3 -lmsgpack
 
 DEBUG			=	no
 

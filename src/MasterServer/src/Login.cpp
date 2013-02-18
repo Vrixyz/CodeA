@@ -74,12 +74,58 @@ int	Login::printLog()
   char		*zErrMsg;
   std::string	requete = "SELECT * FROM table1;";
 
+  std::cout << "Logs contenus dans la base de donnees :" << std::endl;
   if (sqlite3_exec(_db, requete.c_str(), callback, 0, &zErrMsg) != SQLITE_OK)
     {
       std::cerr << "[ERROR] Erreur dans lors du retour des login/passw." << std::endl;
       return (-1);
     }
+  std::cout << std::endl;
   return (0);
+}
+
+User	*Login::findUser(std::string name, std::string pass)
+{
+  std::string   req;
+  sqlite3_stmt  *stmt;
+  int		s;
+
+  req = "SELECT * FROM table1 WHERE login = ? AND pass = ?;";
+  stmt = NULL;
+  if (sqlite3_prepare_v2(this->_db, req.c_str(), 50, &stmt, NULL) != SQLITE_OK)
+    {
+      std::cerr << "[ERROR] Erreur dans la recuperation d'une utilisateur." << std::endl;
+    }
+  sqlite3_bind_text (stmt, 1, name.c_str(), name.size(), NULL);
+  sqlite3_bind_text (stmt, 2, pass.c_str(), pass.size(), NULL);
+  s = sqlite3_step(stmt);
+  sqlite3_reset (stmt);
+  if (s == SQLITE_DONE)
+    return (NULL);
+  else if (s == SQLITE_ROW)
+    return (new User(name, 0));
+  else
+    return(NULL);
+  return (NULL);
+  // while (1)
+  //   {
+  //     s = sqlite3_step (stmt);
+  //     if (s == SQLITE_ROW) {
+  // 	int bytes;
+  // 	const unsigned char * text;
+  // 	bytes = sqlite3_column_bytes(stmt, 0);
+  // 	text  = sqlite3_column_text (stmt, 0);
+  // 	printf ("%d: %s\n", row, text);
+  // 	row++;
+  //     }
+  //     else if (s == SQLITE_DONE) {
+  // 	break;
+  //     }
+  //     else {
+  // 	fprintf (stderr, "Failed.\n");
+  // 	exit (1);
+  //     }
+  //   }
 }
 
 int	Login::modifElem()
@@ -90,32 +136,4 @@ int	Login::modifElem()
 int	Login::delElem()
 {
 
-}
-
-int	Login::splitAndCheck(std::string toCheck)
-{
-  int		i;
-  int		j;
-  int		k;
-  char		*zErrMsg;
-  std::string	name;
-  std::string	pass;
-  std::string	requete = "SELECT * FROM table1;";
-
-  name = "";
-  pass = "";
-  for (i = 0; toCheck[i] != ':'; i++)
-    name += toCheck[i];
-  i++;
-  for (; i < toCheck.size(); i++)
-    pass += toCheck[i];
-
-
-  if (sqlite3_exec(_db, requete.c_str(), callback, 0, &zErrMsg) != SQLITE_OK)
-    {
-      std::cerr << "[ERROR] Erreur dans lors du retour des login/passw." << std::endl;
-      return (-1);
-    }
-
-  return (0);
 }

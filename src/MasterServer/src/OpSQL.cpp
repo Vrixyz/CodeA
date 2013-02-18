@@ -36,10 +36,10 @@ int	step(int i)
      
 int	callback(void *lokis, int nbCol, char **data, char **nomCol)
 {
-  std::cout << "Logs contenus dans la base de donnees :" << std::endl;
   for (int i = 0; i < nbCol; i++)
     {
-      std::cout << "!" << data[i] << "!" << std::endl;
+      std::cout << data[i];
+      std::cout << " ";
     }
   std::cout << std::endl;
   return 0;
@@ -57,7 +57,7 @@ void	*checkLogs(std::string toCheck)
 
   test->coDB();
 
-  rc = test->splitAndCheck(toCheck);
+  //  rc = test->splitAndCheck(toCheck);
 
   test->dcDB();
 

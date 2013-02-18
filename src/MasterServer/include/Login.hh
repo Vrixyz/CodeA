@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "User.hh"
+
 class Login
 {
 private:
@@ -19,10 +21,10 @@ public:
   void dcDB();
   int delElem();
   int printLog();
+  User *findUser(std::string, std::string);
   int modifElem();
   int insertElem(std::string, std::string);
   sqlite3 *getDB();
-  int splitAndCheck(std::string);
   sqlite3 **getPtrDB();
   int createUsersTable();
 };

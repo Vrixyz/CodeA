@@ -39,6 +39,7 @@ public:
 
 public slots:
     void checkCo();
+    void tryCoToGame();
 
 private:
     std::list<t_game> allGames;
@@ -55,5 +56,6 @@ private:
 };
 
 std::string intToString(int);
+int stringToInt(std::string);
 
 #endif // MYWINDOW_H

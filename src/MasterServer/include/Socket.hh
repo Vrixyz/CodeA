@@ -31,7 +31,7 @@ class Socket
   int	init();
   int	Bind(struct sockaddr_in);
   int	Listen(int);
-  int	Select(std::list<Socket *>, fd_set *);
+  int	Select(int, fd_set *);
   int	Accept(struct sockaddr_in, int);
   void	Close();
   int	getFD();

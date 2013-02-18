@@ -19,7 +19,7 @@ int	SQLManager::coDB()
     {
       std::cerr << "Can't open database: " << sqlite3_errmsg(this->_db) << std::endl;
       sqlite3_close(this->_db);
-      exit (1);
+      return (-1);
     }
   return (1);
 }
@@ -103,7 +103,7 @@ User	*SQLManager::findUser(std::string name, std::string pass)
   if (s == SQLITE_DONE)
     return (NULL);
   else if (s == SQLITE_ROW)
-    return (new User(name, 0));
+    return (new User(name));
   else
     return(NULL);
   return (NULL);

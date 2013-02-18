@@ -1,9 +1,8 @@
 #include "./../include/User.hh"
 
-User::User(std::string login, int id)
+User::User(std::string login)
 {
   _login = login;
-  _id = id;
 }
 
 User::~User()

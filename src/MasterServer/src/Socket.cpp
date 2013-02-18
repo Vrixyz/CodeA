@@ -37,18 +37,9 @@ int Socket::Listen(int _listenListSize)
   return ret;
 }
 
-int Socket::Select(std::list<Socket *> _client, fd_set * _readfds)
+int Socket::Select(int FD, fd_set * _readfds)
 {
-  std::list<Socket *>::const_iterator	it;
-  int		olderFd;
-  unsigned int	i;
-
-  olderFd = _socket;
-  for (i = 0, it = _client.begin(); i < _client.size() ; it++, i++)
-    if ((*it)->getFD() > olderFd)
-      olderFd = (*it)->getFD();
-  olderFd++;
-  return select(olderFd, _readfds, NULL, NULL, NULL);
+  return select(FD, _readfds, NULL, NULL, NULL);
 }
 
 int Socket::Accept(struct sockaddr_in _sin_client, int _client_len)
@@ -80,7 +71,7 @@ int Socket::RecvString(std::string &s1)
     }
   if (s1.size() > 0)
     nbRead = s1.size();
-  std::cout << "END " << nbRead << std::endl;
+  std::cout << _socket << ": " << "SIZE RECU " << nbRead << std::endl;
   return nbRead;
 }
 

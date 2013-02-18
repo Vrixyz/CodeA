@@ -2,15 +2,18 @@
 #define _USER_HH_
 
 #include <iostream>
+#include "Socket.hh"
 
 class User
 {
 public:
-  User(std::string, int);
+  User(std::string);
   ~User();
+  Socket*	getSoc(){return _soc;}
+  void		setSoc(Socket* soc){_soc = soc;}
 private:
+  Socket*	_soc;
   std::string	_login;
-  int		_id;
 };
 
 #endif

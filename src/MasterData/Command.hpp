@@ -11,8 +11,8 @@ namespace MasterData
   {
     typedef enum Id_command
       {
-	CONNECT_CLIENT = 1,
-	REGISTER_CLIENT = 2,
+	CONNECT_USER = 1,
+	REGISTER_USER = 2,
 	CONNECT_SERVER = 3
       } Id;
   }

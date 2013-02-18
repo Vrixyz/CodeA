@@ -28,7 +28,7 @@ void    MyWindow::checkCo()
     msgpack::sbuffer sbuf;
     msgpack::packer<msgpack::sbuffer> packet(&sbuf);
 
-    packet.pack((int)MasterData::Command::CONNECT_CLIENT);
+    packet.pack((int)MasterData::Command::CONNECT_USER);
     MasterData::CoClient cli(toSendLogin, toSendPassw);
     packet.pack(cli);
 

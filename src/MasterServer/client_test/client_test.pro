@@ -4,7 +4,9 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
+
+LIBS = -lmsgpack
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -12,10 +14,13 @@ TARGET = client_test
 TEMPLATE = app
 
 
-SOURCES += main.cpp \
-            MyWindow.cpp \
-    Basic.cpp
+SOURCES +=      main.cpp \
+                MyWindow.cpp \
+                Network.cpp \
+                Basic.cpp
 
-HEADERS  += MyWindow.h
+HEADERS +=      Network.h \
+                MyWindow.h 
+
 
 FORMS    +=

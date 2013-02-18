@@ -20,6 +20,8 @@
 
 #include "Client.hh"
 
+#define BUFF 256
+
 class Socket
 {
  public:
@@ -29,13 +31,13 @@ class Socket
   int	init();
   int	Bind(struct sockaddr_in);
   int	Listen(int);
-  int	Select(std::list<Client *>, fd_set *);
+  int	Select(std::list<Socket *>, fd_set *);
   int	Accept(struct sockaddr_in, int);
   void	Close();
   int	getFD();
   void	setFD(int fd);
 
-  int	RecvString(int, std::string&);
+  int	RecvString(std::string&);
   int	SendString(std::string);
 
   int	RecvInt(int*);

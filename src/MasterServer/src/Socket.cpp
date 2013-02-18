@@ -37,17 +37,17 @@ int Socket::Listen(int _listenListSize)
   return ret;
 }
 
-int Socket::Select(std::list<Client *> _client, fd_set * _readfds)
+int Socket::Select(std::list<Socket *> _client, fd_set * _readfds)
 {
-  std::list<Client *>::const_iterator	it;
+  std::list<Socket *>::const_iterator	it;
   int		olderFd;
   unsigned int	i;
 
   olderFd = _socket;
   for (i = 0, it = _client.begin(); i < _client.size() ; it++, i++)
-    if ((*it)->getSocket()->getFD() > olderFd)
-      olderFd = (*it)->getSocket()->getFD();
-  olderFd++; // OK
+    if ((*it)->getFD() > olderFd)
+      olderFd = (*it)->getFD();
+  olderFd++;
   return select(olderFd, _readfds, NULL, NULL, NULL);
 }
 
@@ -66,18 +66,21 @@ int Socket::RecvInt(int* cmd)
   return ret;
 }
 
-int Socket::RecvString(int nb, std::string &s1)
+int Socket::RecvString(std::string &s1)
 {
-  char tmpBuff[nb + 1];
-  int nbRead = read(_socket, tmpBuff, nb);
+  char tmpBuff[BUFF];
+  int nbRead;
 
-  if (nbRead == -1)
+  memset(tmpBuff, 0, BUFF);
+  s1 = "";
+  while ((nbRead = read(_socket, tmpBuff, BUFF)) > 0)
     {
-      std::cerr << "[ERROR] Could not read the file" << std::endl;
-      return -1;
+      s1 += tmpBuff;
+      memset(tmpBuff, 0, BUFF);
     }
-  tmpBuff[nbRead] = 0;
-  s1 = tmpBuff;
+  if (s1.size() > 0)
+    nbRead = s1.size();
+  std::cout << "END " << nbRead << std::endl;
   return nbRead;
 }
 
@@ -88,7 +91,11 @@ int Socket::getFD()
 
 void Socket::setFD(int fd)
 {
+  int flags;
+
   _socket = fd;
+  flags = fcntl (_socket, F_GETFL);
+  fcntl (_socket, F_SETFL, flags | O_NONBLOCK);	 
 }
 
 int Socket::SendInt(int cmd)

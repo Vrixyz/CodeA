@@ -110,6 +110,7 @@ int	Login::splitAndCheck(std::string toCheck)
   for (; i < toCheck.size(); i++)
     pass += toCheck[i];
 
+
   if (sqlite3_exec(_db, requete.c_str(), callback, 0, &zErrMsg) != SQLITE_OK)
     {
       std::cerr << "[ERROR] Erreur dans lors du retour des login/passw." << std::endl;

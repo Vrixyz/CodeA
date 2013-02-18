@@ -7,6 +7,11 @@
 
 #include "Socket.hh"
 #include "Client.hh"
+#include <msgpack.hpp>
+#include "../../MasterData/MasterData.hpp"
+#include "../../MasterData/Command.hpp"
+#include "../../MasterData/Co.hpp"
+
 
 #define EXIT_SUCCESS 0
 #define EXIT_ERROR -1
@@ -21,15 +26,15 @@ class Server
 
   int	Initialisation(void);
   int	Run(void);
-  void	AddClient(Client *);
-  void	DelClient(Client *);
+  void	AddClient(Socket *);
+  void	DelClient(Socket *);
   void	ManageClient();
   int	OdlerFd(void);
-  std::list<Client *>	getClient();
+  std::list<Socket *>	getClient();
 
  protected:
   //ASocket *		_socClient;
-  std::list<Client *>	_client;
+  std::list<Socket *>	_client;
   Socket *		_socket;
   int			_port;
   fd_set		_readfds;

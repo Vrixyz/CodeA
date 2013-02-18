@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Fri Sep 14 10:40:12 2012 thierry berger
-// Last update Wed Dec 12 12:40:10 2012 mathieu leurquin
+// Last update Fri Dec 28 18:49:02 2012 mathieu leurquin
 //
 
 #include "Bullet.hpp"

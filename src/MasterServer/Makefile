@@ -4,10 +4,10 @@ CC			=	g++
 
 SRC			=	src/User.cpp \
 				src/OpSQL.cpp \
-				src/Login.cpp \
 				src/Client.cpp \
 				src/Server.cpp \
 				src/Socket.cpp \
+				src/SQLManager.cpp \
 
 OBJ			=	$(SRC:.cpp=.o)
 

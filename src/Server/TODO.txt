@@ -1,0 +1,16 @@
+nouvelle unite : invocateur
+
+description: portails qui creent des unites, celles ci attaquent au corp a corp. Elles sont toutes controlables seules ou par groupe en mode RTS.
+
+IUnit :
+Portal
+	-> Plusieurs portails, cree 3 minions, toutes les 2 minutes, random portail
+Minion
+	-> attaque au corp a corp.
+
+conditions de lose :  > 15 minutes
+
+win : plus d'ennemis ou + de score (kill d'unite rapporte des points)
+
+
+score sauvegarde dans Player

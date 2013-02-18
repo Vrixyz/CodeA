@@ -46,6 +46,7 @@ public:
 
 public slots:
     void checkCo();
+    void tryCoToGame();
 
 private:
     int _port;
@@ -64,5 +65,6 @@ private:
 };
 
 std::string intToString(int);
+int stringToInt(std::string);
 
 #endif // MYWINDOW_H

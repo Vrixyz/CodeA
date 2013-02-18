@@ -2,7 +2,8 @@ NAME			=	MasterServer
 
 CC			=	g++
 
-SRC			=	src/OpSQL.cpp \
+SRC			=	src/User.cpp \
+				src/OpSQL.cpp \
 				src/Login.cpp \
 				src/Client.cpp \
 				src/Server.cpp \

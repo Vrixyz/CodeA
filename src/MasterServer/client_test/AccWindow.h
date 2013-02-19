@@ -1,0 +1,61 @@
+#ifndef ACCWINDOW_H
+#define ACCWINDOW_H
+
+#include "../../MasterData/MasterData.hpp"
+#include "../../MasterData/Command.hpp"
+#include "../../MasterData/Co.hpp"
+
+#include <iostream>
+#include <list>
+
+#include "MyWindow.h"
+#include "Network.h"
+#include "Define.h"
+#include "Store.h"
+
+#include <QListWidgetItem>
+#include <QApplication>
+#include <QHBoxLayout>
+#include <QPushButton>
+#include <QListWidget>
+#include <QTcpSocket>
+#include <QLineEdit>
+#include <QWidget>
+#include <QDialog>
+#include <QLabel>
+#include <QList>
+#include <QFont>
+
+class Network;
+
+class AccWindow : public QDialog
+{
+    Q_OBJECT
+
+public:
+    AccWindow(int, int, MyWindow *);
+    ~AccWindow();
+
+    void creatFields(void);
+    void showGames(void);
+    void initGames(void);
+
+public slots:
+    void checkCo();
+
+private:;
+    Network             *_soc;
+
+    std::list<t_game>   _allGames;
+    MyWindow            *_parent;
+    QListWidget         *list;
+
+    QPushButton         *co;
+    QPushButton         *quit;
+    QLineEdit*          loginEdit;
+    QLineEdit*          passwEdit;
+    QLabel*             loginLabel;
+    QLabel*             passwLabel;
+};
+
+#endif // ACCWINDOW_H

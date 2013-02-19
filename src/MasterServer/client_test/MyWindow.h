@@ -1,33 +1,30 @@
 #ifndef MYWINDOW_H
 #define MYWINDOW_H
 
-#include <QApplication>
-#include <QPushButton>
-#include <QLineEdit>
-#include <QTcpSocket>
-#include <QLabel>
-#include <QList>
-#include <QFont>
-
-#include <QListWidgetItem>
-#include <QListWidget>
-#include <QHBoxLayout>
-#include <QWidget>
-#include "Network.h"
-#include <iostream>
-#include <list>
 #include "../../MasterData/MasterData.hpp"
 #include "../../MasterData/Command.hpp"
 #include "../../MasterData/Co.hpp"
 
-class Network;
+#include <iostream>
+#include <list>
 
-struct s_game
-{
-    int id;
-    int size;
-    std::string name;
-} typedef t_game;
+#include "Network.h"
+#include "Store.h"
+
+#include <QListWidgetItem>
+#include <QApplication>
+#include <QHBoxLayout>
+#include <QPushButton>
+#include <QListWidget>
+#include <QTcpSocket>
+#include <QLineEdit>
+#include <QWidget>
+#include <QDialog>
+#include <QLabel>
+#include <QList>
+#include <QFont>
+
+class Network;
 
 class MyWindow : public QWidget
 {
@@ -35,36 +32,17 @@ class MyWindow : public QWidget
 
 public:
     MyWindow(int, int);
-    void createQuit(int, int, int, int);
-    void createCo(int, int, int, int);
-    void creatFields();
-
-    void cleanAndShow();
-    void showGames();
-    void initGames();
-    void setPort(int p) {_port = p;}
-
-public slots:
-    void checkCo();
-    void tryCoToGame();
-
+    ~MyWindow();
+    void setCoWindow(int, int);
+    QDialog *getCoWindow(void);
+    void setDataNet(Store*);
+    Store *getDataNet(void);
+    void setPort(int);
+    int getPort(void);
 private:
+    QDialog *_coWindow;
+    Store   *_dataNet;
     int _port;
-    std::list<t_game> allGames;
-
-    QListWidget *list;
-
-    QPushButton *quit;
-    QPushButton *aquit;
-    QPushButton *co;
-    QLineEdit* loginEdit;
-    QLineEdit* passwEdit;
-    QLabel* loginLabel;
-    QLabel* passwLabel;
-    Network *_soc;
 };
-
-std::string intToString(int);
-int stringToInt(std::string);
 
 #endif // MYWINDOW_H

@@ -1,5 +1,4 @@
-#include <sstream>
-#include <string>
+#include <Define.h>
 
 std::string intToString(int nb)
 {

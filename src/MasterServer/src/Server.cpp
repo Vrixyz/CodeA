@@ -4,9 +4,10 @@
 
 int	main(int ac, char **av)
 {
-  (void)ac;
-  (void)av;
-  Server * server = new Server(atoi(av[1]));
+  int port = 4242;
+  if (ac == 2)
+    port = atoi(av[1]);
+  Server * server = new Server(port);
 
   std::cout << "INITIALISATION" << std::endl;
   if (server->Initialisation() == EXIT_ERROR)
@@ -19,6 +20,7 @@ int	main(int ac, char **av)
 
 Server::Server(int port)
 {
+  _idmax = 0;
   _port = port;
   _socket = new Socket();
   _sql = new SQLManager();
@@ -82,11 +84,11 @@ void    Server::AcceptCo()
 
 int	Server::Run(void)
 {
-  std::list<User *>::const_iterator	Uit;
-  std::list<Socket *>::const_iterator	UKit;
-  //std::list<Socket *>::const_iterator	Sit;
-  unsigned int				i;
-  int					maxFD;
+  std::list<User *>::const_iterator		Uit;
+  std::list<Socket *>::const_iterator		UKit;
+  std::list<GameServer *>::const_iterator	Sit;
+  unsigned int					i;
+  int						maxFD;
 
   while (1)
     {
@@ -110,7 +112,14 @@ int	Server::Run(void)
 	  if ((*Uit)->getSoc()->getFD() > maxFD)
 	    maxFD = (*Uit)->getSoc()->getFD();
 	}
+      
       //SERVER FD      
+      for (i = 0, Sit = _server.begin(); i < _server.size() ; Sit++, i++)
+	{
+	  FD_SET((*Sit)->getSoc()->getFD(), &_readfds);
+	  if ((*Sit)->getSoc()->getFD() > maxFD)
+	    maxFD = (*Sit)->getSoc()->getFD();
+	}
 
 
       //SELECT VEUT MAXFD +1
@@ -129,7 +138,7 @@ int	Server::Run(void)
       ManageUser();
 
       // SERVEUR MESSAGE
-      //      ManageGameServer();
+      ManageGameServer();
 
       //UNKWON MESSAGE
       ManageUnknown();
@@ -149,10 +158,74 @@ void Server::ManageUser()
     if (FD_ISSET((*it)->getSoc()->getFD(), &_readfds))
       {	
 	(*it)->getSoc()->RecvString(message);
+	std::cout << "USER " << message << std::endl;
 	if (message.length() == 0)
 	  DelUser(*it);
+
+	msgpack::unpacker pac;
+	pac.reserve_buffer(message.length());
+	memcpy(pac.buffer(), message.data(), message.length());
+	pac.buffer_consumed(message.length());
+	msgpack::unpacked result;
+	if (pac.next(&result)) 
+	  {
+	    int idCmd;
+	    result.get().convert(&idCmd);
+	    switch(idCmd)
+	      {
+	      case MasterData::Command::ASK_SERVER_LIST:
+		SendServList((*it)->getSoc());
+		break;
+	      default:
+		std::cerr << "Command inconnu" << std::endl;
+		break;
+	      }
+	  }
       }
 }
+
+void Server::SendServList(Socket* soc)
+{
+  GameServer *					s;
+  std::list<GameServer *>::iterator		it;
+  unsigned int					i;
+  std::list<MasterData::Serv>			slist;
+  MasterData::Serv				serveur;
+  MasterData::ListServ				sl;
+
+  for (i = 0, it = _server.begin(); i < _server.size(); i++, it++)
+    {
+      s = *it;
+      serveur.id = s->getId();
+      serveur. name = s->getName();
+      slist.push_back(serveur);
+    }
+  msgpack::sbuffer sbuf;
+  msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+  
+  packet.pack((int)MasterData::Command::SEND_SERVER_LIST);
+  sl.list = slist;
+  packet.pack(sl);
+  soc->sendToServer(sbuf);
+}
+
+void Server::ManageGameServer()
+{
+  std::string					message;
+  std::list<GameServer *>::iterator			it;
+  unsigned int					i;
+  int						cmd;
+
+  for (i = 0, it = _server.begin(); i < _server.size(); i++, it++)
+    if (FD_ISSET((*it)->getSoc()->getFD(), &_readfds))
+      {	
+	(*it)->getSoc()->RecvString(message);
+	std::cout << "SERVER " << message << std::endl;
+	if (message.length() == 0)
+	  DelGameServer(*it);
+      }
+}
+
 
 void Server::ManageUnknown()
 {
@@ -189,6 +262,9 @@ void Server::ManageUnknown()
 	      case MasterData::Command::CONNECT_USER:
 		CheckCoUser(client, message);
 		break;
+	      case MasterData::Command::CONNECT_SERVER:
+		AddServer(client, message);
+		break;
 	      default:
 		std::cerr << "ERROR: client non conforme deconnexion du client" << std::endl;
 		_unknown.remove(client);
@@ -203,6 +279,39 @@ void	Server::DelUser(User *u)
 {
   _users.remove(u);
 }
+
+void	Server::DelGameServer(GameServer *s)
+{
+  _server.remove(s);
+}
+
+void	Server::AddServer(Socket *soc, std::string infos)
+{
+  GameServer*		s;
+  msgpack::unpacker	pac;
+  msgpack::unpacked	result;
+  MasterData::CoServer	co(0, "");
+
+  pac.reserve_buffer(infos.length());
+  memcpy(pac.buffer(), infos.data(), infos.length());
+  pac.buffer_consumed(infos.length());
+  if (pac.next(&result)) 
+    {
+      if (pac.next(&result))
+	{
+	  result.get().convert(&co);
+	  s = new GameServer(co.port, co.name, _idmax++);
+	  s->setSoc(soc);
+	  _server.push_back(s);
+	  _unknown.remove(soc);
+	  std::cout << "SUCCES DE L'AJOUT D'UN SERVER" << std::endl;
+	  return; 
+	}
+    }
+  _unknown.remove(soc);
+  soc->Close();
+}
+
 
 void	Server::CheckCoUser(Socket *soc, std::string infos)
 {
@@ -225,10 +334,34 @@ void	Server::CheckCoUser(Socket *soc, std::string infos)
 	      _users.push_back(u);
 	      _unknown.remove(soc);
 	      std::cout << "SUCCES DE LA CONNEXION" << std::endl;
+	      sendCoSucces(u);
 	      return; 
 	    }
+	  sendFailure(soc, "Combinaison user/pass invalid");
 	}
     }
   _unknown.remove(soc);
   soc->Close();
+}
+
+void	Server::sendCoSucces(User *u)
+{
+  msgpack::sbuffer sbuf;
+  msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+  
+  packet.pack((int)MasterData::Command::INFOS_CLIENT);
+  MasterData::InfosClient ic(u->getName());
+  packet.pack(ic);
+  u->getSoc()->sendToServer(sbuf);
+}
+
+void	Server::sendFailure(Socket *soc, std::string msg)
+{
+  msgpack::sbuffer sbuf;
+  msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+  
+  packet.pack((int)MasterData::Command::ERROR);
+  MasterData::ErrorMsg err(msg);
+  packet.pack(err);
+  soc->sendToServer(sbuf);
 }

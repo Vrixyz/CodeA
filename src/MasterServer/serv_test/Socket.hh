@@ -4,7 +4,6 @@
 #include <iostream>
 #include <string>
 
-#include <msgpack.hpp>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -18,8 +17,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <list>
-
-#include "Client.hh"
+#include <msgpack.hpp>
 
 #define BUFF 256
 
@@ -36,6 +34,7 @@ class Socket
   int	Accept(struct sockaddr_in, int);
   void	Close();
   int	getFD();
+  int	Connect(std::string ip, int port);
   void	setFD(int fd);
 
   int	RecvString(std::string&);

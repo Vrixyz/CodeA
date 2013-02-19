@@ -1,18 +1,13 @@
-NAME			=	MasterServer
+NAME			=	Server
 
 CC			=	g++
 
-SRC			=	src/User.cpp \
-				src/Client.cpp \
-				src/Server.cpp \
-				src/Socket.cpp \
-				src/SQLManager.cpp \
-				src/GameServer.cpp \
-#				src/OpSQL.cpp \
+SRC			=	Server.cpp \
+				Socket.cpp \
 
 OBJ			=	$(SRC:.cpp=.o)
 
-LIB			=	-lsqlite3 -lmsgpack
+LIB			=	-lmsgpack
 
 DEBUG			=	no
 
@@ -28,7 +23,7 @@ $(NAME)                 :       $(OBJ)
 				$(CC) -o $(NAME) $(OBJ) $(XXFLAGS) $(LIB)
 
 clean                   :
-				rm -f $(OBJ) src/*~ include/*~
+				rm -f $(OBJ) *~
 
 fclean			:	clean
 				rm -f $(NAME)

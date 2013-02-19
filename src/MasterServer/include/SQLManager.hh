@@ -20,7 +20,6 @@ public:
   int coDB();
   void dcDB();
   int delElem();
-  int printLog();
   User *findUser(std::string, std::string);
   int modifElem();
   int insertElem(std::string, std::string);

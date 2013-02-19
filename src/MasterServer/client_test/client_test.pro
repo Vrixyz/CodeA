@@ -17,10 +17,17 @@ TEMPLATE = app
 SOURCES +=      main.cpp \
                 MyWindow.cpp \
                 Network.cpp \
-                Basic.cpp
+                Basic.cpp \
+                AccWindow.cpp \
+    Store.cpp \
+    GamesWindow.cpp
 
 HEADERS +=      Network.h \
-                MyWindow.h 
+                MyWindow.h \ 
+                AccWindow.h \
+    Store.h \
+    Define.h \
+    GamesWindow.h
 
 
 FORMS    +=

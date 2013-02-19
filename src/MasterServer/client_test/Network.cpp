@@ -4,7 +4,7 @@ Network::Network(QString h, int p)
 {
     host = h;
     port = p;
-    QObject::connect(&soc, SIGNAL(readyRead()), this, SLOT(ReceiveFromServer()));
+//    QObject::connect(&soc, SIGNAL(readyRead()), this, SLOT(ReceiveFromServer()));
 }
 
 Network::~Network()
@@ -26,12 +26,13 @@ void    Network::connectToServer()
   //    std::cout << "CONNECT " << soc.connectToHost(host, port)  << std::endl;
 }
 
-void    Network::ReceiveFromServer()
+std::string    Network::ReceiveFromServer()
 {
     std::cout << "received" << std::endl;
     QByteArray ligne;
     ligne = soc.readAll();
-    try
+    return ligne.data();
+/*    try
     {
         msgpack::unpacker pac;
         pac.reserve_buffer(ligne.length());
@@ -46,5 +47,5 @@ void    Network::ReceiveFromServer()
     catch (std::exception& e)
     {
         std::cerr << std::endl << e.what() << std::endl;
-    }
+    }*/
 }

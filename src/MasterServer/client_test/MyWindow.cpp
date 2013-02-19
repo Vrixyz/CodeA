@@ -1,5 +1,6 @@
 #include "MyWindow.h"
 #include "AccWindow.h"
+#include "GamesWindow.h"
 
 MyWindow::MyWindow(int size_x, int size_y) : QWidget()
 {
@@ -9,6 +10,13 @@ MyWindow::MyWindow(int size_x, int size_y) : QWidget()
 
 MyWindow::~MyWindow()
 {
+}
+
+void    MyWindow::setGamesWindow()
+{
+    _coWindow->close();
+    _gamesWindow = new GamesWindow(400, 400, this);
+    _gamesWindow->show();
 }
 
 void    MyWindow::setCoWindow(int x , int y)

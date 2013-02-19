@@ -39,8 +39,10 @@ public:
     Store *getDataNet(void);
     void setPort(int);
     int getPort(void);
+    void setGamesWindow();
 private:
     QDialog *_coWindow;
+    QDialog *_gamesWindow;
     Store   *_dataNet;
     int _port;
 };

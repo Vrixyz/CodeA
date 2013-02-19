@@ -39,9 +39,9 @@ public:
     ~Network();
     void connectToServer();
     void sendToServer(const msgpack::sbuffer&);
-
+    QTcpSocket *getSock() {return &soc;}
 public slots:
-    void ReceiveFromServer();
+    std::string ReceiveFromServer();
 private:
     int port;
     QString host;

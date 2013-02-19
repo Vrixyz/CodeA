@@ -42,13 +42,12 @@ public:
 
 public slots:
     void checkCo();
+    void RecvInfosClient();
 
-private:;
+private:
     Network             *_soc;
 
-    std::list<t_game>   _allGames;
     MyWindow            *_parent;
-    QListWidget         *list;
 
     QPushButton         *co;
     QPushButton         *quit;

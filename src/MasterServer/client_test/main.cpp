@@ -7,8 +7,10 @@ int     main(int argc, char *argv[])
 
     MyWindow window(400, 400);
     window.setCoWindow(400, 400);
-    window.setPort(atoi(argv[1]));
-//    window.show();
+    if (argc == 2)
+        window.setPort(atoi(argv[1]));
+    else
+        window.setPort(4242);
     window.getCoWindow()->show();
     return app.exec();
 }

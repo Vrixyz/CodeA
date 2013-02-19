@@ -1,6 +1,16 @@
 #include "Define.hh"
 #include "Server.hh"
 
+std::string intToString(int nb)
+{
+    std::string s;
+    std::stringstream out;
+
+    out << nb;
+    s = out.str();
+    return (s);
+}
+
 int	main(int ac, char **av)
 {
   if (ac == 4)
@@ -91,12 +101,15 @@ int	Server::Run(void)
   std::list<Socket *>::const_iterator	UKit;
   unsigned int				i;
   int					maxFD;
+  std::string				name;
 
   msgpack::sbuffer sbuf;
   msgpack::packer<msgpack::sbuffer> packet(&sbuf);
   
+
+  name = "No name on:" + intToString(_port);
   packet.pack((int)MasterData::Command::CONNECT_SERVER);
-  MasterData::CoServer serv(_port, "No name on:" + _port);
+  MasterData::CoServer serv(_port, name);
   packet.pack(serv);
   _master->sendToServer(sbuf);
 

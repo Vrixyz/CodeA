@@ -41,7 +41,7 @@ public:
     void sendToServer(const msgpack::sbuffer&);
     QTcpSocket *getSock() {return &soc;}
 public slots:
-    std::string ReceiveFromServer();
+   QByteArray    ReceiveFromServer();
 private:
     int port;
     QString host;

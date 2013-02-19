@@ -56,7 +56,7 @@ int	Server::Initialisation(void)
       return EXIT_ERROR;
     }
   _sql->createUsersTable();
-  //  _sql->insertElem("toto42", "passw");
+  _sql->insertElem("toto42", "passw");
   return EXIT_SUCCESS;
 }
 
@@ -77,7 +77,7 @@ void    Server::AcceptCo()
       //CREATION DE LA SOCKET
       client  = new Socket();
       client->setFD(soc);
-      std::cout << "SUCCESS: Connexion d'un client" << std::endl;
+      std::cout << "SUCCESS: Nouvelle socket" << std::endl;
       _unknown.push_back(client);
     }
 }
@@ -189,24 +189,21 @@ void Server::SendServList(Socket* soc)
   GameServer *					s;
   std::list<GameServer *>::iterator		it;
   unsigned int					i;
-  std::list<MasterData::Serv>			slist;
-  MasterData::Serv				serveur;
-  MasterData::ListServ				sl;
 
-  for (i = 0, it = _server.begin(); i < _server.size(); i++, it++)
-    {
-      s = *it;
-      serveur.id = s->getId();
-      serveur. name = s->getName();
-      slist.push_back(serveur);
-    }
+  std::cout << "Liste send" << std::endl;
   msgpack::sbuffer sbuf;
   msgpack::packer<msgpack::sbuffer> packet(&sbuf);
   
   packet.pack((int)MasterData::Command::SEND_SERVER_LIST);
-  sl.list = slist;
-  packet.pack(sl);
+
+  for (i = 0, it = _server.begin(); i < _server.size(); i++, it++)
+    {
+      s = *it;
+      MasterData::Serv	serveur(s->getId(), s->getName());
+      packet.pack(serveur);
+    }
   soc->sendToServer(sbuf);
+  std::cout << "LIST SERV SIZE " << sbuf.size() << "|" << sbuf.data() << std::endl;
 }
 
 void Server::ManageGameServer()

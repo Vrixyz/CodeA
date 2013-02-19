@@ -19,6 +19,11 @@ void    MyWindow::setGamesWindow()
     _gamesWindow->show();
 }
 
+QDialog *MyWindow::getGamesWindow(void)
+{
+    return _gamesWindow;
+}
+
 void    MyWindow::setCoWindow(int x , int y)
 {
     _coWindow = new AccWindow(x, y, this);

@@ -5,11 +5,15 @@
 
 class GamesWindow : public QDialog
 {
+    Q_OBJECT
+
 public:
     GamesWindow(int, int, MyWindow*);
     ~GamesWindow();
+public slots:
+    void RecvList();
 private:
-    QWidget*            _parent;
+    MyWindow*           _parent;
     QPushButton*        quit;
     std::list<t_game>   _allGames;
     QListWidget         *list;

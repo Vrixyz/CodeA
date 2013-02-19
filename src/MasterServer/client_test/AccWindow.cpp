@@ -29,7 +29,6 @@ void    AccWindow::checkCo()
 
     std::string toSendLogin;
     std::string toSendPassw;
-    std::string rep;
 
     login = loginEdit->text();
     passw = passwEdit->text();
@@ -48,47 +47,42 @@ void    AccWindow::checkCo()
 
     _parent->getDataNet()->getNetwork()->sendToServer(sbuf);
 
-    rep = _parent->getDataNet()->getNetwork()->ReceiveFromServer();
     QObject::connect(_parent->getDataNet()->getNetwork()->getSock(), SIGNAL(readyRead()), this, SLOT(RecvInfosClient()));
 }
 
 void    AccWindow::RecvInfosClient()
 {
-    std::string ligne;
+    QByteArray res;
+    msgpack::unpacked result;
+    msgpack::unpacker pac;
 
-    ligne = _parent->getDataNet()->getNetwork()->ReceiveFromServer();
-//    std::cout << "ligne " << ligne << std::endl;
-    try
+    res = _parent->getDataNet()->getNetwork()->ReceiveFromServer();
+    std::cout << "INFO SIZE " << res.length() << std::endl;
+
+
+    pac.reserve_buffer(res.length());
+    memcpy(pac.buffer(), res.data(), res.length());
+    pac.buffer_consumed(res.length());
+    if (pac.next(&result))
     {
-        msgpack::unpacker pac;
-        pac.reserve_buffer(ligne.length());
-        memcpy(pac.buffer(), ligne.data(), ligne.length());
-        pac.buffer_consumed(ligne.length());
-        msgpack::unpacked result;
-        if (pac.next(&result)) {
-            int idData;
-            result.get().convert(&idData);
-            if (idData == MasterData::Command::INFOS_CLIENT)
-            {
-                MasterData::InfosClient info("");
-                pac.next(&result);
-                result.get().convert(&info);
-                std::cout << "CONNEXION DONE de " << info.name << std::endl;
-                _parent->getDataNet()->getNetwork()->getSock()->disconnect();
-                _parent->setGamesWindow();
-            }
-            else if (idData == MasterData::Command::ERROR)
-            {
-                MasterData::ErrorMsg err("");
-                pac.next(&result);
-                result.get().convert(&err);
-                std::cerr << "Erreur connexion : " << err.msg << std::endl;
-            }
+        int idData;
+        result.get().convert(&idData);
+        if (idData == MasterData::Command::INFOS_CLIENT)
+        {
+            MasterData::InfosClient info("");
+            pac.next(&result);
+            result.get().convert(&info);
+            std::cout << "CONNEXION DONE de " << info.name << std::endl;
+            _parent->getDataNet()->getNetwork()->getSock()->disconnect();
+            _parent->setGamesWindow();
         }
-    }
-    catch (std::exception& e)
-    {
-        std::cerr << std::endl << e.what() << std::endl;
+        else if (idData == MasterData::Command::ERROR)
+        {
+            MasterData::ErrorMsg err("");
+            pac.next(&result);
+            result.get().convert(&err);
+            std::cerr << "Erreur connexion : " << err.msg << std::endl;
+        }
     }
 }
 

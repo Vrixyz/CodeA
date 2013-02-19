@@ -26,26 +26,12 @@ void    Network::connectToServer()
   //    std::cout << "CONNECT " << soc.connectToHost(host, port)  << std::endl;
 }
 
-std::string    Network::ReceiveFromServer()
+QByteArray    Network::ReceiveFromServer()
 {
-    std::cout << "received" << std::endl;
     QByteArray ligne;
     ligne = soc.readAll();
-    return ligne.data();
-/*    try
-    {
-        msgpack::unpacker pac;
-        pac.reserve_buffer(ligne.length());
-        memcpy(pac.buffer(), ligne.data(), ligne.length());
-        pac.buffer_consumed(ligne.length());
-        msgpack::unpacked result;
-        if (pac.next(&result)) {
-            int idData;
-            result.get().convert(&idData);
-        }
-    }
-    catch (std::exception& e)
-    {
-        std::cerr << std::endl << e.what() << std::endl;
-    }*/
+
+
+    std::cout << "RECV " << ligne.length() << std::endl;
+    return ligne;
 }

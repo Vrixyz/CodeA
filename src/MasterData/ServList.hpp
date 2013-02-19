@@ -8,17 +8,12 @@ namespace MasterData
 {
   struct	Serv
   {
+    Serv(int _id, std::string _name) :
+      id(_id), name(_name) {}
     int	id;
     std::string name;
 
     MSGPACK_DEFINE(id, name);
-  };
-
-  struct	ListServ
-  {
-    std::list<Serv> list;
-
-    MSGPACK_DEFINE(list);
   };
 }
 

@@ -2,6 +2,7 @@
 #define MYWINDOW_H
 
 #include "../../MasterData/MasterData.hpp"
+#include "../../MasterData/ServList.hpp"
 #include "../../MasterData/Command.hpp"
 #include "../../MasterData/Co.hpp"
 
@@ -33,13 +34,19 @@ class MyWindow : public QWidget
 public:
     MyWindow(int, int);
     ~MyWindow();
+
     void setCoWindow(int, int);
     QDialog *getCoWindow(void);
+
     void setDataNet(Store*);
     Store *getDataNet(void);
+
     void setPort(int);
     int getPort(void);
+
     void setGamesWindow();
+    QDialog *getGamesWindow(void);
+
 private:
     QDialog *_coWindow;
     QDialog *_gamesWindow;

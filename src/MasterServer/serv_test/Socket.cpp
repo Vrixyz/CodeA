@@ -1,4 +1,4 @@
-#include "./../include/Socket.hh"
+#include "Socket.hh"
 
 Socket::~Socket()
 {
@@ -11,6 +11,32 @@ Socket::Socket()
 void Socket::Close()
 {
 close(_socket);
+}
+
+int Socket::Connect(std::string ip, int port)
+{
+  struct sockaddr_in addr;
+  struct hostent *server;
+
+
+  _socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+  if(_socket == -1)
+    {
+      std::cerr << "Erreur lors de la commande system socket" << std::endl;
+      return -1;
+    }
+
+  addr.sin_addr.s_addr = inet_addr(ip.data());  
+  addr.sin_port = htons(port);
+  addr.sin_family = AF_INET;
+
+  /* connect to host */
+  if(connect(_socket, (struct sockaddr*)&addr,sizeof(addr)) == -1)
+    {
+      std::cerr << "Impossible de se connecter au MAster Serveur" << std::endl;
+      return -1;
+    }
+  return 1;
 }
 
 int Socket::init()

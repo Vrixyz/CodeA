@@ -10,13 +10,14 @@ class GamesWindow : public QDialog
 public:
     GamesWindow(int, int, MyWindow*);
     ~GamesWindow();
+    void addToList(int, std::string);
 public slots:
     void RecvList();
 private:
     MyWindow*           _parent;
-    QPushButton*        quit;
-    std::list<t_game>   _allGames;
-    QListWidget         *list;
+    QPushButton*        _quit;
+    QListWidget*        _list;
+    QLabel*             _servLabel;
 };
 
 #endif // GAMESWINDOW_H

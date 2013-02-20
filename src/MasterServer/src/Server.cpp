@@ -158,7 +158,7 @@ void Server::ManageUser()
     if (FD_ISSET((*it)->getSoc()->getFD(), &_readfds))
       {	
 	(*it)->getSoc()->RecvString(message);
-	std::cout << "USER " << message << std::endl;
+	std::cout << "USER " << (*it)->getName() << std::endl;
 	if (message.length() == 0)
 	  DelUser(*it);
 
@@ -203,7 +203,7 @@ void Server::SendServList(Socket* soc)
       packet.pack(serveur);
     }
   soc->sendToServer(sbuf);
-  std::cout << "LIST SERV SIZE " << sbuf.size() << "|" << sbuf.data() << std::endl;
+  std::cout << "LIST SERV SEND" << std::endl;
 }
 
 void Server::ManageGameServer()

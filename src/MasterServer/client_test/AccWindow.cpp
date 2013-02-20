@@ -92,6 +92,20 @@ void    AccWindow::checkSu()
     std::cout << std::endl << "Passw : " << _passw1SuEdit->text().toUtf8().constData();
     std::cout << std::endl << "Passw : " << _passw2SuEdit->text().toUtf8().constData();
     std::cout << std::endl << "AMail : " << _mailEdit->text().toUtf8().constData() << std::endl;
+
+    _parent->getDataNet()->setNetwork(new Network("127.0.0.1", _parent->getPort()));
+    _parent->getDataNet()->getNetwork()->connectToServer();
+
+    msgpack::sbuffer sbuf;
+    msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+
+    packet.pack((int)MasterData::Command::REGISTER_USER);
+    MasterData::RegClient cli(_loginSuEdit->text().toUtf8().constData(), _passw1SuEdit->text().toUtf8().constData());
+    packet.pack(cli);
+
+    _parent->getDataNet()->getNetwork()->sendToServer(sbuf);
+
+    QObject::connect(_parent->getDataNet()->getNetwork()->getSock(), SIGNAL(readyRead()), this, SLOT(RecvInfosClient()));
 }
 
 void    AccWindow::RecvInfosClient()

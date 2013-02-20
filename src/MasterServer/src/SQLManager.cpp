@@ -55,18 +55,23 @@ int	SQLManager::createUsersTable()
 int	SQLManager::insertElem(std::string name, std::string pass)
 {
   std::string	req;
+  int ret;
   sqlite3_stmt	*stmt;
 
+  ret = 1;
   req = "INSERT INTO user values(?, ?);";
   stmt = NULL;
   if (sqlite3_prepare_v2(this->_db, req.c_str(), 50, &stmt, NULL) != SQLITE_OK)
     {
       std::cerr << "[ERROR] Erreur dans l'ajout d'un nouveau element." << std::endl;
+      return -1;
     }
   sqlite3_bind_text (stmt, 1, name.c_str(), name.size(), NULL);
   sqlite3_bind_text (stmt, 2, pass.c_str(), pass.size(), NULL);
-  sqlite3_step(stmt);
-  sqlite3_reset (stmt);     
+  if (sqlite3_step(stmt) != SQLITE_DONE)
+    ret = -1;
+  sqlite3_reset (stmt);    
+  return ret; 
 }
 
 User	*SQLManager::findUser(std::string name, std::string pass)

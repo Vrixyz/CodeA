@@ -30,6 +30,7 @@ class Server
   int	Initialisation(void);
   int	Run(void);
   void  CheckCoUser(Socket *soc, std::string info);
+  void  CheckRegUser(Socket *soc, std::string info);
   void  AddServer(Socket *soc, std::string info);
   void	SendServList(Socket* soc);
   void	AcceptCo();

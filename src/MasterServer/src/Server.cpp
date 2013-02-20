@@ -256,6 +256,9 @@ void Server::ManageUnknown()
 	    result.get().convert(&idCmd);
 	    switch(idCmd)
 	      {
+	      case MasterData::Command::REGISTER_USER:
+		CheckRegUser(client, message);
+		break;
 	      case MasterData::Command::CONNECT_USER:
 		CheckCoUser(client, message);
 		break;
@@ -335,6 +338,37 @@ void	Server::CheckCoUser(Socket *soc, std::string infos)
 	      return; 
 	    }
 	  sendFailure(soc, "Combinaison user/pass invalid");
+	}
+    }
+  _unknown.remove(soc);
+  soc->Close();
+}
+void	Server::CheckRegUser(Socket *soc, std::string infos)
+{
+  User*			u;
+  msgpack::unpacker	pac;
+  msgpack::unpacked	result;
+  MasterData::RegClient	reg("", "");
+
+  pac.reserve_buffer(infos.length());
+  memcpy(pac.buffer(), infos.data(), infos.length());
+  pac.buffer_consumed(infos.length());
+  if (pac.next(&result)) 
+    {
+      if (pac.next(&result))
+	{
+	  result.get().convert(&reg);
+	  if (_sql->insertElem(reg.login, reg.pass))
+	    {
+	      u = new User(reg.login);	      
+	      u->setSoc(soc);
+	      _users.push_back(u);
+	      _unknown.remove(soc);
+	      std::cout << "SUCCES DE L'AJOUT D'un COMPTE" << std::endl;
+	      sendCoSucces(u);
+	      return; 
+	    }
+	  sendFailure(soc, "Impossible de creer un compte avec ce login/pass");
 	}
     }
   _unknown.remove(soc);

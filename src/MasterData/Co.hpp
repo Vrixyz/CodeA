@@ -27,6 +27,18 @@ namespace MasterData
     MSGPACK_DEFINE(port, name);
   };
 
+  //SYNTHAXE DE REGISTER
+  struct	RegClient
+  {
+    RegClient(std::string _login, std::string _pass) :
+      login(_login), pass(_pass) {}
+    std::string	login;
+    std::string	pass;
+    
+    MSGPACK_DEFINE(login, pass);
+  };
+
+
   //ENVOI D'INFOS AU CLIENT SUR SON COMPTE(USEFULL POUR LE MOMENT)
   struct	InfosClient
   {

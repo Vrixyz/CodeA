@@ -36,25 +36,61 @@ public:
     AccWindow(int, int, MyWindow *);
     ~AccWindow();
 
-    void creatFields(void);
+    void creatFields4CoPage(void);
+    void creatFields4SuPage(void);
     void showGames(void);
     void initGames(void);
 
+    void setTab();
+    void setCoPage();
+    void setSuPage();
+
 public slots:
     void checkCo();
+    void checkSu();
     void RecvInfosClient();
 
 private:
+
+    /* Classe des sockets, etc. */
+
     Network             *_soc;
+
+    /* Fenetre principale */
 
     MyWindow            *_parent;
 
-    QPushButton         *co;
-    QPushButton         *quit;
-    QLineEdit*          loginEdit;
-    QLineEdit*          passwEdit;
-    QLabel*             loginLabel;
-    QLabel*             passwLabel;
+    /* Tableau d'onglets */
+
+    QTabWidget          *_tabConnexion;
+    QWidget             *_page1;
+    QWidget             *_page2;
+
+    /* Boutons + Fields + Labels pour la connexion */
+
+    QPushButton         *_co;
+    QPushButton         *_CoQuit;
+
+    QLineEdit*          _loginEdit;
+    QLineEdit*          _passwEdit;
+
+    QLabel*             _loginLabel;
+    QLabel*             _passwLabel;
+
+    /* Boutons + Fields + Labels pour l'inscription */
+
+    QPushButton         *_su;
+    QPushButton         *_SuQuit;
+
+    QLineEdit*          _loginSuEdit;
+    QLineEdit*          _passw1SuEdit;
+    QLineEdit*          _passw2SuEdit;
+    QLineEdit*          _mailEdit;
+
+    QLabel*             _loginSuLabel;
+    QLabel*             _passw1SuLabel;
+    QLabel*             _passw2SuLabel;
+    QLabel*             _mailLabel;
 };
 
 #endif // ACCWINDOW_H

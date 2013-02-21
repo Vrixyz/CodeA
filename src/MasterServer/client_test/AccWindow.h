@@ -13,18 +13,7 @@
 #include "Define.h"
 #include "Store.h"
 
-#include <QListWidgetItem>
-#include <QApplication>
-#include <QHBoxLayout>
-#include <QPushButton>
-#include <QListWidget>
-#include <QTcpSocket>
-#include <QLineEdit>
-#include <QWidget>
-#include <QDialog>
-#include <QLabel>
-#include <QList>
-#include <QFont>
+#include <QtGui>
 
 class Network;
 
@@ -54,22 +43,22 @@ private:
 
     /* Classe des sockets, etc. */
 
-    Network             *_soc;
+    Network*            _soc;
 
     /* Fenetre principale */
 
-    MyWindow            *_parent;
+    MyWindow*           _parent;
 
     /* Tableau d'onglets */
 
-    QTabWidget          *_tabConnexion;
-    QWidget             *_page1;
-    QWidget             *_page2;
+    QTabWidget*         _tabConnexion;
+    QWidget*            _page1;
+    QWidget*            _page2;
 
     /* Boutons + Fields + Labels pour la connexion */
 
-    QPushButton         *_co;
-    QPushButton         *_CoQuit;
+    QPushButton*        _co;
+    QPushButton*        _CoQuit;
 
     QLineEdit*          _loginEdit;
     QLineEdit*          _passwEdit;
@@ -79,8 +68,8 @@ private:
 
     /* Boutons + Fields + Labels pour l'inscription */
 
-    QPushButton         *_su;
-    QPushButton         *_SuQuit;
+    QPushButton*        _su;
+    QPushButton*        _SuQuit;
 
     QLineEdit*          _loginSuEdit;
     QLineEdit*          _passw1SuEdit;

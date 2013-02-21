@@ -20,14 +20,16 @@ SOURCES +=      main.cpp \
                 Basic.cpp \
                 AccWindow.cpp \
                 Store.cpp \
-                GamesWindow.cpp
+                GamesWindow.cpp \
+    ClassWindow.cpp
 
 HEADERS +=      Network.h \
                 MyWindow.h \ 
                 AccWindow.h \
                 Store.h \
                 Define.h \
-                GamesWindow.h
+                GamesWindow.h \
+    ClassWindow.h
 
 
 FORMS    +=

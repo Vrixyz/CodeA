@@ -4,6 +4,7 @@ AccWindow::AccWindow(int size_x, int size_y, MyWindow *parent) : QDialog(parent,
 {
     _parent = parent;
     setFixedSize(size_x, size_y);
+//    setStyleSheet("QWidget { background-image: url(img/bg-accwin.png); }");
 
     setTab();
     setCoPage();
@@ -21,6 +22,9 @@ void    AccWindow::setTab()
 
     _page1 = new QWidget;
     _page2 = new QWidget;
+
+//    _page1->setStyleSheet("QWidget { background-image: url(img/bg-accwin.png); }");
+//    _page2->setStyleSheet("QWidget { background-image: url(img/bg-accwin.png); }");
 
     _tabConnexion->addTab(_page1, "Connexion");
     _tabConnexion->addTab(_page2, "Inscription");
@@ -159,10 +163,10 @@ void    AccWindow::creatFields4SuPage()
     _passw1SuEdit->setEchoMode(QLineEdit::Password);
     _passw2SuEdit->setEchoMode(QLineEdit::Password);
 
-    _loginSuLabel->setGeometry(30, 40,160, 30);
-    _passw1SuLabel->setGeometry(30, 70, 160, 30);
-    _passw2SuLabel->setGeometry(30, 100, 160, 30);
-    _mailLabel->setGeometry(30, 130, 160, 30);
+    _loginSuLabel->setGeometry(30, 40,120, 30);
+    _passw1SuLabel->setGeometry(30, 70, 120, 30);
+    _passw2SuLabel->setGeometry(30, 100, 120, 30);
+    _mailLabel->setGeometry(30, 130, 120, 30);
 
     _loginSuEdit->setGeometry(160, 40, 210, 30);
     _passw1SuEdit->setGeometry(160, 70, 210, 30);
@@ -186,9 +190,9 @@ void    AccWindow::creatFields4CoPage()
     _passwEdit->setEchoMode(QLineEdit::Password);
 
     _loginEdit->setGeometry(150, 80, 180, 30);
-    _loginLabel->setGeometry(60, 80, 190, 30);
+    _loginLabel->setGeometry(60, 80, 90, 30);
     _passwEdit->setGeometry(150, 130, 180, 30);
-    _passwLabel->setGeometry(60, 130, 190, 30);
+    _passwLabel->setGeometry(60, 130, 90, 30);
 
     _loginLabel->setBuddy(_loginEdit);
     _passwLabel->setBuddy(_passwEdit);

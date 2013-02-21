@@ -12,18 +12,7 @@
 #include "Network.h"
 #include "Store.h"
 
-#include <QListWidgetItem>
-#include <QApplication>
-#include <QHBoxLayout>
-#include <QPushButton>
-#include <QListWidget>
-#include <QTcpSocket>
-#include <QLineEdit>
-#include <QWidget>
-#include <QDialog>
-#include <QLabel>
-#include <QList>
-#include <QFont>
+#include <QtGui>
 
 class Network;
 

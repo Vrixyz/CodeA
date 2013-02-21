@@ -16,6 +16,12 @@ void    AccWindow::setCoPage()
 {
     creatFields4CoPage();
 
+    _CoQuit = new QPushButton("Quitter", this);
+    _CoQuit->setFont(QFont("", 12, 0));
+    _CoQuit->setGeometry(100, 320, 200, 40);
+    _CoQuit->setStyleSheet("color : #FFFFFF");
+    QObject::connect(_CoQuit, SIGNAL(clicked()), qApp, SLOT(quit()));
+
     _co = new QPushButton("Connexion", this);
     _co->setFont(QFont("", 12, 0));
     _co->setGeometry(100, 220, 200, 40);
@@ -27,12 +33,6 @@ void    AccWindow::setCoPage()
     _su->setGeometry(100, 270, 200, 40);
     _su->setStyleSheet("color : #FFFFFF");
     QObject::connect(_su, SIGNAL(clicked()), _parent, SLOT(setSuWindow()));
-
-    _CoQuit = new QPushButton("Quitter", this);
-    _CoQuit->setFont(QFont("", 12, 0));
-    _CoQuit->setGeometry(100, 320, 200, 40);
-    _CoQuit->setStyleSheet("color : #FFFFFF");
-    QObject::connect(_CoQuit, SIGNAL(clicked()), qApp, SLOT(quit()));
 }
 
 void    AccWindow::checkCo()

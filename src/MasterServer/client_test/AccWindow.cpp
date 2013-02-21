@@ -1,9 +1,10 @@
 #include "AccWindow.h"
 
-AccWindow::AccWindow(int size_x, int size_y, MyWindow *parent) : QDialog(parent, 0)
+AccWindow::AccWindow(int size_x, int size_y, MyWindow *parent) : QDialog(parent, Qt::FramelessWindowHint)
 {
     _parent = parent;
     setFixedSize(size_x, size_y);
+    setAttribute(Qt::WA_TranslucentBackground);
 //    setStyleSheet("QWidget { background-image: url(img/bg-accwin.png); }");
 
     setTab();
@@ -23,7 +24,7 @@ void    AccWindow::setTab()
     _page1 = new QWidget;
     _page2 = new QWidget;
 
-//    _page1->setStyleSheet("QWidget { background-image: url(img/bg-accwin.png); }");
+    _page1->setStyleSheet("QWidget { background-image: url(img/bg-accwin.png); }");
 //    _page2->setStyleSheet("QWidget { background-image: url(img/bg-accwin.png); }");
 
     _tabConnexion->addTab(_page1, "Connexion");
@@ -38,11 +39,13 @@ void    AccWindow::setCoPage()
     _co = new QPushButton("Connexion", _page1);
     _co->setFont(QFont("", 12, 0));
     _co->setGeometry(100, 220, 200, 40);
+    _co->setStyleSheet("color : #FFFFFF");
     QObject::connect(_co, SIGNAL(clicked()), this, SLOT(checkCo()));
 
     _CoQuit = new QPushButton("Quitter", _page1);
     _CoQuit->setFont(QFont("", 12, 0));
     _CoQuit->setGeometry(100, 270, 200, 40);
+    _CoQuit->setStyleSheet("color : #FFFFFF");
     QObject::connect(_CoQuit, SIGNAL(clicked()), qApp, SLOT(quit()));
 }
 
@@ -184,15 +187,18 @@ void    AccWindow::creatFields4CoPage()
     // Creations des deux labels et des deux champs de saisie
     _loginEdit = new QLineEdit(_page1);
     _passwEdit = new QLineEdit(_page1);
-    _loginLabel = new QLabel("&Login:", _page1);
-    _passwLabel = new QLabel("&Password:", _page1);
+    _loginLabel = new QLabel("<font color=\"#FFFFFF\">&Login</font>:", _page1);
+    _passwLabel = new QLabel("<font color=\"#FFFFFF\">&Password:</font>", _page1);
 
     _passwEdit->setEchoMode(QLineEdit::Password);
-
     _loginEdit->setGeometry(150, 80, 180, 30);
     _loginLabel->setGeometry(60, 80, 90, 30);
     _passwEdit->setGeometry(150, 130, 180, 30);
     _passwLabel->setGeometry(60, 130, 90, 30);
+
+
+    _loginLabel->setAttribute(Qt::WA_TranslucentBackground);
+    _passwLabel->setAttribute(Qt::WA_TranslucentBackground);
 
     _loginLabel->setBuddy(_loginEdit);
     _passwLabel->setBuddy(_passwEdit);

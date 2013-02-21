@@ -1,4 +1,6 @@
 #include "MyWindow.h"
+
+#include "SuWindow.h"
 #include "AccWindow.h"
 #include "GamesWindow.h"
 
@@ -6,6 +8,9 @@ MyWindow::MyWindow(int size_x, int size_y) : QWidget()
 {
     _dataNet = new Store();
     setFixedSize(size_x, size_y);
+    _suWindow = NULL;
+    _accWindow = NULL;
+    _gamesWindow = NULL;
 }
 
 MyWindow::~MyWindow()
@@ -14,9 +19,25 @@ MyWindow::~MyWindow()
 
 void    MyWindow::setGamesWindow()
 {
-    _coWindow->close();
+    _accWindow->hide();
     _gamesWindow = new GamesWindow(400, 400, this);
     _gamesWindow->show();
+}
+
+void    MyWindow::setSuWindow()
+{
+    _suWindow = new SuWindow(400, 400, this);
+    _suWindow->show();
+    _accWindow->hide();
+}
+
+void    MyWindow::setAccWindow()
+{
+    if (_accWindow == NULL)
+        _accWindow = new AccWindow(400, 400, this);
+    _accWindow->show();
+    if ((_suWindow != NULL) && _suWindow->isActiveWindow() == 1)
+        _suWindow->hide();
 }
 
 QDialog *MyWindow::getGamesWindow(void)
@@ -24,15 +45,14 @@ QDialog *MyWindow::getGamesWindow(void)
     return _gamesWindow;
 }
 
-void    MyWindow::setCoWindow(int x , int y)
+QDialog *MyWindow::getSuWindow(void)
 {
-    _coWindow = new AccWindow(x, y, this);
-    _coWindow->setFixedSize(x, y);
+    return _suWindow;
 }
 
-QDialog *MyWindow::getCoWindow(void)
+QDialog *MyWindow::getAccWindow(void)
 {
-    return _coWindow;
+    return _accWindow;
 }
 
 void    MyWindow::setDataNet(Store *dataNet)

@@ -1,21 +1,31 @@
 #include "GamesWindow.h"
 #include "Define.h"
 
-GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(parent, 0)
+GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(parent, Qt::FramelessWindowHint)
 {
     _parent = parent;
     setFixedSize(size_x, size_y);
 
+    setStyleSheet("QWidget { background-image: url(img/bg-accwin.png); }");
+
     _quit = new QPushButton("Quitter", this);
     _quit->setFont(QFont("", 12, 0));
+    _quit->setStyleSheet("color : #FFFFFF");
     _quit->setGeometry(100, 340, 200, 40);
     QObject::connect(_quit, SIGNAL(clicked()), qApp, SLOT(quit()));
 
     _list = new QListWidget(this);
     _list->setGeometry(10, 40, 380, 280);
+    _list->setAttribute(Qt::WA_TranslucentBackground);
+
+    QPalette Pal(palette());
+    Pal.setColor(QPalette::Background, Qt::black);
+    _list->setAutoFillBackground(true);
+    _list->setPalette(Pal);
 
     _servLabel = new QLabel(this, 0);
-    _servLabel->setText("Liste des Serveurs");
+    _servLabel->setFont(QFont("", 14, 0));
+    _servLabel->setText("<font color=\"#FFFFFF\">Liste des Serveurs</font>");
     _servLabel->setAlignment(Qt::AlignCenter);
     _servLabel->setGeometry(0, 0, 400, 40);
     _servLabel->show();

@@ -4,64 +4,35 @@ AccWindow::AccWindow(int size_x, int size_y, MyWindow *parent) : QDialog(parent,
 {
     _parent = parent;
     setFixedSize(size_x, size_y);
-    setAttribute(Qt::WA_TranslucentBackground);
-//    setStyleSheet("QWidget { background-image: url(img/bg-accwin.png); }");
-
-    setTab();
+    setStyleSheet("QWidget { background-image: url(img/bg-accwin.png); }");
     setCoPage();
-    setSuPage();
 }
 
 AccWindow::~AccWindow()
 {
 }
 
-void    AccWindow::setTab()
-{
-    _tabConnexion = new QTabWidget(this);
-    _tabConnexion->setGeometry(0, 0, 400, 400);
-
-    _page1 = new QWidget;
-    _page2 = new QWidget;
-
-    _page1->setStyleSheet("QWidget { background-image: url(img/bg-accwin.png); }");
-//    _page2->setStyleSheet("QWidget { background-image: url(img/bg-accwin.png); }");
-
-    _tabConnexion->addTab(_page1, "Connexion");
-    _tabConnexion->addTab(_page2, "Inscription");
-    _tabConnexion->show();
-}
-
 void    AccWindow::setCoPage()
 {
     creatFields4CoPage();
 
-    _co = new QPushButton("Connexion", _page1);
+    _co = new QPushButton("Connexion", this);
     _co->setFont(QFont("", 12, 0));
     _co->setGeometry(100, 220, 200, 40);
     _co->setStyleSheet("color : #FFFFFF");
     QObject::connect(_co, SIGNAL(clicked()), this, SLOT(checkCo()));
 
-    _CoQuit = new QPushButton("Quitter", _page1);
+    _su = new QPushButton("Inscription", this);
+    _su->setFont(QFont("", 12, 0));
+    _su->setGeometry(100, 270, 200, 40);
+    _su->setStyleSheet("color : #FFFFFF");
+    QObject::connect(_su, SIGNAL(clicked()), _parent, SLOT(setSuWindow()));
+
+    _CoQuit = new QPushButton("Quitter", this);
     _CoQuit->setFont(QFont("", 12, 0));
-    _CoQuit->setGeometry(100, 270, 200, 40);
+    _CoQuit->setGeometry(100, 320, 200, 40);
     _CoQuit->setStyleSheet("color : #FFFFFF");
     QObject::connect(_CoQuit, SIGNAL(clicked()), qApp, SLOT(quit()));
-}
-
-void    AccWindow::setSuPage()
-{
-    creatFields4SuPage();
-
-    _su = new QPushButton("Enregistrement", _page2);
-    _su->setFont(QFont("", 12, 0));
-    _su->setGeometry(100, 220, 200, 40);
-    QObject::connect(_su, SIGNAL(clicked()), this, SLOT(checkSu()));
-
-    _SuQuit = new QPushButton("Quitter", _page2);
-    _SuQuit->setFont(QFont("", 12, 0));
-    _SuQuit->setGeometry(100, 270, 200, 40);
-    QObject::connect(_SuQuit, SIGNAL(clicked()), qApp, SLOT(quit()));
 }
 
 void    AccWindow::checkCo()
@@ -85,29 +56,6 @@ void    AccWindow::checkCo()
 
     packet.pack((int)MasterData::Command::CONNECT_USER);
     MasterData::CoClient cli(toSendLogin, toSendPassw);
-    packet.pack(cli);
-
-    _parent->getDataNet()->getNetwork()->sendToServer(sbuf);
-
-    QObject::connect(_parent->getDataNet()->getNetwork()->getSock(), SIGNAL(readyRead()), this, SLOT(RecvInfosClient()));
-}
-
-void    AccWindow::checkSu()
-{
-    std::cout << std::endl << "TENTATIVE DE CREATION DE COMPTE";
-    std::cout << std::endl << "Login : " << _loginSuEdit->text().toUtf8().constData();
-    std::cout << std::endl << "Passw : " << _passw1SuEdit->text().toUtf8().constData();
-    std::cout << std::endl << "Passw : " << _passw2SuEdit->text().toUtf8().constData();
-    std::cout << std::endl << "AMail : " << _mailEdit->text().toUtf8().constData() << std::endl;
-
-    _parent->getDataNet()->setNetwork(new Network("127.0.0.1", _parent->getPort()));
-    _parent->getDataNet()->getNetwork()->connectToServer();
-
-    msgpack::sbuffer sbuf;
-    msgpack::packer<msgpack::sbuffer> packet(&sbuf);
-
-    packet.pack((int)MasterData::Command::REGISTER_USER);
-    MasterData::RegClient cli(_loginSuEdit->text().toUtf8().constData(), _passw1SuEdit->text().toUtf8().constData());
     packet.pack(cli);
 
     _parent->getDataNet()->getNetwork()->sendToServer(sbuf);
@@ -151,44 +99,13 @@ void    AccWindow::RecvInfosClient()
     }
 }
 
-void    AccWindow::creatFields4SuPage()
-{
-    // Creations des 4 labels et des 4 champs de saisie
-    _loginSuEdit = new QLineEdit(_page2);
-    _passw1SuEdit = new QLineEdit(_page2);
-    _passw2SuEdit = new QLineEdit(_page2);
-    _mailEdit = new QLineEdit(_page2);
-    _loginSuLabel = new QLabel("&Login:", _page2);
-    _passw1SuLabel = new QLabel("&Password:", _page2);
-    _passw2SuLabel = new QLabel("&Password (conf.):", _page2);
-    _mailLabel = new QLabel("&Mail:", _page2);
-
-    _passw1SuEdit->setEchoMode(QLineEdit::Password);
-    _passw2SuEdit->setEchoMode(QLineEdit::Password);
-
-    _loginSuLabel->setGeometry(30, 40,120, 30);
-    _passw1SuLabel->setGeometry(30, 70, 120, 30);
-    _passw2SuLabel->setGeometry(30, 100, 120, 30);
-    _mailLabel->setGeometry(30, 130, 120, 30);
-
-    _loginSuEdit->setGeometry(160, 40, 210, 30);
-    _passw1SuEdit->setGeometry(160, 70, 210, 30);
-    _passw2SuEdit->setGeometry(160, 100, 210, 30);
-    _mailEdit->setGeometry(160, 130, 210, 30);
-
-    _loginSuLabel->setBuddy(_loginSuEdit);
-    _passw1SuLabel->setBuddy(_passw1SuEdit);
-    _passw2SuLabel->setBuddy(_passw2SuEdit);
-    _mailLabel->setBuddy(_mailEdit);
-}
-
 void    AccWindow::creatFields4CoPage()
 {
     // Creations des deux labels et des deux champs de saisie
-    _loginEdit = new QLineEdit(_page1);
-    _passwEdit = new QLineEdit(_page1);
-    _loginLabel = new QLabel("<font color=\"#FFFFFF\">&Login</font>:", _page1);
-    _passwLabel = new QLabel("<font color=\"#FFFFFF\">&Password:</font>", _page1);
+    _loginEdit = new QLineEdit(this);
+    _passwEdit = new QLineEdit(this);
+    _loginLabel = new QLabel("<font color=\"#FFFFFF\">&Login</font>:", this);
+    _passwLabel = new QLabel("<font color=\"#FFFFFF\">&Password:</font>", this);
 
     _passwEdit->setEchoMode(QLineEdit::Password);
     _loginEdit->setGeometry(150, 80, 180, 30);

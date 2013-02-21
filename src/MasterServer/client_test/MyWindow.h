@@ -21,11 +21,13 @@ class MyWindow : public QWidget
     Q_OBJECT
 
 public:
+
     MyWindow(int, int);
     ~MyWindow();
 
-    void setCoWindow(int, int);
-    QDialog *getCoWindow(void);
+    QDialog *getGamesWindow(void);
+    QDialog *getAccWindow(void);
+    QDialog *getSuWindow(void);
 
     void setDataNet(Store*);
     Store *getDataNet(void);
@@ -33,14 +35,22 @@ public:
     void setPort(int);
     int getPort(void);
 
+public slots:
+
     void setGamesWindow();
-    QDialog *getGamesWindow(void);
+    void setAccWindow();
+    void setSuWindow();
 
 private:
-    QDialog *_coWindow;
-    QDialog *_gamesWindow;
-    Store   *_dataNet;
+
     int _port;
+
+    QDialog *_accWindow;
+    QDialog *_suWindow;
+    QDialog *_gamesWindow;
+
+    Store   *_dataNet;
+
 };
 
 #endif // MYWINDOW_H

@@ -8,11 +8,16 @@ class ClassWindow : public QDialog
     Q_OBJECT
 
 public:
+
     ClassWindow(int, int, MyWindow*);
     ~ClassWindow();
+
 public slots:
+
 private:
+
     MyWindow*           _parent;
+
 };
 
 #endif // CLASSWINDOW_H

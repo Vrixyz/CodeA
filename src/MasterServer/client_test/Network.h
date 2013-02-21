@@ -8,18 +8,8 @@
 #include <iostream>
 #include <list>
 
-#include <QListWidgetItem>
-#include <QApplication>
-#include <QHBoxLayout>
-#include <QPushButton>
-#include <QListWidget>
 #include <QTcpSocket>
-#include <QLineEdit>
-#include <QWidget>
-#include <QDialog>
-#include <QLabel>
-#include <QList>
-#include <QFont>
+#include <QtGui>
 
 #include <msgpack.hpp>
 
@@ -35,17 +25,23 @@ class Network : public QObject
     Q_OBJECT
 
 public:
+
     Network(QString, int);
     ~Network();
     void connectToServer();
     void sendToServer(const msgpack::sbuffer&);
     QTcpSocket *getSock() {return &soc;}
+
 public slots:
+
    QByteArray    ReceiveFromServer();
+
 private:
+
     int port;
     QString host;
     QTcpSocket soc;
+
 };
 
 #endif // NETWORK_H

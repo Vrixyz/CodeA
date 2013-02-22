@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Jan 02 13:00:00 2013 thierry berger
-// Last update Tue Feb  5 12:33:21 2013 mathieu leurquin
+// Last update Thu Feb 21 15:57:31 2013 mathieu leurquin
 //
 
 #ifndef SERVER_I_UNIT_HPP_
@@ -13,7 +13,6 @@
 
 #include "Player.hpp"
 #include "Object.hpp"
-
 
 namespace Server
 {

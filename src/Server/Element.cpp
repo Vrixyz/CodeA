@@ -5,9 +5,10 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 17:53:20 2012 thierry berger
-// Last update Wed Dec 12 12:28:20 2012 mathieu leurquin
+// Last update Thu Feb 21 15:51:43 2013 mathieu leurquin
 //
 
+#include "World.hpp"
 #include "Element.hpp"
 
 b2Body*	Server::Element::setBody(BitField *b, float width, float height, int x, int y)

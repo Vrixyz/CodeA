@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Tue Sep 18 10:58:04 2012 mathieu leurquin
-// Last update Tue Dec 18 16:22:50 2012 mathieu leurquin
+// Last update Thu Feb 21 12:57:47 2013 mathieu leurquin
 //
 
 #ifndef SERVER_BITFIELD_HPP
@@ -26,6 +26,7 @@ namespace Server
       TEAM1_BULLET   = 16,
       TEAM1_SHIELD   = 32,
       TEAM1_UNIT     = 64,
+      PORTAL	     = 128	
     };
     
     BitField(uint16_t w, uint16_t c) :  what(w), collide(c) {}

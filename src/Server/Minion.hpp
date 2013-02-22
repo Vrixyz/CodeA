@@ -1,15 +1,15 @@
 //
-// Unit.hpp for  in /home/leurqu_m//Documents/tek3/pfa/CodeA/src/Server
+// Minion.hpp for  in /home/leurqu_m//Documents/CodeA/src/Server
 // 
 // Made by mathieu leurquin
 // Login   <leurqu_m@epitech.net>
 // 
-// Started on  Wed Sep 12 13:00:00 2012 mathieu leurquin
-// Last update Fri Feb 22 12:36:20 2013 mathieu leurquin
+// Started on  Fri Feb 22 10:39:04 2013 mathieu leurquin
+// Last update Fri Feb 22 12:36:32 2013 mathieu leurquin
 //
 
-#ifndef SERVER_UNIT_HPP
-# define SERVER_UNIT_HPP
+#ifndef SERVER_MINION_HPP
+# define SERVER_MINION_HPP
 
 #include <msgpack.hpp>
 #include "../GameData/Unit.hpp"
@@ -21,22 +21,17 @@
 namespace Server
 {
   class World;
-  class	Mage : public IUnit
+  class	Minion : public IUnit
   {
   public:
     GameData::Unit _data;
     b2Vec2 current;
     float rotation;
-    std::vector<float>spellTimer;
 
-    Mage(World& world, int id) : IUnit(world, id), _data(id, 10), current(0, 0), rotation(0) {
-      // timer used for fire
-      spellTimer.push_back(0);
-      // timer used for shield
-      spellTimer.push_back(0);
-      _data.health = 10;
+    Minion(World& world, int id) : IUnit(world, id), _data(id, 10), current(0, 0), rotation(0) {
+      _data.health = 2;
     }
-    virtual ~Mage() {}
+    virtual ~Minion() {}
 
     virtual void addPlayer(Player* p);
     virtual bool belongsToPlayer(int idPlayer) const;
@@ -49,7 +44,7 @@ namespace Server
     virtual void spell2(const GameData::CommandStruct::Shield arg);
 
 
-    virtual b2Body*	setBody(BitField *b);
+    virtual b2Body* setBody(BitField *b, float x, float y);
     const GameData::Unit& getData() const {return _data;}
     virtual void update(float elapsedMilliseconds);
     virtual void serialize(msgpack::packer<msgpack::sbuffer>& packet) const;

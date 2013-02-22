@@ -4,7 +4,7 @@ AccWindow::AccWindow(int size_x, int size_y, MyWindow *parent) : QDialog(parent,
 {
     _parent = parent;
     setFixedSize(size_x, size_y);
-    setStyleSheet("QWidget { background-image: url(img/bg-accwin.png); }");
+    setStyleSheet("QWidget { background-image: url(img/bg-test.png); }");
     setCoPage();
 }
 
@@ -16,22 +16,23 @@ void    AccWindow::setCoPage()
 {
     creatFields4CoPage();
 
-    _CoQuit = new QPushButton("Quitter", this);
+    _CoQuit = new QPushButton("", this);
     _CoQuit->setFont(QFont("", 12, 0));
     _CoQuit->setGeometry(100, 320, 200, 40);
-    _CoQuit->setStyleSheet("color : #FFFFFF");
+    _CoQuit->setStyleSheet("QWidget { background-image: url(img/quitter.png); border: 0px; }");
     QObject::connect(_CoQuit, SIGNAL(clicked()), qApp, SLOT(quit()));
 
-    _co = new QPushButton("Connexion", this);
+    _co = new QPushButton("", this);
     _co->setFont(QFont("", 12, 0));
     _co->setGeometry(100, 220, 200, 40);
-    _co->setStyleSheet("color : #FFFFFF");
+    _co->setStyleSheet("QWidget { background-image: url(img/connexion.png); border: 0px; }");
     QObject::connect(_co, SIGNAL(clicked()), this, SLOT(checkCo()));
 
-    _su = new QPushButton("Inscription", this);
+    _su = new QPushButton("", this);
     _su->setFont(QFont("", 12, 0));
     _su->setGeometry(100, 270, 200, 40);
     _su->setStyleSheet("color : #FFFFFF");
+    _su->setStyleSheet("QWidget { background-image: url(img/inscription.png); border: 0px; }");
     QObject::connect(_su, SIGNAL(clicked()), _parent, SLOT(setSuWindow()));
 }
 
@@ -104,18 +105,23 @@ void    AccWindow::creatFields4CoPage()
     // Creations des deux labels et des deux champs de saisie
     _loginEdit = new QLineEdit(this);
     _passwEdit = new QLineEdit(this);
-    _loginLabel = new QLabel("<font color=\"#FFFFFF\">&Login</font>:", this);
-    _passwLabel = new QLabel("<font color=\"#FFFFFF\">&Password:</font>", this);
+    _loginLabel = new QLabel("<font color=\"#000000\">&Login</font>:", this);
+    _passwLabel = new QLabel("<font color=\"#000000\">&Password:</font>", this);
 
     _passwEdit->setEchoMode(QLineEdit::Password);
-    _loginEdit->setGeometry(150, 80, 180, 30);
-    _loginLabel->setGeometry(60, 80, 90, 30);
-    _passwEdit->setGeometry(150, 130, 180, 30);
-    _passwLabel->setGeometry(60, 130, 90, 30);
 
+    _passwLabel->setGeometry(60, 160, 90, 30);
+    _loginLabel->setGeometry(60, 120, 90, 30);
+    _passwEdit->setGeometry(150, 160, 180, 30);
+    _loginEdit->setGeometry(150, 120, 180, 30);
 
     _loginLabel->setAttribute(Qt::WA_TranslucentBackground);
     _passwLabel->setAttribute(Qt::WA_TranslucentBackground);
+
+    _loginEdit->setStyleSheet("QWidget { background-image: url(img/login_co.png); border :0; color: black; } ");
+    _passwEdit->setStyleSheet("QWidget { background-image: url(img/pass_co.png); border :0; color: black; } ");
+    _loginEdit->setAlignment(Qt::AlignHCenter);
+    _passwEdit->setAlignment(Qt::AlignHCenter);
 
     _loginLabel->setBuddy(_loginEdit);
     _passwLabel->setBuddy(_passwEdit);

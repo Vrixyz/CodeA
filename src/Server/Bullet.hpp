@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 17:37:09 2012 thierry berger
-// Last update Wed Dec 12 12:28:21 2012 mathieu leurquin
+// Last update Thu Feb 21 16:17:38 2013 mathieu leurquin
 //
 
 #ifndef SERVER_BULLET_HPP
@@ -16,6 +16,7 @@
 #include "BitField.hpp"
 namespace Server
 {
+  class World;
   class Bullet : public Object
   {
   public:

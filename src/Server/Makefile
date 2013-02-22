@@ -5,13 +5,15 @@
 ## Login   <berger_t@epitech.net>
 ## 
 ## Started on  Fri Sep 14 10:58:16 2012 thierry berger
-## Last update Tue Feb  5 12:17:42 2013 mathieu leurquin
+## Last update Fri Feb 22 10:46:13 2013 mathieu leurquin
 ##
 
 SRC_SR	=	mainTest.cpp \
 		World.cpp \
 		Element.cpp \
+	 	Portal.cpp \
 		Mage.cpp \
+		Minion.cpp \
 		Bullet.cpp \
 		tcp_connection.cpp \
 		BitField.cpp \

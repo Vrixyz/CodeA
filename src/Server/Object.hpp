@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Mon Oct 29 16:47:27 2012 mathieu leurquin
-// Last update Wed Dec 12 11:15:34 2012 mathieu leurquin
+// Last update Thu Feb 21 16:09:30 2013 mathieu leurquin
 //
 
 #ifndef SERVER_OBJECT_HPP
@@ -86,7 +86,5 @@ namespace Server
     }
   };
 }
-
-#include "World.hpp"
 
 #endif

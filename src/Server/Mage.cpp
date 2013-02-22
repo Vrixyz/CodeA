@@ -5,9 +5,10 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 13:21:11 2012 thierry berger
-// Last update Tue Feb  5 12:33:52 2013 mathieu leurquin
+// Last update Fri Feb 22 12:45:08 2013 mathieu leurquin
 //
 
+#include "World.hpp"
 #include "Mage.hpp"
 
 b2Body*	Server::Mage::setBody(BitField *b)
@@ -105,12 +106,12 @@ void Server::Mage::spell1(const GameData::CommandStruct::Fire &arg)
   BitField *bullet;
   if (this->id == 0)
     {
-      bullet = new BitField(Server::BitField::TEAM1_BULLET, Server::BitField::TEAM2_UNIT | Server::BitField::OBSTACLE | Server::BitField::TEAM2_SHIELD);
+      bullet = new BitField(Server::BitField::TEAM1_BULLET, Server::BitField::TEAM2_UNIT | Server::BitField::OBSTACLE | Server::BitField::TEAM2_SHIELD | Server::BitField::PORTAL);
       std::cout<<"team 1"<<std::endl;
     }
   else
     {
-      bullet = new BitField(Server::BitField::TEAM2_BULLET, Server::BitField::TEAM1_UNIT | Server::BitField::OBSTACLE | Server::BitField::TEAM1_SHIELD);
+      bullet = new BitField(Server::BitField::TEAM2_BULLET, Server::BitField::TEAM1_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL);
       std::cout<<"team 2"<<std::endl;
     }
   Server::Bullet *b = _world.createBullet(10, this->getBody()->GetAngle(), this->getBody()->GetPosition(), arg.idUnit, bullet);
@@ -218,6 +219,7 @@ void Server::Mage::intraCollision(Object *o)
 
 void Server::Mage::intraCollisionUnit(Object *o)
 {
+  _data.health -= 1;
   std::cout<<"Unit:!:Collision with a unit and unit!"<<std::endl;
 }
 
@@ -228,6 +230,6 @@ void Server::Mage::intraCollisionElement(Object *o)
 
 void Server::Mage::intraCollisionBullet(Object *o)
 {
-  _data.health--;
+  _data.health -= 2;
   std::cout<<"Unit::Collision with a unit and bullet!"<<std::endl;
 }

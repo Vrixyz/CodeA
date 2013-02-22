@@ -5,9 +5,10 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Fri Sep 14 10:40:12 2012 thierry berger
-// Last update Fri Dec 28 18:49:02 2012 mathieu leurquin
+// Last update Thu Feb 21 16:17:26 2013 mathieu leurquin
 //
 
+#include "World.hpp"
 #include "Bullet.hpp"
 
 b2Body*	Server::Bullet::setBody(float angle, b2Vec2 position, BitField *b)

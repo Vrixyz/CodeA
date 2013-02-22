@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 10:46:49 2012 thierry berger
-// Last update Tue Feb  5 12:23:01 2013 mathieu leurquin
+// Last update Fri Feb 22 11:08:53 2013 mathieu leurquin
 //
 
 #ifndef SERVER_WORLD_HPP
@@ -22,11 +22,8 @@
 #include "../GameData/Information.hpp"
 #include "../GameData/Serializable.hpp"
 #include "myContactListener.hpp"
-#include "Element.hpp"
-#include "Bullet.hpp"
-#include "Mage.hpp"
-#include "IUnit.hpp"
 #include "BitField.hpp"
+#include "Player.hpp"
 #include <list>
 #include <set>
 #define VELOCITY_ITERATION 6
@@ -35,12 +32,13 @@
 
 namespace Server
 {
-  class Player;
-  class Mage;
-  class IUnit;
   class Element;
+  class IUnit;
+  class Portal;
+  class Mage;
   class Bullet;
-  // class MyContactListener;
+  class Minion;
+ // class MyContactListener;
   class	World : GameData::Serializable
   {
   public:
@@ -65,7 +63,9 @@ namespace Server
     void run();
     void handleContact(b2Body object1, b2Body object2);
     Player& createPlayer(int id);
-    Server::Mage* createUnit(BitField *b, Player* p = NULL);
+    Server::Mage* createMage(BitField *b, Player* p = NULL);
+    Server::Portal* createPortal(BitField *b, Player* player);
+    Server::Minion* createMinion(BitField *b, Player* player, float x, float y);
     Server::Element* createElement(bool walkable, float width, float height, BitField *b, int idUnit);
     Server::Bullet* createBullet(int damage, float angle, b2Vec2 position, int idUnit, BitField *b);
     Player* getPlayer(int id);
@@ -102,7 +102,12 @@ namespace Server
   };
 }
 
-#include "Player.hpp"
+#include "IUnit.hpp"
+#include "Element.hpp"
+#include "Portal.hpp"
+#include "Mage.hpp"
+#include "Bullet.hpp"
+#include "Minion.hpp"
 // #include "myContactListener.hpp"
 
 #endif

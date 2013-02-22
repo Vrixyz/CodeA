@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:20:38 2012 mathieu leurquin
-// Last update Thu Sep 13 13:29:31 2012 thierry berger
+// Last update Fri Feb 22 12:38:06 2013 mathieu leurquin
 //
 
 #ifndef SERVER_PLAYER_HPP
@@ -14,16 +14,17 @@
 #include <list>
 #include <Box2D/Box2D.h>
 
-#include "World.hpp"
-
 namespace Server
 {
   class	Player
   {
   public:
     int id;
-
-    Player(World& world, int playerId) : id(playerId) {}
+    int score;
+    Player(int playerId) : id(playerId) 
+    {
+      score = 0;
+    }
     virtual ~Player() {}
 
     virtual void* serialize(int& finalLength) const {return 0;};

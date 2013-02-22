@@ -5,11 +5,13 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Tue Feb  5 12:34:24 2013 mathieu leurquin
+// Last update Fri Feb 22 12:46:41 2013 mathieu leurquin
 //
 
 #include "World.hpp"
 #include <cmath>
+#include <stdlib.h>
+#include <time.h>
 
 MyContactListener Server::World::myContactListenerInstance;
 
@@ -20,18 +22,18 @@ Server::World::~World()
 
 void	Server::World::init(int width, int height)
 {
-  Server::Mage *u;
- 
+  srand (time(NULL));
   // // FIXME: we must create the player and the unit at the connection !
   // BitField *b = new  BitField(Server::BitField::MAGE, Server::BitField::MAGE);
     
   BitField *obs = new BitField(Server::BitField::OBSTACLE, Server::BitField::TEAM1_UNIT | Server::BitField::TEAM2_UNIT 
-			       | Server::BitField::TEAM1_BULLET | Server::BitField::TEAM2_BULLET );
+			       | Server::BitField::TEAM1_BULLET | Server::BitField::TEAM2_BULLET | Server::BitField::PORTAL);
   
   // u = this->createUnit(b);
   // u->addPlayer(&this->createPlayer(0));
 
   this->createElement(true, 100, 100, obs, -1);
+  
   // this->createElement(true, 1, 10, shield);
   
   // _physicWorld.SetContactListener(&World::myContactListenerInstance);
@@ -105,13 +107,13 @@ void	Server::World::run()
 
 Server::Player&	Server::World::createPlayer(int id)
 {
-  Player* p = new Player(*this, id);
+  Player* p = new Player(id);
 
   players.push_back(p);
   return *p;
 }
 
-Server::Mage* Server::World::createUnit(BitField *b, Player* p)
+Server::Mage* Server::World::createMage(BitField *b, Player* p)
 {
   Server::Mage* u = new Server::Mage(*this, (int)units.size());
   u->setBody(b);
@@ -120,6 +122,27 @@ Server::Mage* Server::World::createUnit(BitField *b, Player* p)
   units.push_back(u);
   return u;
 }
+
+Server::Minion *Server::World::createMinion(BitField *b, Player* p, float x, float y)
+{
+  Minion* m = new Server::Minion(*this, (int)units.size());
+  m->setBody(b, x, y);
+  if (p != NULL)
+    m->addPlayer(p);
+  units.push_back(m);
+  return m;
+}
+
+Server::Portal* Server::World::createPortal(BitField *b, Player* player)
+{
+  Server::Portal* p = new Server::Portal(*this, (int)units.size());
+  
+  p->setBody(b, rand() % 500 - 250, rand() % 500 - 250);
+  if (p != NULL)
+    p->addPlayer(player);
+  units.push_back(p);
+  return p;
+} 
 
 Server::Element* Server::World::createElement(bool walkable, float width, float height, BitField *b, int idU)
 {
@@ -436,24 +459,28 @@ void	Server::World::addPlayer(int idClient)
 	return ; // TODO: send to client that he is already a player.
     }
 
-  //check friendly or not
+  //FOR MAGE VS MAGE TEST
+  Player p = createPlayer(idClient);
+ 
   BitField *b;
-  if (players.size() == 0)
+  if (players.size() == 1)
     {
-      b = new  BitField(Server::BitField::TEAM1_UNIT, Server::BitField::TEAM2_BULLET | Server::BitField::TEAM2_UNIT | Server::BitField::OBSTACLE);
-      std::cout<<"team1"<<std::endl;
+      b = new  BitField(Server::BitField::TEAM1_UNIT, Server::BitField::TEAM2_BULLET | Server::BitField::TEAM2_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL);
+      createMage(b, &(p));
+      std::cout<<"team1"<<std::endl;      
     }
   else
     {
-      b = new  BitField(Server::BitField::TEAM2_UNIT, Server::BitField::TEAM1_BULLET | Server::BitField::TEAM1_UNIT | Server::BitField::OBSTACLE);
-        std::cout<<"team2"<<std::endl;
+      BitField *bp = new  BitField(Server::BitField::PORTAL, Server::BitField::TEAM2_BULLET | Server::BitField::TEAM2_UNIT | Server::BitField::TEAM1_BULLET | Server::BitField::TEAM1_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL);
+      createPortal(bp, &(p));
+      createPortal(bp, &(p));
+      createPortal(bp, &(p));
     }
 
-
+  
   // TODO: we might want to wait all players before creating the units
-  this->createUnit(b, &(createPlayer(idClient)));
-
-
+     //createPortal(b, &(createPlayer(idClient)));
+  // createMage(b, &(p));
   // FIXME: use a fucking QueueSendToServer !
   msgpack::sbuffer sbuf;
   msgpack::packer<msgpack::sbuffer> packet(&sbuf);

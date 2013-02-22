@@ -5,7 +5,7 @@ SuWindow::SuWindow(int size_x, int size_y, MyWindow *parent) : QDialog(parent, Q
 {
     _parent = parent;
     setFixedSize(size_x, size_y);
-    setStyleSheet("QWidget { background-image: url(img/bg-accwin.png); }");
+    setStyleSheet("QWidget { background-image: url(img/bg-test.png); }");
     setSuPage();
 }
 
@@ -17,22 +17,22 @@ void    SuWindow::setSuPage()
 {
     creatFields4SuPage();
 
-    _su = new QPushButton("Enregistrement", this);
+    _su = new QPushButton("", this);
     _su->setFont(QFont("", 12, 0));
     _su->setGeometry(100, 220, 200, 40);
-    _su->setStyleSheet("color : #FFFFFF");
+    _su->setStyleSheet("QWidget { background-image: url(img/enregistrement.png); border :0; } ");
     QObject::connect(_su, SIGNAL(clicked()), this, SLOT(checkSu()));
 
-    _back = new QPushButton("Retour", this);
+    _back = new QPushButton("", this);
     _back->setFont(QFont("", 12, 0));
     _back->setGeometry(100, 270, 200, 40);
-    _back->setStyleSheet("color : #FFFFFF");
+    _back->setStyleSheet("QWidget { background-image: url(img/retour.png); border :0; } ");
     QObject::connect(_back, SIGNAL(clicked()), _parent, SLOT(setAccWindow()));
 
-    _SuQuit = new QPushButton("Quitter", this);
+    _SuQuit = new QPushButton("", this);
     _SuQuit->setFont(QFont("", 12, 0));
     _SuQuit->setGeometry(100, 320, 200, 40);
-    _SuQuit->setStyleSheet("color : #FFFFFF");
+    _SuQuit->setStyleSheet("QWidget { background-image: url(img/quitter.png); border :0; } ");
     QObject::connect(_SuQuit, SIGNAL(clicked()), qApp, SLOT(quit()));
 }
 
@@ -66,10 +66,10 @@ void    SuWindow::creatFields4SuPage()
     _passw1SuEdit = new QLineEdit(this);
     _passw2SuEdit = new QLineEdit(this);
     _mailEdit = new QLineEdit(this);
-    _loginSuLabel = new QLabel("<font color=\"#FFFFFF\">&Login</font>:", this);
-    _passw1SuLabel = new QLabel("<font color=\"#FFFFFF\">&Password</font>:", this);
-    _passw2SuLabel = new QLabel("<font color=\"#FFFFFF\">&Password (conf.)</font>:", this);
-    _mailLabel = new QLabel("<font color=\"#FFFFFF\">&Mail:</font>", this);
+    _loginSuLabel = new QLabel("<font color=\"#000000\">&Login</font>:", this);
+    _passw1SuLabel = new QLabel("<font color=\"#000000\">&Password</font>:", this);
+    _passw2SuLabel = new QLabel("<font color=\"#000000\">&Password (conf.)</font>:", this);
+    _mailLabel = new QLabel("<font color=\"#000000\">&Mail:</font>", this);
 
     _passw1SuEdit->setEchoMode(QLineEdit::Password);
     _passw2SuEdit->setEchoMode(QLineEdit::Password);
@@ -79,20 +79,31 @@ void    SuWindow::creatFields4SuPage()
     _passw2SuLabel->setAttribute(Qt::WA_TranslucentBackground);
     _mailLabel->setAttribute(Qt::WA_TranslucentBackground);
 
-    _loginSuLabel->setGeometry(30, 50,120, 30);
-    _passw1SuLabel->setGeometry(30, 85, 120, 30);
-    _passw2SuLabel->setGeometry(30, 120, 120, 30);
-    _mailLabel->setGeometry(30, 155, 120, 30);
 
-    _loginSuEdit->setGeometry(160, 50, 210, 30);
-    _passw1SuEdit->setGeometry(160, 85, 210, 30);
-    _passw2SuEdit->setGeometry(160, 120, 210, 30);
-    _mailEdit->setGeometry(160, 155, 210, 30);
+    _loginSuLabel->setGeometry(30, 100,120, 25);
+    _passw1SuLabel->setGeometry(30, 130, 120, 25);
+    _passw2SuLabel->setGeometry(30, 160, 120, 25);
+    _mailLabel->setGeometry(30, 190, 120, 25);
+
+    _loginSuEdit->setGeometry(160, 100, 210, 25);
+    _passw1SuEdit->setGeometry(160, 130, 210, 25);
+    _passw2SuEdit->setGeometry(160, 160, 210, 25);
+    _mailEdit->setGeometry(160, 190, 210, 25);
 
     _loginSuLabel->setBuddy(_loginSuEdit);
     _passw1SuLabel->setBuddy(_passw1SuEdit);
     _passw2SuLabel->setBuddy(_passw2SuEdit);
     _mailLabel->setBuddy(_mailEdit);
+
+    _loginSuEdit->setAlignment(Qt::AlignHCenter);
+    _passw1SuEdit->setAlignment(Qt::AlignHCenter);
+    _passw2SuEdit->setAlignment(Qt::AlignHCenter);
+    _mailEdit->setAlignment(Qt::AlignHCenter);
+
+    _loginSuEdit->setStyleSheet("QWidget { background-image: url(img/login_su.png); border :0; color: black; } ");
+    _passw1SuEdit->setStyleSheet("QWidget { background-image: url(img/pass1_su.png); border :0; color: black; } ");
+    _passw2SuEdit->setStyleSheet("QWidget { background-image: url(img/pass2_su.png); border :0; color: black; } ");
+    _mailEdit->setStyleSheet("QWidget { background-image: url(img/mail_su.png); border :0; color: black; } ");
 }
 
 void    SuWindow::RecvInfosClient()

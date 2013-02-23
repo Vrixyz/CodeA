@@ -42,7 +42,7 @@ void	SQLManager::dcDB()
 int	SQLManager::createUsersTable()
 {
   char		*zErrMsg;
-  std::string requete0 = "CREATE TABLE user (login varchar(30), pass varchar(30));";
+  std::string requete0 = "CREATE TABLE user (login varchar(30) unique, pass varchar(30));";
 
   if (sqlite3_exec(_db, requete0.c_str(), 0, 0, &zErrMsg) != SQLITE_OK)
     {

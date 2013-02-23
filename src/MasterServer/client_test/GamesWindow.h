@@ -16,10 +16,12 @@ public:
     void createTabNews();
     void createTabServers();
     void createTabSucces();
+    void RecvList(QByteArray res);
+    void RecvError(QByteArray res);
+    void RecvServer(QByteArray res);
 
 public slots:
-
-    void RecvList();
+    void RecvData();
     void tryToCoGame();
 
 private:

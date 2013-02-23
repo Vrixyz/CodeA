@@ -1,37 +1,17 @@
 #include "GamesWindow.h"
 #include "Define.h"
 
-GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(parent, Qt::FramelessWindowHint)
+GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(parent, 0/*Qt::FramelessWindowHint*/)
 {
+    msgpack::sbuffer sbuf;
+    msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+
     _parent = parent;
     setFixedSize(size_x, size_y);
 
-    setStyleSheet("QWidget { background-image: url(img/bg-accwin.png); }");
+    setStyleSheet("QWidget { background-image: url(img/mainwindow.png); }");
 
-    _quit = new QPushButton("Quitter", this);
-    _quit->setFont(QFont("", 12, 0));
-    _quit->setStyleSheet("color : #FFFFFF");
-    _quit->setGeometry(100, 340, 200, 40);
-    QObject::connect(_quit, SIGNAL(clicked()), qApp, SLOT(quit()));
-
-    _list = new QListWidget(this);
-    _list->setGeometry(10, 40, 380, 280);
-    _list->setAttribute(Qt::WA_TranslucentBackground);
-
-    QPalette Pal(palette());
-    Pal.setColor(QPalette::Background, Qt::black);
-    _list->setAutoFillBackground(true);
-    _list->setPalette(Pal);
-
-    _servLabel = new QLabel(this, 0);
-    _servLabel->setFont(QFont("", 14, 0));
-    _servLabel->setText("<font color=\"#FFFFFF\">Liste des Serveurs</font>");
-    _servLabel->setAlignment(Qt::AlignCenter);
-    _servLabel->setGeometry(0, 0, 400, 40);
-    _servLabel->show();
-
-    msgpack::sbuffer sbuf;
-    msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+    setTabAndAll();
 
     packet.pack((int)MasterData::Command::ASK_SERVER_LIST);
 
@@ -43,6 +23,44 @@ GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(par
 
 GamesWindow::~GamesWindow()
 {
+}
+
+void    GamesWindow::setTabAndAll()
+{
+    _tab = new QTabWidget(this);
+
+    _tab->setGeometry(50, 100, 425, 400);
+    createTabNews();
+    createTabServers();
+    createTabSucces();
+
+    _list = new QListWidget(_serversPage);
+    _list->setGeometry(10, 40, 380, 280);
+    _list->setAttribute(Qt::WA_TranslucentBackground);
+
+    QPalette Pal(palette());
+    Pal.setColor(QPalette::Background, Qt::white);
+    _list->setAutoFillBackground(true);
+    _list->setPalette(Pal);
+}
+
+void    GamesWindow::createTabNews()
+{
+    _newsPage = new QWidget(_tab);
+    _newsPage->setStyleSheet("QWidget { background-image: url(img/bg-accwin.png); }");
+    _tab->addTab(_newsPage, "News");
+}
+
+void    GamesWindow::createTabServers()
+{
+    _serversPage = new QWidget(_tab);
+    _tab->addTab(_serversPage, "Servers");
+}
+
+void    GamesWindow::createTabSucces()
+{
+    _succesPage = new QWidget(_tab);
+    _tab->addTab(_succesPage, "News");
 }
 
 void    GamesWindow::tryToCoGame()

@@ -12,10 +12,12 @@ public:
     GamesWindow(int, int, MyWindow*);
     ~GamesWindow();
     void addToList(int, std::string);
+    void RecvList(QByteArray res);
+    void RecvError(QByteArray res);
+    void RecvServer(QByteArray res);
 
 public slots:
-
-    void RecvList();
+    void RecvData();
     void tryToCoGame();
 
 private:

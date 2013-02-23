@@ -37,7 +37,7 @@ GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(par
 
     _parent->getDataNet()->getNetwork()->sendToServer(sbuf);
 
-    QObject::connect(_parent->getDataNet()->getNetwork()->getSock(), SIGNAL(readyRead()), this, SLOT(RecvList()));
+    QObject::connect(_parent->getDataNet()->getNetwork()->getSock(), SIGNAL(readyRead()), this, SLOT(RecvData()));
     QObject::connect(_list, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(tryToCoGame()));
 }
 
@@ -60,46 +60,108 @@ void    GamesWindow::tryToCoGame()
     for (unsigned int i = 0; i < toPars.size() && (toPars[i] <= '9' && toPars[i] >= '0'); i++)
         toSend += toPars[i];
     nbGame = stringToInt(toSend);
-    std::cout << "TRY DE CONNEXION A LA GAME ---> " << nbGame << std::endl;
+
+
+    // ON ENVOI AU SERVEUR LE CHOIX DE GAME
+    msgpack::sbuffer sbuf;
+    msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+
+    packet.pack((int)MasterData::Command::REQUEST_SERVER);
+    packet.pack(nbGame);
+
+    _parent->getDataNet()->getNetwork()->sendToServer(sbuf);
+    //    std::cout << "TRY DE CONNEXION A LA GAME ---> " << nbGame << std::endl;
 }
 
-void    GamesWindow::RecvList()
+void    GamesWindow::RecvList(QByteArray res)
+{
+  msgpack::unpacked result;
+  msgpack::unpacker pac;
+  
+  pac.reserve_buffer(res.length());
+  memcpy(pac.buffer(), res.data(), res.length());
+  pac.buffer_consumed(res.length());
+  std::cout << "RECEPTION DE LA LIST DE SERV" << std::endl;
+  if (pac.next(&result))
+    {
+      MasterData::Serv serv(0, "");
+      while (pac.next(&result))
+	{
+	  result.get().convert(&serv);
+	  addToList(serv.id, serv.name);
+	  std::cout << "ID " << serv.id << " NAME " << serv.name << std::endl;
+	}
+      _parent->getDataNet()->getNetwork()->getSock()->disconnect();
+      _list->show();
+    }
+}
+
+void    GamesWindow::RecvError(QByteArray res)
+{
+  msgpack::unpacked result;
+  msgpack::unpacker pac;
+  
+  pac.reserve_buffer(res.length());
+  memcpy(pac.buffer(), res.data(), res.length());
+  pac.buffer_consumed(res.length());
+  if (pac.next(&result))
+    {
+      MasterData::ErrorMsg err("");
+      pac.next(&result);
+      result.get().convert(&err);
+      std::cerr << "Erreur : " << err.msg << std::endl;
+    }
+}
+
+void    GamesWindow::RecvServer(QByteArray res)
+{
+  msgpack::unpacked result;
+  msgpack::unpacker pac;
+  
+  pac.reserve_buffer(res.length());
+  memcpy(pac.buffer(), res.data(), res.length());
+  pac.buffer_consumed(res.length());
+  if (pac.next(&result))
+    {
+      pac.next(&result);
+      //PARSER LA STRUCT D'infos SERVEUR ET FAIRE LE BORDEL QUE DORIAN DOIT FAIRE!
+      //
+      //result.get().convert(&idData);
+    }
+}
+
+
+void    GamesWindow::RecvData()
 {
     QByteArray res;
     msgpack::unpacked result;
     msgpack::unpacker pac;
 
     res = _parent->getDataNet()->getNetwork()->ReceiveFromServer();
-    std::cout << "LIST SIZE " << res.length() << std::endl;
-
     pac.reserve_buffer(res.length());
     memcpy(pac.buffer(), res.data(), res.length());
     pac.buffer_consumed(res.length());
     if (pac.next(&result))
     {
-        int idData;
-        result.get().convert(&idData);
-        if (idData == MasterData::Command::SEND_SERVER_LIST)
-        {
-            MasterData::Serv serv(0, "");
-            while (pac.next(&result))
-            {
-                result.get().convert(&serv);
-                addToList(serv.id, serv.name);
-                std::cout << "ID " << serv.id << " NAME " << serv.name << std::endl;
-            }
-            _parent->getDataNet()->getNetwork()->getSock()->disconnect();
-            _list->show();
-        }
-        else if (idData == MasterData::Command::ERROR)
-        {
-            MasterData::ErrorMsg err("");
-            pac.next(&result);
-            result.get().convert(&err);
-            std::cerr << "Erreur connexion : " << err.msg << std::endl;
-        }
+      int idData;
+      result.get().convert(&idData);
+      switch(idData)
+	{
+	case MasterData::Command::SEND_SERVER_LIST:
+	  RecvList(res);
+	  break;
+	case MasterData::Command::INFOS_SERVER:
+	  RecvServer(res);
+	  break;
+	case MasterData::Command::ERROR:
+	  RecvError(res);
+	  break;
+	default:
+	  std::cerr << "Command inconnu" << std::endl;
+	  break;
+	};
     }
-
+    
 }
 
 void    GamesWindow::addToList(int id, std::string name)

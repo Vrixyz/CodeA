@@ -42,7 +42,9 @@ class Server
   int	OdlerFd(void);
   void	sendCoSucces(User *);
   void	sendFailure(Socket *, std::string);
-
+  void	BroadcastMsg(User *, std::string);
+  GameServer* getServById(int id);
+  void	JoinServer(User* u, std::string info);
 
  protected:
   SQLManager*			_sql;

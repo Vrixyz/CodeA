@@ -13,7 +13,7 @@ int	main(int ac, char **av)
   if (server->Initialisation() == EXIT_ERROR)
     return EXIT_FAILURE;
   std::cout << "SUCCES" << std::endl;
-  std::cout << "LANCEMENT DU SERVEUR SUR LE PORT " << 4242 << std::endl;
+  std::cout << "LANCEMENT DU SERVEUR SUR LE PORT " << port << std::endl;
   server->Run();
   return EXIT_SUCCESS;
 }
@@ -146,6 +146,82 @@ int	Server::Run(void)
   return EXIT_SUCCESS;
 }
 
+void Server::BroadcastMsg(User* u, std::string info)
+{
+  msgpack::unpacker pac;
+  msgpack::unpacked result;
+  MasterData::SendChat msg("");  
+  std::list<User *>::iterator		it;
+  unsigned int				i;
+
+
+  pac.reserve_buffer(info.length());
+  memcpy(pac.buffer(), info.data(), info.length());
+  pac.buffer_consumed(info.length());
+  if (pac.next(&result))
+    {
+      pac.next(&result);
+      result.get().convert(&msg);
+      msgpack::sbuffer sbuf;
+      msgpack::packer<msgpack::sbuffer> packet(&sbuf);  
+      packet.pack((int)MasterData::Command::RECV_CHAT);
+      MasterData::RecvChat tosend(u->getName(), msg.msg);
+      packet.pack(tosend);    
+
+      for (i = 0, it = _users.begin(); i < _users.size(); i++, it++)
+	{
+	  if ((*it)->isInGame() == false)
+	    (*it)->getSoc()->sendToServer(sbuf);
+	}
+    }    
+}
+
+GameServer* Server::getServById(int id)
+{
+  std::list<GameServer *>::iterator		it;
+  unsigned int					i;
+  int						cmd;
+
+  for (i = 0, it = _server.begin(); i < _server.size(); i++, it++)
+    if ((*it)->getId() == id)
+      return *it;
+  return NULL;
+}
+
+void Server::JoinServer(User* u, std::string info)
+{
+  msgpack::unpacker pac;
+  msgpack::unpacked result;
+  std::list<User *>::iterator		it;
+  unsigned int				i;
+  GameServer *				s;
+
+  pac.reserve_buffer(info.length());
+  memcpy(pac.buffer(), info.data(), info.length());
+  pac.buffer_consumed(info.length());
+  if (pac.next(&result))
+    {
+      std::cout << "RECEPTION SERV" << std::endl;
+      pac.next(&result);
+      int idServ;
+      result.get().convert(&idServ);
+      s = getServById(idServ);
+      if (s == NULL)
+	{
+	  sendFailure(u->getSoc(), "Serveur introuvable");
+	  return;
+	}
+
+
+
+
+      // for (i = 0, it = _users.begin(); i < _users.size(); i++, it++)
+      // 	{
+      // 	  if ((*it)->isInGame() == false)
+      // 	    (*it)->getSoc()->sendToServer(sbuf);
+      // 	}
+    }    
+}
 
 void Server::ManageUser()
 {
@@ -176,6 +252,12 @@ void Server::ManageUser()
 	      case MasterData::Command::ASK_SERVER_LIST:
 		SendServList((*it)->getSoc());
 		break;
+	      case MasterData::Command::SEND_CHAT:
+		BroadcastMsg(*it, message);
+		break;
+	      case MasterData::Command::REQUEST_SERVER:
+		JoinServer(*it, message);
+		break;
 	      default:
 		std::cerr << "Command inconnu" << std::endl;
 		break;
@@ -184,8 +266,11 @@ void Server::ManageUser()
       }
 }
 
+
+
 void Server::SendServList(Socket* soc)
 {
+  //SEGFAULT RANDOM ARRIVER 2 FOIS DANS CETTE FONCTION FAIRE DES TEST POUR LE TROUVER
   GameServer *					s;
   std::list<GameServer *>::iterator		it;
   unsigned int					i;
@@ -203,7 +288,6 @@ void Server::SendServList(Socket* soc)
       packet.pack(serveur);
     }
   soc->sendToServer(sbuf);
-  std::cout << "LIST SERV SEND" << std::endl;
 }
 
 void Server::ManageGameServer()

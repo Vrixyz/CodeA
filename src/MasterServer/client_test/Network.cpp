@@ -14,10 +14,8 @@ Network::~Network()
 
 void    Network::sendToServer(const msgpack::sbuffer& packedInformation)
 {
-    int i;
-
-    i = soc.write(packedInformation.data(), packedInformation.size());
-    std::cout << "send " << packedInformation.size()  << std::endl;
+  soc.write(packedInformation.data(), packedInformation.size());
+  std::cout << "send " << packedInformation.size()  << std::endl;
 }
 
 void    Network::connectToServer()

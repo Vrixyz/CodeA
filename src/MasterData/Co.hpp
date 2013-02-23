@@ -21,7 +21,7 @@ namespace MasterData
   {
     CoServer(int _port, std::string _name) :
       port(_port), name(_name) {}
-    int		port;;
+    int		port;
     std::string	name;
     
     MSGPACK_DEFINE(port, name);

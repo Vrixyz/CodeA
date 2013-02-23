@@ -38,22 +38,39 @@ GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(par
     _parent->getDataNet()->getNetwork()->sendToServer(sbuf);
 
     QObject::connect(_parent->getDataNet()->getNetwork()->getSock(), SIGNAL(readyRead()), this, SLOT(RecvList()));
+    QObject::connect(_list, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(tryToCoGame()));
 }
 
 GamesWindow::~GamesWindow()
 {
 }
 
+void    GamesWindow::tryToCoGame()
+{
+    int                                 nbGame;
+    std::string                         toSend;
+    std::string                         toPars;
+    QList<QListWidgetItem *>            tmpList;
+    QList<QListWidgetItem *>::Iterator  tmp;
+
+    tmpList = _list->selectedItems();
+    tmp = tmpList.begin();
+    toPars = (*tmp)->text().toUtf8().constData();
+    toSend = "";
+    for (unsigned int i = 0; i < toPars.size() && (toPars[i] <= '9' && toPars[i] >= '0'); i++)
+        toSend += toPars[i];
+    nbGame = stringToInt(toSend);
+    std::cout << "TRY DE CONNEXION A LA GAME ---> " << nbGame << std::endl;
+}
+
 void    GamesWindow::RecvList()
 {
-
     QByteArray res;
     msgpack::unpacked result;
     msgpack::unpacker pac;
 
     res = _parent->getDataNet()->getNetwork()->ReceiveFromServer();
     std::cout << "LIST SIZE " << res.length() << std::endl;
-
 
     pac.reserve_buffer(res.length());
     memcpy(pac.buffer(), res.data(), res.length());

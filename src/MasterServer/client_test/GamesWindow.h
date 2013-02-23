@@ -16,6 +16,7 @@ public:
 public slots:
 
     void RecvList();
+    void tryToCoGame();
 
 private:
 

@@ -1,4 +1,5 @@
 #include "GamesWindow.h"
+#include "MyItemLi.h"
 #include "Define.h"
 
 GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(parent, 0/*Qt::FramelessWindowHint*/)
@@ -72,7 +73,7 @@ void    GamesWindow::tryToCoGame()
     QList<QListWidgetItem *>            tmpList;
     QList<QListWidgetItem *>::Iterator  tmp;
 
-    tmpList = _list->selectedItems();
+    tmpList =_list->selectedItems();
     tmp = tmpList.begin();
     toPars = (*tmp)->text().toUtf8().constData();
     toSend = "";
@@ -186,13 +187,14 @@ void    GamesWindow::RecvData()
 void    GamesWindow::addToList(int id, std::string name)
 {
     std::string         labelName;
-    QListWidgetItem*    item;
+    MyItemLi*           item;
 
     labelName = "";
     labelName += intToString(id);
     labelName += " | ";
     labelName += name;
     QString toto(labelName.c_str());
-    item = new QListWidgetItem(toto);
+    item = new MyItemLi(id);
+    item->setText(toto);
     _list->addItem(item);
 }

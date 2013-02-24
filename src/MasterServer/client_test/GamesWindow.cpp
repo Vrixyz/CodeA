@@ -29,14 +29,15 @@ void    GamesWindow::setTabAndAll()
 {
     _tab = new QTabWidget(this);
 
-    _tab->setGeometry(50, 100, 425, 400);
+    _tab->setGeometry(50, 75, 425, 400);
+    _tab->setStyleSheet("QTabWidget::tab-bar {alignment: center;}");
+
     createTabNews();
     createTabServers();
     createTabSucces();
 
     _list = new QListWidget(_serversPage);
     _list->setGeometry(10, 40, 380, 280);
-    _list->setAttribute(Qt::WA_TranslucentBackground);
 
     QPalette Pal(palette());
     Pal.setColor(QPalette::Background, Qt::white);
@@ -60,7 +61,7 @@ void    GamesWindow::createTabServers()
 void    GamesWindow::createTabSucces()
 {
     _succesPage = new QWidget(_tab);
-    _tab->addTab(_succesPage, "News");
+    _tab->addTab(_succesPage, "Succes");
 }
 
 void    GamesWindow::tryToCoGame()

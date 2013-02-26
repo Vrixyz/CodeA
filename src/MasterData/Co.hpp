@@ -21,7 +21,7 @@ namespace MasterData
   {
     CoServer(int _port, std::string _name) :
       port(_port), name(_name) {}
-    int		port;;
+    int		port;
     std::string	name;
     
     MSGPACK_DEFINE(port, name);
@@ -47,6 +47,17 @@ namespace MasterData
     std::string name;
     
     MSGPACK_DEFINE(name);
+  };
+
+  // INFOS SERVEUR
+  struct	InfosServer
+  {
+    InfosServer(std::string _ip, int _port) :
+      ip(_ip), port(_port) {}
+    std::string ip;
+    int		port;
+
+    MSGPACK_DEFINE(ip, port);
   };
 
 }

@@ -22,7 +22,8 @@ SOURCES +=      main.cpp \
                 Store.cpp \
                 GamesWindow.cpp \
     ClassWindow.cpp \
-    SuWindow.cpp
+    SuWindow.cpp \
+    MyItemLi.cpp
 
 HEADERS +=      Network.h \
                 MyWindow.h \ 
@@ -31,7 +32,8 @@ HEADERS +=      Network.h \
                 Define.h \
                 GamesWindow.h \
     ClassWindow.h \
-    SuWindow.h
+    SuWindow.h \
+    MyItemLi.h
 
 
 FORMS    +=

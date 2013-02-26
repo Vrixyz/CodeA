@@ -21,9 +21,7 @@ namespace Server
   {
   public:
     GameData::Element _data;
-    int idUnit;
-    Element(World& world, int id, bool walkable, int idU) :
-      Object(world, Object::Element, id), _data(id, walkable), idUnit(idU) {}
+    Element(World& world, bool walkable);
     ~Element();
     virtual b2Body* setBody(BitField *b, float width = 100, float height = 100, int x = 10, int y = 10);
     const GameData::Element& getData()const {return _data;}

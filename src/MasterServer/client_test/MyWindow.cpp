@@ -20,7 +20,7 @@ MyWindow::~MyWindow()
 void    MyWindow::setGamesWindow()
 {
     _accWindow->hide();
-    _gamesWindow = new GamesWindow(400, 400, this);
+    _gamesWindow = new GamesWindow(1000, 500, this);
     _gamesWindow->show();
 }
 

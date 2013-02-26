@@ -114,7 +114,7 @@ Server::Player&	Server::World::createPlayer(int id)
 
 Server::Mage* Server::World::createMage(BitField *b, Player* p)
 {
-  Server::Mage* u = new Server::Mage(*this, (int)units.size());
+  Server::Mage* u = new Server::Mage(*this);
   u->setBody(b);
   if (p != NULL)
     u->addPlayer(p);
@@ -124,7 +124,7 @@ Server::Mage* Server::World::createMage(BitField *b, Player* p)
 
 Server::Minion *Server::World::createMinion(BitField *b, Player* p, float x, float y)
 {
-  Minion* m = new Server::Minion(*this, (int)units.size());
+  Minion* m = new Server::Minion(*this);
   m->setBody(b, x, y);
   if (p != NULL)
     m->addPlayer(p);
@@ -134,7 +134,7 @@ Server::Minion *Server::World::createMinion(BitField *b, Player* p, float x, flo
 
 Server::Portal* Server::World::createPortal(BitField *b, Player* player)
 {
-  Server::Portal* p = new Server::Portal(*this, (int)units.size());
+  Server::Portal* p = new Server::Portal(*this);
   
   p->setBody(b, rand() % 500 - 250, rand() % 500 - 250);
   if (p != NULL)
@@ -145,7 +145,7 @@ Server::Portal* Server::World::createPortal(BitField *b, Player* player)
 
 Server::Element* Server::World::createElement(bool walkable, float width, float height, BitField *b, int idU)
 {
-  Server::Element* e = new Element(*this, (int)elements.size(), walkable, idU);
+  Server::Element* e = new Element(*this, walkable);
   e->setBody(b, width, height);
   elements.push_back(e);  
   return e;
@@ -153,7 +153,7 @@ Server::Element* Server::World::createElement(bool walkable, float width, float 
 
 Server::Bullet*  Server::World::createBullet(int damage, float angle, b2Vec2 pos, int idUnit, BitField *bit)
 {
-  Server::Bullet* b = new Bullet(*this, (int)elements.size(), damage, idUnit);
+  Server::Bullet* b = new Bullet(*this, damage);
 
   b->setBody(angle, pos, bit);
   bullets.push_back(b);
@@ -182,24 +182,36 @@ Server::IUnit* Server::World::getUnit(int id)
   return NULL;
 }
 
-Server::Element* Server::World::getElement(int idU)
+Server::Element* Server::World::getElement(int id)
 {
   for (std::list<Element*>::iterator it = elements.begin(); it != elements.end(); it++)
     {
-      if ((*it)->idUnit == idU)
+      if ((*it)->id == id)
 	return (*it);
     }
   return NULL;
 }
 
-Server::Bullet* Server::World::getBullet(int idU)
+Server::Bullet* Server::World::getBullet(int id)
 {
   for (std::list<Bullet*>::iterator it = bullets.begin(); it != bullets.end(); it++)
     {
-      // if ((*it)->idUnit == idU)
-      // 	return (*it);
+      if ((*it)->id == id)
+      	return (*it);
     }
   return NULL;
+}
+
+void Server::World::addPlayerToDestroy(Server::IUnit *u)
+{
+  for (std::list<IUnit*>::iterator it = units.begin(); it != units.end(); it++)
+    {
+      if ((*it) == u)
+	{
+	  std::cout<<"T MORT"<<std::endl;
+	  unitsErase.insert(*it);
+	}
+    }
 }
 
 void Server::World::destroyPlayer(int id)
@@ -216,28 +228,6 @@ void Server::World::destroyPlayer(int id)
 	it++;
     }
 }
-
-void Server::World::addPlayerToDestroy(Server::IUnit *u)
-{
-  for (std::list<IUnit*>::iterator it = units.begin(); it != units.end(); it++)
-    {
-      if ((*it) == u)
-	{
-	  std::cout<<"T MORT"<<std::endl;
-	  unitsErase.insert(*it);
-	}
-    }
-}
-
-// void Server::World::destroyUnit(int id)
-// {
-//   return destroyFromList(b2units, id);
-// }
-
-// void Server::World::destroyBullet(int id)
-// {
-//   return destroyFromList(bullets, id);
-// }
 
 // TODO: iterate on players, rather than clients, and instaure command queuing for communication Server->Communication
 void	Server::World::sendUpdatesToClients()
@@ -354,13 +344,14 @@ void Server::World::destroyElement()
   std::set<Element*>::iterator end = elementsErase.end();
   for (; it!=end; ++it) {
     Element* dyingElement = *it;
+    std::cout << "destroying element" << std::endl;
   
-    delete dyingElement;
   
     //... and remove it from main list of balls
     std::list<Element*>::iterator it = std::find(elements.begin(), elements.end(), dyingElement);
     if (it != elements.end())
       elements.erase(it);
+    //    delete dyingElement; // NOTE: deleted by erase();
   } 
   elementsErase.clear();
 }

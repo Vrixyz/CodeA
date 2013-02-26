@@ -10,6 +10,17 @@
 
 #include "Unit.hpp"
 
+static unsigned int _incr_id = 0;
+
+Server::Unit(World& world)  : IUnit(world, _incr_id), _data(_incr_id, 10), current(0, 0), rotation(0)
+{
+  // timer used for fire
+  spellTimer.push_back(0);
+  // timer used for shield
+  spellTimer.push_back(0);
+  _incr_id++;
+}
+
 b2Body*	Server::Unit::setBody(BitField *b)
 {
   b2BodyDef uBDef;

@@ -213,6 +213,7 @@ void Server::Mage::update(float elapsedMilliseconds)
     }
   if ((*shield) > 5000)
     {
+      
       _world.elementsErase.insert(_world.getElement(this->id));
       (*shield) = 0;
     }

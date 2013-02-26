@@ -12,17 +12,29 @@ public:
     GamesWindow(int, int, MyWindow*);
     ~GamesWindow();
     void addToList(int, std::string);
+    void setTabAndAll();
+    void createTabNews();
+    void createTabServers();
+    void createTabSucces();
+    void RecvList(QByteArray res);
+    void RecvError(QByteArray res);
+    void RecvServer(QByteArray res);
 
 public slots:
-
-    void RecvList();
+    void RecvData();
+    void tryToCoGame();
 
 private:
 
     MyWindow*           _parent;
     QPushButton*        _quit;
     QListWidget*        _list;
-    QLabel*             _servLabel;
+
+    QTabWidget*         _tab;
+
+    QWidget*            _newsPage;
+    QWidget*            _serversPage;
+    QWidget*            _succesPage;
 
 };
 

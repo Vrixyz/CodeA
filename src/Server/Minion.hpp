@@ -24,11 +24,11 @@ namespace Server
   class	Minion : public IUnit
   {
   public:
-    GameData::Unit _data;
+    //    GameData::Unit _data; // now in IUnit directly
     b2Vec2 current;
     float rotation;
 
-    Minion(World& world, int id) : IUnit(world, id), _data(id, 10), current(0, 0), rotation(0) {
+    Minion(World& world) : IUnit(world), current(0, 0), rotation(0) {
       _data.health = 2;
     }
     virtual ~Minion() {}

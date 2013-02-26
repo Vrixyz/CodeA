@@ -31,7 +31,33 @@ void    GamesWindow::setTabAndAll()
     _tab = new QTabWidget(this);
 
     _tab->setGeometry(50, 75, 425, 400);
-    _tab->setStyleSheet("QTabWidget::tab-bar {alignment: center;}");
+    _tab->setStyleSheet(" QTabWidget::pane {"
+" border-top: px solid #C2C7CB;"
+" position: absolute;"
+" top: -1em;"
+" }"
+" QTabWidget::tab-bar {"
+" alignment: center;"
+" }"
+" QTabBar::tab {"
+" background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
+" stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,"
+" stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);"
+" border: 2px solid #C4C4C3;"
+" border-bottom-color: #C2C7CB;"
+" border-top-left-radius: 4px;"
+" border-top-right-radius: 4px;"
+" min-width: 8ex;"
+" padding: 2px;"
+" }"
+" QTabBar::tab:selected, QTabBar::tab:hover {"
+" background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
+" stop: 0 #fafafa, stop: 0.4 #f4f4f4,"
+" stop: 0.5 #e7e7e7, stop: 1.0 #fafafa);"
+" }"
+" QTabBar::tab:selected {"
+" border-color: #9B9B9B;"
+" border-bottom-color: #C2C7CB; }");
 
     createTabNews();
     createTabServers();
@@ -49,21 +75,25 @@ void    GamesWindow::setTabAndAll()
 void    GamesWindow::createTabNews()
 {
     _newsPage = new QWidget(_tab);
-    _newsPage->setStyleSheet("QWidget { background-image: url(img/bg-accwin.png); }");
-    _tab->addTab(_newsPage, "News");
+//    _newsPage->setStyleSheet("QWidget { background-image: url(img/bg-accwin.png); }");
+    _tab->addTab(_newsPage, "      News      ");
 }
 
 void    GamesWindow::createTabServers()
 {
     _serversPage = new QWidget(_tab);
+<<<<<<< HEAD
 
     _tab->addTab(_serversPage, "Servers");
+=======
+    _tab->addTab(_serversPage, "      Servers      ");
+>>>>>>> f465850c768343d03ff30c7e987c817d5d17be6b
 }
 
 void    GamesWindow::createTabSucces()
 {
     _succesPage = new QWidget(_tab);
-    _tab->addTab(_succesPage, "Succes");
+    _tab->addTab(_succesPage, "      Succes      ");
 }
 
 void    GamesWindow::tryToCoGame()

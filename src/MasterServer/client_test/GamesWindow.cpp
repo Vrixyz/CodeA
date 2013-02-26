@@ -82,12 +82,7 @@ void    GamesWindow::createTabNews()
 void    GamesWindow::createTabServers()
 {
     _serversPage = new QWidget(_tab);
-<<<<<<< HEAD
-
     _tab->addTab(_serversPage, "Servers");
-=======
-    _tab->addTab(_serversPage, "      Servers      ");
->>>>>>> f465850c768343d03ff30c7e987c817d5d17be6b
 }
 
 void    GamesWindow::createTabSucces()

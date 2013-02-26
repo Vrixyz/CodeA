@@ -11,6 +11,14 @@
 #include "World.hpp"
 #include "Bullet.hpp"
 
+static unsigned int _incr_id = 0;
+
+Server::Bullet::Bullet(World& w, int damage) : Object(w, Object::Bullet, _incr_id), _data(damage, _incr_id)
+{
+  _incr_id++;
+}
+
+
 b2Body*	Server::Bullet::setBody(float angle, b2Vec2 position, BitField *b)
 {
   b2BodyDef bBDef;

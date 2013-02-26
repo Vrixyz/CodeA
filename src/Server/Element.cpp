@@ -11,6 +11,16 @@
 #include "World.hpp"
 #include "Element.hpp"
 
+static unsigned int _incr_id = 0;
+
+Server::Element::Element(World& world, bool walkable) :
+  Object(world, Object::Element, _incr_id), _data(_incr_id, walkable)
+{
+  std::cout << "new element" << std::endl;
+  _incr_id++;
+}
+
+
 b2Body*	Server::Element::setBody(BitField *b, float width, float height, int x, int y)
 {
   b2BodyDef eBDef;

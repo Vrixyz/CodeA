@@ -49,6 +49,17 @@ namespace MasterData
     MSGPACK_DEFINE(name);
   };
 
+  // INFOS SERVEUR
+  struct	InfosServer
+  {
+    InfosServer(std::string _ip, int _port) :
+      ip(_ip), port(_port) {}
+    std::string ip;
+    int		port;
+
+    MSGPACK_DEFINE(ip, port);
+  };
+
 }
 
 #endif

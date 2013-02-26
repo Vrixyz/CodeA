@@ -44,33 +44,26 @@ int Socket::Select(int FD, fd_set * _readfds)
 
 int Socket::Accept(struct sockaddr_in _sin_client, int _client_len)
 {
-	int ret;
-	ret = accept(_socket, (struct sockaddr *)&_sin_client, (socklen_t *)&_client_len);
-	return ret;
-}
-
-int Socket::RecvInt(int* cmd)
-{
   int ret;
-
-  ret = read(_socket, cmd, sizeof(int));
+  ret = accept(_socket, (struct sockaddr *)&_sin_client, (socklen_t *)&_client_len);
+  setIP(inet_ntoa(_sin_client.sin_addr));
+ 
   return ret;
 }
 
-int Socket::RecvString(std::string &s1)
+int Socket::RecvString(msgpack::sbuffer &buff)
 {
   char tmpBuff[BUFF];
   int nbRead;
 
   memset(tmpBuff, 0, BUFF);
-  s1 = "";
   while ((nbRead = read(_socket, tmpBuff, BUFF)) > 0)
     {
-      s1 += tmpBuff;
-      memset(tmpBuff, 0, BUFF);
+      buff.write(tmpBuff, nbRead);
+      memset(tmpBuff, 0, BUFF);    
     }
-  if (s1.size() > 0)
-    nbRead = s1.size();
+  if (buff.size() > 0)
+    nbRead = buff.size();
   std::cout << _socket << ": " << "SIZE RECU " << nbRead << std::endl;
   return nbRead;
 }
@@ -82,26 +75,21 @@ int Socket::getFD()
 
 void Socket::setFD(int fd)
 {
-  int flags;
-
   _socket = fd;
-  flags = fcntl (_socket, F_GETFL);
-  fcntl (_socket, F_SETFL, flags | O_NONBLOCK);	 
 }
 
-int Socket::SendInt(int cmd)
+void Socket::setNonBlock()
 {
-  int ret;
-
-  ret = write(_socket, &cmd, sizeof(int));
-  return ret;
+  int flags;
+ 
+  flags = fcntl (_socket, F_GETFL);
+  fcntl (_socket, F_SETFL, flags | O_NONBLOCK);	 
 }
 
 int Socket::sendToServer(const msgpack::sbuffer& cmd)
 {
   int ret;
 
-  //  std::cout << "commande envoyee au client : |" << cmd << "| de la taille : |" << cmd.size() << "|" << std::endl;
   ret = write(_socket, cmd.data(), cmd.size());
   return ret;
 }

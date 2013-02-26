@@ -49,6 +49,10 @@ void MainWindow::NewGame()
 
     packet.pack((int)GameData::Command::BePlayer);
     n->sendToServer(sbuf);
+<<<<<<< HEAD
+=======
+    //
+>>>>>>> 584c7eaf164dd7db264077170d4821ea69ead3a1
 }
 
 void MainWindow::on_loginb_pressed()

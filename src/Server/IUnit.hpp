@@ -13,13 +13,17 @@
 
 #include "Player.hpp"
 #include "Object.hpp"
+#include "../GameData/Unit.hpp"
+#include "../GameData/Command.hpp"
 
 namespace Server
 {
   class IUnit : public Object
   {
   public:
-    IUnit(World& w, int id) : Object(w, Object::Unit, id) {}
+    GameData::Unit _data;
+    IUnit(World& w); // FIXME: this makes this class not an interface, but it makes itself controlling the id : better than an external control.
+    
     virtual ~IUnit() {}
     virtual void addPlayer(Player* p) = 0;
     virtual bool belongsToPlayer(int idPlayer) const = 0;

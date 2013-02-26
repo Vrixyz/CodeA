@@ -52,6 +52,7 @@ void GameView::mouseMoveEvent(QMouseEvent *e)
     {
         GameData::CommandStruct::Rotate r;
         r.idUnit = n->game->selectedUnit;
+        std::cout << "id: " << r.idUnit << std::endl;
         packet.pack(stat);
         packet.pack(r);
         n->sendToServer(sbuf);

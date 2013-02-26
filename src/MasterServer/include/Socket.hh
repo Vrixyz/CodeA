@@ -36,16 +36,17 @@ class Socket
   int	Accept(struct sockaddr_in, int);
   void	Close();
   int	getFD();
+  void	setIP(std::string ip){_ip = ip;}
+  std::string	getIP(){ return _ip;}
   void	setFD(int fd);
+  void	setNonBlock();
 
-  int	RecvString(std::string&);
+  int	RecvString(msgpack::sbuffer&);
   int	sendToServer(const msgpack::sbuffer&);
 
-  int	RecvInt(int*);
-  int	SendInt(int);
-
   private:
-  int	_socket;
+  int		_socket;
+  std::string	_ip;
 };
 
 #endif

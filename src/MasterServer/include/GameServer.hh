@@ -18,6 +18,7 @@ public:
   void		addPlayer(){_player ++;}
   int		getPlayer(){return _player;}
   int		getFree(){return (MAXPLACE - _player);}
+  int		getPort(){return _port;}
 private:
   Socket*	_soc;
   int		_port;

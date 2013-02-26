@@ -82,7 +82,7 @@ void    GamesWindow::createTabNews()
 void    GamesWindow::createTabServers()
 {
     _serversPage = new QWidget(_tab);
-    _tab->addTab(_serversPage, "      Servers      ");
+    _tab->addTab(_serversPage, "Servers");
 }
 
 void    GamesWindow::createTabSucces()
@@ -116,7 +116,6 @@ void    GamesWindow::tryToCoGame()
     packet.pack(nbGame);
 
     _parent->getDataNet()->getNetwork()->sendToServer(sbuf);
-    //    std::cout << "TRY DE CONNEXION A LA GAME ---> " << nbGame << std::endl;
 }
 
 void    GamesWindow::RecvList(QByteArray res)
@@ -169,10 +168,12 @@ void    GamesWindow::RecvServer(QByteArray res)
   pac.buffer_consumed(res.length());
   if (pac.next(&result))
     {
+      MasterData::InfosServer serv("", 0);
       pac.next(&result);
+      result.get().convert(&serv);
+      std::cerr << "INFOS DE CONNEXION IP:" << serv.ip << " PORT:" << serv.port << std::endl;
       //PARSER LA STRUCT D'infos SERVEUR ET FAIRE LE BORDEL QUE DORIAN DOIT FAIRE!
-      //
-      //result.get().convert(&idData);
+
     }
 }
 
@@ -187,6 +188,7 @@ void    GamesWindow::RecvData()
     pac.reserve_buffer(res.length());
     memcpy(pac.buffer(), res.data(), res.length());
     pac.buffer_consumed(res.length());
+    std::cout << "RECV_DATA" << std::endl; 
     if (pac.next(&result))
     {
       int idData;
@@ -206,8 +208,7 @@ void    GamesWindow::RecvData()
 	  std::cerr << "Command inconnu" << std::endl;
 	  break;
 	};
-    }
-    
+    }   
 }
 
 void    GamesWindow::addToList(int id, std::string name)

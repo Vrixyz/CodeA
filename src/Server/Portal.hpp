@@ -23,10 +23,10 @@ namespace Server
   class	Portal : public IUnit
   {
   public:
-    GameData::Unit _data;
+    //    GameData::Unit _data;
     b2Vec2 current;
     float pop;
-    Portal(World& world, int id) : IUnit(world, id), _data(id, 10), current(0, 0){
+    Portal(World& world) : IUnit(world), current(0, 0){
       pop = 0;
       _data.health = 50;
     }

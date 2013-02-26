@@ -29,10 +29,10 @@ class Server
 
   int	Initialisation(void);
   int	Run(void);
-  void  CheckCoUser(Socket *soc, std::string info);
-  void  CheckRegUser(Socket *soc, std::string info);
-  void  AddServer(Socket *soc, std::string info);
-  void	SendServList(Socket* soc);
+  void  CheckCoUser(Socket *, msgpack::sbuffer&);
+  void  CheckRegUser(Socket *, msgpack::sbuffer&);
+  void  AddServer(Socket *, msgpack::sbuffer&);
+  void	SendServList(Socket *);
   void	AcceptCo();
   void	DelUser(User *);
   void	DelGameServer(GameServer *);
@@ -42,9 +42,9 @@ class Server
   int	OdlerFd(void);
   void	sendCoSucces(User *);
   void	sendFailure(Socket *, std::string);
-  void	BroadcastMsg(User *, std::string);
+  void	BroadcastMsg(User *, msgpack::sbuffer&);
   GameServer* getServById(int id);
-  void	JoinServer(User* u, std::string info);
+  void	JoinServer(User* u, msgpack::sbuffer&);
 
  protected:
   SQLManager*			_sql;

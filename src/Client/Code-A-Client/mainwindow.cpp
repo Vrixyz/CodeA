@@ -49,8 +49,6 @@ void MainWindow::NewGame()
 
     packet.pack((int)GameData::Command::BePlayer);
     n->sendToServer(sbuf);
-    //
-
 }
 
 void MainWindow::on_loginb_pressed()
@@ -158,3 +156,5 @@ void MainWindow::setMove(int x, int y)
     packet.pack(m);
     n->sendToServer(sbuf);
 }
+
+

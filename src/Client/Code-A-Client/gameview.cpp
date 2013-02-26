@@ -85,7 +85,6 @@ void GameView::rotationUpdate()
         stat = 5;
     else
         stat = 6;
-    // std::cout << "status courrant " << status << " futur status : " << stat << " angle relatif : " << a << " real angle " << cangle << std::endl;
     if (stat != status)
     {
         GameData::CommandStruct::Rotate r;
@@ -123,4 +122,14 @@ void GameView::mousePressEvent(QMouseEvent *event)
         std::cout << "nothing" << std::endl;
         break;
     }
+}
+
+void GameView::wheelEvent(QWheelEvent *e)
+{
+    int delta = e->delta();
+    this->geometry();
+    if (delta < 0)
+        this->scale(0.9, 0.9);
+    else
+        this->scale(1.1, 1.1);
 }

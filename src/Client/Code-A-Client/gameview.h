@@ -11,6 +11,7 @@ public:
     GameView(QWidget *);
     void mouseMoveEvent(QMouseEvent *);
     void mousePressEvent(QMouseEvent *);
+    void wheelEvent(QWheelEvent *);
     void rotationUpdate();
     void bindNet(Nm *);
     Nm *n;

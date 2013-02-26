@@ -11,6 +11,7 @@
 #include <QGraphicsView>
 #include <QGraphicsItem>
 #include <list>
+#include "../../GameData/Physics.hpp"
 #include "../../GameData/Command.hpp"
 #include "nm.h"
 #include "game.h"
@@ -21,6 +22,7 @@
 #include <QPoint>
 #include <QLine>
 #include <cmath>
+#include <QWheelEvent>
 
 class Nm;
 

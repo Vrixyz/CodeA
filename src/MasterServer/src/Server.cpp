@@ -13,7 +13,7 @@ int	main(int ac, char **av)
   if (server->Initialisation() == EXIT_ERROR)
     return EXIT_FAILURE;
   std::cout << "SUCCES" << std::endl;
-  std::cout << "LANCEMENT DU SERVEUR SUR LE PORT " << port << std::endl;
+  std::cout << "LANCEMENT DU MASTER SUR LE PORT " << port << std::endl;
   server->Run();
   return EXIT_SUCCESS;
 }
@@ -77,6 +77,8 @@ void    Server::AcceptCo()
       //CREATION DE LA SOCKET
       client  = new Socket();
       client->setFD(soc);
+      client->setNonBlock();
+      client->setIP(_socket->getIP());
       std::cout << "SUCCESS: Nouvelle socket" << std::endl;
       _unknown.push_back(client);
     }
@@ -124,7 +126,6 @@ int	Server::Run(void)
 
       //SELECT VEUT MAXFD +1
       maxFD++;
-
       
       if ((_socket->Select(maxFD, &_readfds) == -1))
 	{
@@ -146,24 +147,24 @@ int	Server::Run(void)
   return EXIT_SUCCESS;
 }
 
-void Server::BroadcastMsg(User* u, std::string info)
+void Server::BroadcastMsg(User* u, msgpack::sbuffer &sbuf)
 {
-  msgpack::unpacker pac;
-  msgpack::unpacked result;
   MasterData::SendChat msg("");  
   std::list<User *>::iterator		it;
   unsigned int				i;
 
+  msgpack::unpacker pac;
+  pac.reserve_buffer(sbuf.size());
+  memcpy(pac.buffer(), sbuf.data(), sbuf.size());
+  pac.buffer_consumed(sbuf.size());
+  msgpack::unpacked result;
 
-  pac.reserve_buffer(info.length());
-  memcpy(pac.buffer(), info.data(), info.length());
-  pac.buffer_consumed(info.length());
   if (pac.next(&result))
     {
       pac.next(&result);
       result.get().convert(&msg);
-      msgpack::sbuffer sbuf;
-      msgpack::packer<msgpack::sbuffer> packet(&sbuf);  
+      msgpack::sbuffer buf;
+      msgpack::packer<msgpack::sbuffer> packet(&buf);  
       packet.pack((int)MasterData::Command::RECV_CHAT);
       MasterData::RecvChat tosend(u->getName(), msg.msg);
       packet.pack(tosend);    
@@ -171,7 +172,7 @@ void Server::BroadcastMsg(User* u, std::string info)
       for (i = 0, it = _users.begin(); i < _users.size(); i++, it++)
 	{
 	  if ((*it)->isInGame() == false)
-	    (*it)->getSoc()->sendToServer(sbuf);
+	    (*it)->getSoc()->sendToServer(buf);
 	}
     }    
 }
@@ -188,17 +189,18 @@ GameServer* Server::getServById(int id)
   return NULL;
 }
 
-void Server::JoinServer(User* u, std::string info)
+void Server::JoinServer(User* u, msgpack::sbuffer &sbuf)
 {
-  msgpack::unpacker pac;
-  msgpack::unpacked result;
   std::list<User *>::iterator		it;
   unsigned int				i;
   GameServer *				s;
-
-  pac.reserve_buffer(info.length());
-  memcpy(pac.buffer(), info.data(), info.length());
-  pac.buffer_consumed(info.length());
+  
+  msgpack::unpacker pac;
+  pac.reserve_buffer(sbuf.size());
+  memcpy(pac.buffer(), sbuf.data(), sbuf.size());
+  pac.buffer_consumed(sbuf.size());
+  msgpack::unpacked result;
+  
   if (pac.next(&result))
     {
       std::cout << "RECEPTION SERV" << std::endl;
@@ -206,21 +208,22 @@ void Server::JoinServer(User* u, std::string info)
       int idServ;
       result.get().convert(&idServ);
       s = getServById(idServ);
-      if (s == NULL)
+      if (s == NULL || s->getFree() <= 0)
 	{
-	  sendFailure(u->getSoc(), "Serveur introuvable");
+	  sendFailure(u->getSoc(), "Serveur introuvable ou complet");
 	  return;
 	}
-
-
-
-
-      // for (i = 0, it = _users.begin(); i < _users.size(); i++, it++)
-      // 	{
-      // 	  if ((*it)->isInGame() == false)
-      // 	    (*it)->getSoc()->sendToServer(sbuf);
-      // 	}
-    }    
+      else
+	{
+	  std::cout << "ENVOI DE DATA DE CO" << std::endl; 
+	  msgpack::sbuffer buf;
+	  msgpack::packer<msgpack::sbuffer> packet(&buf);
+	  MasterData::InfosServer serv(s->getSoc()->getIP(), s->getPort());  
+	  packet.pack((int)MasterData::Command::INFOS_SERVER);
+	  packet.pack(serv);
+	  u->getSoc()->sendToServer(buf);
+	}      
+    }
 }
 
 void Server::ManageUser()
@@ -233,16 +236,19 @@ void Server::ManageUser()
   for (i = 0, it = _users.begin(); i < _users.size(); i++, it++)
     if (FD_ISSET((*it)->getSoc()->getFD(), &_readfds))
       {	
-	(*it)->getSoc()->RecvString(message);
+	msgpack::sbuffer sbuf;
 	std::cout << "USER " << (*it)->getName() << std::endl;
-	if (message.length() == 0)
+	(*it)->getSoc()->RecvString(sbuf);
+	
+	msgpack::unpacker pac;
+	pac.reserve_buffer(sbuf.size());
+	memcpy(pac.buffer(), sbuf.data(), sbuf.size());
+	pac.buffer_consumed(sbuf.size());
+	msgpack::unpacked result;
+
+	if (sbuf.size() == 0)
 	  DelUser(*it);
 
-	msgpack::unpacker pac;
-	pac.reserve_buffer(message.length());
-	memcpy(pac.buffer(), message.data(), message.length());
-	pac.buffer_consumed(message.length());
-	msgpack::unpacked result;
 	if (pac.next(&result)) 
 	  {
 	    int idCmd;
@@ -253,10 +259,10 @@ void Server::ManageUser()
 		SendServList((*it)->getSoc());
 		break;
 	      case MasterData::Command::SEND_CHAT:
-		BroadcastMsg(*it, message);
+		BroadcastMsg(*it, sbuf);
 		break;
 	      case MasterData::Command::REQUEST_SERVER:
-		JoinServer(*it, message);
+		JoinServer(*it, sbuf);
 		break;
 	      default:
 		std::cerr << "Command inconnu" << std::endl;
@@ -265,8 +271,6 @@ void Server::ManageUser()
 	  }
       }
 }
-
-
 
 void Server::SendServList(Socket* soc)
 {
@@ -292,25 +296,22 @@ void Server::SendServList(Socket* soc)
 
 void Server::ManageGameServer()
 {
-  std::string					message;
-  std::list<GameServer *>::iterator			it;
+  std::list<GameServer *>::iterator		it;
   unsigned int					i;
   int						cmd;
 
   for (i = 0, it = _server.begin(); i < _server.size(); i++, it++)
     if (FD_ISSET((*it)->getSoc()->getFD(), &_readfds))
       {	
-	(*it)->getSoc()->RecvString(message);
-	std::cout << "SERVER " << message << std::endl;
-	if (message.length() == 0)
+	msgpack::sbuffer sbuf;
+	(*it)->getSoc()->RecvString(sbuf);
+	if (sbuf.size() == 0)
 	  DelGameServer(*it);
       }
 }
 
-
 void Server::ManageUnknown()
 {
-  std::string				message;
   std::list<Socket *>::iterator		it;
   unsigned int				i;
   int					cmd;
@@ -319,21 +320,23 @@ void Server::ManageUnknown()
   for (i = 0, it = _unknown.begin(); i < _unknown.size(); i++, it++)
     if (FD_ISSET((*it)->getFD(), &_readfds))
       {	
-	(*it)->RecvString(message);
-	if (message.length() == 0)
+	msgpack::sbuffer sbuf;
+	(*it)->RecvString(sbuf);
+
+	if (sbuf.size() == 0)
 	  {
 	    _unknown.remove(*it);
 	    (*it)->Close();
 	  }
-
 	client = *it;
 
-	//CHECK DU TYPE DE CLIENT ET DE LA VALIDER DU LOGIN MDP
 	msgpack::unpacker pac;
-	pac.reserve_buffer(message.length());
-	memcpy(pac.buffer(), message.data(), message.length());
-	pac.buffer_consumed(message.length());
+	pac.reserve_buffer(sbuf.size());
+	memcpy(pac.buffer(), sbuf.data(), sbuf.size());
+	pac.buffer_consumed(sbuf.size());
 	msgpack::unpacked result;
+
+	//CHECK DU TYPE DE CLIENT ET DE LA VALIDER DU LOGIN MDP
 	if (pac.next(&result)) 
 	  {
 	    int idCmd;
@@ -341,13 +344,13 @@ void Server::ManageUnknown()
 	    switch(idCmd)
 	      {
 	      case MasterData::Command::REGISTER_USER:
-		CheckRegUser(client, message);
+		CheckRegUser(client, sbuf);
 		break;
 	      case MasterData::Command::CONNECT_USER:
-		CheckCoUser(client, message);
+		CheckCoUser(client, sbuf);
 		break;
 	      case MasterData::Command::CONNECT_SERVER:
-		AddServer(client, message);
+		AddServer(client, sbuf);
 		break;
 	      default:
 		std::cerr << "ERROR: client non conforme deconnexion du client" << std::endl;
@@ -369,16 +372,17 @@ void	Server::DelGameServer(GameServer *s)
   _server.remove(s);
 }
 
-void	Server::AddServer(Socket *soc, std::string infos)
+void	Server::AddServer(Socket *soc, msgpack::sbuffer &sbuf)
 {
   GameServer*		s;
-  msgpack::unpacker	pac;
-  msgpack::unpacked	result;
   MasterData::CoServer	co(0, "");
 
-  pac.reserve_buffer(infos.length());
-  memcpy(pac.buffer(), infos.data(), infos.length());
-  pac.buffer_consumed(infos.length());
+  msgpack::unpacker pac;
+  pac.reserve_buffer(sbuf.size());
+  memcpy(pac.buffer(), sbuf.data(), sbuf.size());
+  pac.buffer_consumed(sbuf.size());
+  msgpack::unpacked result;
+
   if (pac.next(&result)) 
     {
       if (pac.next(&result))
@@ -396,17 +400,17 @@ void	Server::AddServer(Socket *soc, std::string infos)
   soc->Close();
 }
 
-
-void	Server::CheckCoUser(Socket *soc, std::string infos)
+void	Server::CheckCoUser(Socket *soc, msgpack::sbuffer &sbuf)
 {
   User*			u;
-  msgpack::unpacker	pac;
-  msgpack::unpacked	result;
   MasterData::CoClient	co("", "");
 
-  pac.reserve_buffer(infos.length());
-  memcpy(pac.buffer(), infos.data(), infos.length());
-  pac.buffer_consumed(infos.length());
+  msgpack::unpacker pac;
+  pac.reserve_buffer(sbuf.size());
+  memcpy(pac.buffer(), sbuf.data(), sbuf.size());
+  pac.buffer_consumed(sbuf.size());
+  msgpack::unpacked result;
+
   if (pac.next(&result)) 
     {
       if (pac.next(&result))
@@ -427,16 +431,18 @@ void	Server::CheckCoUser(Socket *soc, std::string infos)
   _unknown.remove(soc);
   soc->Close();
 }
-void	Server::CheckRegUser(Socket *soc, std::string infos)
+
+void	Server::CheckRegUser(Socket *soc, msgpack::sbuffer &sbuf)
 {
   User*			u;
-  msgpack::unpacker	pac;
-  msgpack::unpacked	result;
   MasterData::RegClient	reg("", "");
 
-  pac.reserve_buffer(infos.length());
-  memcpy(pac.buffer(), infos.data(), infos.length());
-  pac.buffer_consumed(infos.length());
+  msgpack::unpacker pac;
+  pac.reserve_buffer(sbuf.size());
+  memcpy(pac.buffer(), sbuf.data(), sbuf.size());
+  pac.buffer_consumed(sbuf.size());
+  msgpack::unpacked result;
+
   if (pac.next(&result)) 
     {
       if (pac.next(&result))
@@ -463,9 +469,9 @@ void	Server::sendCoSucces(User *u)
 {
   msgpack::sbuffer sbuf;
   msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+  MasterData::InfosClient ic(u->getName());
   
   packet.pack((int)MasterData::Command::INFOS_CLIENT);
-  MasterData::InfosClient ic(u->getName());
   packet.pack(ic);
   u->getSoc()->sendToServer(sbuf);
 }
@@ -474,9 +480,9 @@ void	Server::sendFailure(Socket *soc, std::string msg)
 {
   msgpack::sbuffer sbuf;
   msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+  MasterData::ErrorMsg err(msg);
   
   packet.pack((int)MasterData::Command::ERROR);
-  MasterData::ErrorMsg err(msg);
   packet.pack(err);
   soc->sendToServer(sbuf);
 }

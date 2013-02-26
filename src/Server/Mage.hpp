@@ -24,17 +24,17 @@ namespace Server
   class	Mage : public IUnit
   {
   public:
-    GameData::Unit _data;
+    //   GameData::Unit _data; // now in IUnit directly.
     b2Vec2 current;
-    float rotation;
+    float rotation; // that's useless if we dont't have a cannon" : check body position.
     std::vector<float>spellTimer;
 
-    Mage(World& world, int id) : IUnit(world, id), _data(id, 10), current(0, 0), rotation(0) {
+    Mage(World& world) : IUnit(world), current(0, 0), rotation(0) {
       // timer used for fire
       spellTimer.push_back(0);
       // timer used for shield
       spellTimer.push_back(0);
-      _data.health = 10;
+      this->_data.health = 10;
     }
     virtual ~Mage() {}
 

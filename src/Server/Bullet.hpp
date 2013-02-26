@@ -21,8 +21,7 @@ namespace Server
   {
   public:
     GameData::Bullet _data;
-    int idUnit;
-    Bullet(World& w, int id, int damage, int idU) : Object(w, Object::Bullet, id), _data(damage, id), idUnit(idU) {}
+    Bullet(World& w, int damage);
     ~Bullet();
     virtual b2Body* setBody(float angle, b2Vec2 position, BitField * b);
     /// TODO: implement these functions (or delete all serialized related stuff (nah..))

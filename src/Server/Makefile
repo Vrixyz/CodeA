@@ -14,6 +14,7 @@ SRC_SR	=	mainTest.cpp \
 	 	Portal.cpp \
 		Mage.cpp \
 		Minion.cpp \
+		IUnit.cpp \
 		Bullet.cpp \
 		tcp_connection.cpp \
 		BitField.cpp \

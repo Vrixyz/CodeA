@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 13:21:11 2012 thierry berger
-// Last update Fri Feb 22 12:45:08 2013 mathieu leurquin
+// Last update Tue Feb 26 10:53:44 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -111,7 +111,7 @@ void Server::Mage::spell1(const GameData::CommandStruct::Fire &arg)
     }
   else
     {
-      bullet = new BitField(Server::BitField::TEAM2_BULLET, Server::BitField::TEAM1_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL);
+      bullet = new BitField(Server::BitField::TEAM2_BULLET, Server::BitField::TEAM1_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL | Server::BitField::TEAM1_SHIELD);
       std::cout<<"team 2"<<std::endl;
     }
   Server::Bullet *b = _world.createBullet(10, this->getBody()->GetAngle(), this->getBody()->GetPosition(), arg.idUnit, bullet);
@@ -120,15 +120,33 @@ void Server::Mage::spell1(const GameData::CommandStruct::Fire &arg)
   angle = this->getBody()->GetAngle() * 57.2957795;
   angle = (int)angle % (int)360;
   angle = angle  < 0 ? -angle : angle;
+  float xd = 0;
+  float yd = 0;
   if (angle >= 0 && angle < 90)
-    b->getBody()->ApplyLinearImpulse(b2Vec2(1, 1 / (tan(b->getBody()->GetAngle()))), b->getBody()->GetWorldCenter());
+    {
+      xd = 1;
+      yd = 1 / (tan(b->getBody()->GetAngle()));
+    }
   else if (angle >= 90 && angle < 180)
-    b->getBody()->ApplyLinearImpulse(b2Vec2(1, (-1) * tan(b->getBody()->GetAngle() - 1.5707963267949)), b->getBody()->GetWorldCenter());
+    {
+      xd = 1;
+      yd = (-1) * tan(b->getBody()->GetAngle() - 1.5707963267949);
+    }
   else if (angle >= 180 && angle < 270)
-    b->getBody()->ApplyLinearImpulse(b2Vec2(-1, -1 / (tan(b->getBody()->GetAngle() - 3.1415926535898))), b->getBody()->GetWorldCenter());
+    {
+      xd = -1;
+      yd = -1 / (tan(b->getBody()->GetAngle() - 3.1415926535898));
+    }
   else
-    b->getBody()->ApplyLinearImpulse(b2Vec2(-1, (tan(b->getBody()->GetAngle() - 4.7123889803847))), b->getBody()->GetWorldCenter());
+    {
+      xd = -1;
+      yd = (tan(b->getBody()->GetAngle() - 4.7123889803847));
+    }
+
+  b->getBody()->ApplyLinearImpulse(b2Vec2(xd, yd), b->getBody()->GetWorldCenter());
+  std::cout<<"xd : "<<xd<<" yd : "<<yd<<std::endl;
   (*fire) = -1;
+  std::cout<<"caca : "<<angle<<std::endl;
 }
 
 void Server::Mage::spell2(const GameData::CommandStruct::Shield arg)
@@ -140,16 +158,18 @@ void Server::Mage::spell2(const GameData::CommandStruct::Shield arg)
   //check friendly or not
   BitField *shield;
   if (this->id == 0)
-    shield = new BitField(Server::BitField::TEAM1_SHIELD, Server::BitField::OBSTACLE | Server::BitField::TEAM2_BULLET);
+    shield = new BitField(Server::BitField::TEAM1_SHIELD, Server::BitField::OBSTACLE | Server::BitField::TEAM2_BULLET | Server::BitField::TEAM2_UNIT);
   else
-    shield = new BitField(Server::BitField::TEAM2_SHIELD, Server::BitField::OBSTACLE | Server::BitField::TEAM1_BULLET);
+    shield = new BitField(Server::BitField::TEAM2_SHIELD, Server::BitField::OBSTACLE | Server::BitField::TEAM1_BULLET | Server::BitField::TEAM1_UNIT);
   
   b2Vec2 position = this->getBody()->GetPosition();
   
-  Server::Element *e = _world.createElement(true, (float)10, (float)1, shield, this->id);
+  Server::Element *e = _world.createElement(true, (float)50, (float)1, shield, this->id);
     // Server::Element *e = new Server::Element(*this, (int)elements.size(), true, this->id);
   
-  e->setBody(shield, 10 , 1,  position.x, position.y);
+  e->setBody(shield, 50 , 1,  position.x, position.y);
+  std::cout<<"body mage : "<<(this->getBody()->GetAngle() / M_PI) * 180<<std::endl;
+  std::cout<<"body shield : "<<((this->getBody()->GetAngle()) / M_PI) * 180<<std::endl;
   e->getBody()->SetTransform(position, this->getBody()->GetAngle());
   _world.elements.push_back(e); 
   (*sh) = -1;

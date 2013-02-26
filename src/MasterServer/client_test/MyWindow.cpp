@@ -17,6 +17,18 @@ MyWindow::~MyWindow()
 {
 }
 
+void    MyWindow::affWin()
+{
+    _gamesWindow->hide();
+    show();
+}
+
+void    MyWindow::hideWin()
+{
+    hide();
+    _gamesWindow->show();
+}
+
 void    MyWindow::setGamesWindow()
 {
     _accWindow->hide();

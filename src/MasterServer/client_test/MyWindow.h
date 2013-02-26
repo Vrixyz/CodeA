@@ -35,6 +35,9 @@ public:
     void setPort(int);
     int getPort(void);
 
+    void affWin(void);
+    void hideWin(void);
+
 public slots:
 
     void setGamesWindow();

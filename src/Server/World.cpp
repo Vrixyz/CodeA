@@ -1,11 +1,10 @@
-//
 // World.cpp for  in /home/berger_t/PFA/src/Server
 // 
 // Made by thierry berger
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Fri Feb 22 12:46:41 2013 mathieu leurquin
+// Last update Mon Feb 25 16:18:23 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -32,7 +31,7 @@ void	Server::World::init(int width, int height)
   // u = this->createUnit(b);
   // u->addPlayer(&this->createPlayer(0));
 
-  this->createElement(true, 100, 100, obs, -1);
+  //  this->createElement(true, 100, 100, obs, -1);
   
   // this->createElement(true, 1, 10, shield);
   

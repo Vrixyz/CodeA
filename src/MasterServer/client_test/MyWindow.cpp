@@ -17,13 +17,13 @@ MyWindow::~MyWindow()
 {
 }
 
-void    MyWindow::affWin()
+void    MyWindow::startGame(int port, std::string ip)
 {
     _gamesWindow->hide();
     show();
 }
 
-void    MyWindow::hideWin()
+void    MyWindow::endGame()
 {
     hide();
     _gamesWindow->show();

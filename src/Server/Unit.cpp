@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 13:21:11 2012 thierry berger
-// Last update Sat Jan  5 18:22:36 2013 mathieu leurquin
+// Last update Wed Feb 27 10:20:27 2013 mathieu leurquin
 //
 
 #include "Unit.hpp"
@@ -192,14 +192,14 @@ void Server::Unit::update(float elapsedMilliseconds)
 
   if ((*fire) > 3000)
     {
-      _world.bulletsErase.insert(_world.getBullet(this->id));
+      _world.addBulletToDestroy(_world.getBullet(this->id));
       (*fire) = 0;
     }
-  if ((*shield) > 5000)
-    {
-      _world.elementsErase.insert(_world.getElement(this->id));
-      (*shield) = 0;
-    }
+  // if ((*shield) > 5000)
+  //   {
+  //     _world.elementsErase.insert(_world.getElement(this->id));
+  //     (*shield) = 0;
+  //   }
   
 
   // TODO: do this in a function, and improve precision

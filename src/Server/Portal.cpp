@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Thu Feb 21 10:56:20 2013 mathieu leurquin
-// Last update Mon Feb 25 16:19:43 2013 mathieu leurquin
+// Last update Wed Feb 27 10:11:32 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -106,7 +106,7 @@ void Server::Portal::update(float elapsedMilliseconds)
 {
   if (_data.health <= 0)
     {
-      _world.addPlayerToDestroy(this);
+      _world.addUnitToDestroy(this);
       return;
     }
   pop += elapsedMilliseconds;

@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 10:46:49 2012 thierry berger
-// Last update Fri Feb 22 11:08:53 2013 mathieu leurquin
+// Last update Wed Feb 27 10:14:48 2013 mathieu leurquin
 //
 
 #ifndef SERVER_WORLD_HPP
@@ -73,8 +73,10 @@ namespace Server
     Server::Element* getElement(int id);
     Server::Bullet* getBullet(int id);
 
-    void addPlayerToDestroy(Server::IUnit*);
-
+    void addUnitToDestroy(Server::IUnit*);
+    void addElemToDestroy(Server::Element*);
+    void addBulletToDestroy(Server::Bullet*);
+    
     void destroyPlayer(int);
     void destroyUnit();
     void destroyElement();

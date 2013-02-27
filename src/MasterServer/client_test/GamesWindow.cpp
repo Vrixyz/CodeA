@@ -58,12 +58,12 @@ void    GamesWindow::setTabAndAll()
     _readChat = new QTextEdit("", this);
     _readChat->setAttribute(Qt::WA_TranslucentBackground);
     _readChat->setGeometry(536, 103, 390, 320);
-    _readChat->setStyleSheet("QTextEdit { border: 0px; } ");
+    _readChat->setStyleSheet("QTextEdit { background-image : url(img/bg-chat.png) ; border: 0px; } ");
     _readChat->setReadOnly(1);
 
     _writeChat = new QLineEdit(this);
     _writeChat->setAttribute(Qt::WA_TranslucentBackground);
-    _writeChat->setStyleSheet("QLineEdit { border: 0px; } ");
+    _writeChat->setStyleSheet("QLineEdit { background-image : url(img/bg-chatdial.png) ; border: 0px; } ");
     _writeChat->setGeometry(536, 430, 390, 25);
 
     QObject::connect(_writeChat, SIGNAL(returnPressed()), this, SLOT(sendMsg()));

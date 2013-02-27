@@ -17,6 +17,7 @@ public:
     void createTabServers();
     void createTabSucces();
     void RecvList(QByteArray res);
+    void RecvChat(QByteArray res);
     void RecvError(QByteArray res);
     void RecvServer(QByteArray res);
 

@@ -400,6 +400,19 @@ void	Server::AddServer(Socket *soc, msgpack::sbuffer &sbuf)
   soc->Close();
 }
 
+int	Server::isCo(std::string login)
+{
+  std::list<User *>::iterator		it;
+  unsigned int				i;
+
+  for (i = 0, it = _users.begin(); i < _users.size(); i++, it++)
+    {
+      if((*it)->getName() == login)
+	return 1;
+    }
+  return 0;
+}
+
 void	Server::CheckCoUser(Socket *soc, msgpack::sbuffer &sbuf)
 {
   User*			u;
@@ -416,7 +429,12 @@ void	Server::CheckCoUser(Socket *soc, msgpack::sbuffer &sbuf)
       if (pac.next(&result))
 	{
 	  result.get().convert(&co);
-	  if ((u = _sql->findUser(co.login, co.pass)) != NULL)
+	  if(isCo(co.login))
+	    {
+	      sendFailure(soc, "Utilisateur deja loguer");
+	      std::cout << "Compte deja loguer" << std::endl;
+	    }
+	  else if ((u = _sql->findUser(co.login, co.pass)) != NULL)
 	    {	      
 	      u->setSoc(soc);
 	      _users.push_back(u);
@@ -425,7 +443,8 @@ void	Server::CheckCoUser(Socket *soc, msgpack::sbuffer &sbuf)
 	      sendCoSucces(u);
 	      return; 
 	    }
-	  sendFailure(soc, "Combinaison user/pass invalid");
+	  else
+	    sendFailure(soc, "Combinaison user/pass invalid");
 	}
     }
   _unknown.remove(soc);
@@ -448,7 +467,7 @@ void	Server::CheckRegUser(Socket *soc, msgpack::sbuffer &sbuf)
       if (pac.next(&result))
 	{
 	  result.get().convert(&reg);
-	  if (_sql->insertElem(reg.login, reg.pass))
+	  if (_sql->insertElem(reg.login, reg.pass) != -1)
 	    {
 	      u = new User(reg.login);	      
 	      u->setSoc(soc);

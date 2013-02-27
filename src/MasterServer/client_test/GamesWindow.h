@@ -35,6 +35,7 @@ private:
     QPushButton*        _quit;
     QPushButton*        _join;
     QPushButton*        _match;
+    QPushButton*        _class;
 
     QListWidget*        _list;
 

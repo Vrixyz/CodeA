@@ -23,6 +23,7 @@ GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(par
     QObject::connect(_list, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(tryToCoGame()));
     QObject::connect(_join, SIGNAL(clicked()), this, SLOT(tryToCoGame()));
     QObject::connect(_match, SIGNAL(clicked()), this, SLOT(tryToMatchmaking()));
+    QObject::connect(_class, SIGNAL(clicked()), _parent, SLOT(setClassWindow()));
 }
 
 GamesWindow::~GamesWindow()
@@ -92,13 +93,16 @@ void    GamesWindow::createTabServers()
     _serversPage = new QWidget(_tab);
 
     _match = new QPushButton("Matchmaking", _serversPage);
+    _class = new QPushButton("Class", _serversPage);
     _join = new QPushButton("Join", _serversPage);
 
-    _join->setGeometry(15, 335, 200, 50);
     _match->setGeometry(15, 42, 200, 50);
+    _class->setGeometry(218, 42, 200, 50);
+    _join->setGeometry(15, 335, 200, 50);
 
-    _join->setAutoDefault(0);
     _match->setAutoDefault(0);
+    _class->setAutoDefault(0);
+    _join->setAutoDefault(0);
 
     _iServ = new QLabel("<font color=\"#e7d593\">Liste des serveurs :</font>", _serversPage);
     _iServ->setGeometry(52, 95, 150, 20);

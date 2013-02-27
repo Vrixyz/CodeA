@@ -41,6 +41,7 @@ public:
 public slots:
 
     void setGamesWindow();
+    void setClassWindow();
     void setAccWindow();
     void setSuWindow();
 
@@ -51,6 +52,7 @@ private:
     QDialog *_accWindow;
     QDialog *_suWindow;
     QDialog *_gamesWindow;
+    QDialog *_classWindow;
 
     Store   *_dataNet;
 

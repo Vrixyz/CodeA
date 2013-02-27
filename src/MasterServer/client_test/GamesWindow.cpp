@@ -2,7 +2,7 @@
 #include "MyItemLi.h"
 #include "Define.h"
 
-GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(parent, Qt::FramelessWindowHint)
+GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(parent, 0/*Qt::FramelessWindowHint*/)
 {
     msgpack::sbuffer sbuf;
     msgpack::packer<msgpack::sbuffer> packet(&sbuf);
@@ -56,11 +56,16 @@ void    GamesWindow::setTabAndAll()
     _list->setPalette(Pal);
 
     _readChat = new QTextEdit("", this);
+    _readChat->setAttribute(Qt::WA_TranslucentBackground);
     _readChat->setGeometry(536, 103, 390, 320);
+    _readChat->setStyleSheet("QTextEdit { border: 0px; } ");
     _readChat->setReadOnly(1);
 
     _writeChat = new QLineEdit(this);
+    _writeChat->setAttribute(Qt::WA_TranslucentBackground);
+    _writeChat->setStyleSheet("QLineEdit { border: 0px; } ");
     _writeChat->setGeometry(536, 430, 390, 25);
+
     QObject::connect(_writeChat, SIGNAL(returnPressed()), this, SLOT(sendMsg()));
 }
 

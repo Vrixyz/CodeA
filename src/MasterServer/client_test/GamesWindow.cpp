@@ -2,7 +2,7 @@
 #include "MyItemLi.h"
 #include "Define.h"
 
-GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(parent, 0/*Qt::FramelessWindowHint*/)
+GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(parent, Qt::FramelessWindowHint)
 {
     msgpack::sbuffer sbuf;
     msgpack::packer<msgpack::sbuffer> packet(&sbuf);
@@ -11,7 +11,7 @@ GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(par
     setFixedSize(size_x, size_y);
 
     setObjectName("toto");
-    setStyleSheet("#toto { background-image: url(img/mainwindow.png); }");
+    setStyleSheet("#toto { background-image: url(img/mainwindowall.png); }");
 
     setTabAndAll();
 
@@ -21,6 +21,8 @@ GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(par
 
     QObject::connect(_parent->getDataNet()->getNetwork()->getSock(), SIGNAL(readyRead()), this, SLOT(RecvData()));
     QObject::connect(_list, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(tryToCoGame()));
+    QObject::connect(_join, SIGNAL(clicked()), this, SLOT(tryToCoGame()));
+    QObject::connect(_match, SIGNAL(clicked()), this, SLOT(tryToMatchmaking()));
 }
 
 GamesWindow::~GamesWindow()
@@ -33,38 +35,63 @@ void    GamesWindow::setTabAndAll()
 
     _tab->setGeometry(50, 77, 425, 400);
     _tab->setStyleSheet(" QTabWidget::pane {"
-" border-top: px solid #C2C7CB;"
+" border-top: px solid #000000;"
 " position: absolute;"
 " top: -2em;"
 " }"
 " QTabWidget::tab-bar {"
 " alignment: center;"
-" }"
-"QTabWidget { min-width: 200px; min-height: 200px; background-color: #000000; }");
+" }");
 
     createTabServers();
     createTabNews();
     createTabSucces();
 
     _list = new QListWidget(_serversPage);
-    _list->setGeometry(10, 40, 200, 200);
+    _list->setGeometry(15, 122, 200, 200);
 
     QPalette Pal(palette());
     Pal.setColor(QPalette::Background, Qt::white);
     _list->setAutoFillBackground(true);
     _list->setPalette(Pal);
+
+    _readChat = new QTextEdit("", this);
+    _readChat->setGeometry(536, 103, 390, 320);
+    _readChat->setReadOnly(1);
+
+    _writeChat = new QLineEdit(this);
+    _writeChat->setGeometry(536, 430, 390, 25);
+    QObject::connect(_writeChat, SIGNAL(returnPressed()), this, SLOT(sendMsg()));
+}
+
+void    GamesWindow::sendMsg()
+{
+    _readChat->insertPlainText(_writeChat->text() + "\n");
+    _writeChat->clear();
 }
 
 void    GamesWindow::createTabNews()
 {
     _newsPage = new QWidget(_tab);
-//    _newsPage->setStyleSheet("QWidget { background-image: url(img/bg-accwin.png); }");
     _tab->addTab(_newsPage, "        News        ");
 }
 
 void    GamesWindow::createTabServers()
 {
     _serversPage = new QWidget(_tab);
+
+    _match = new QPushButton("Matchmaking", _serversPage);
+    _join = new QPushButton("Join", _serversPage);
+
+    _join->setGeometry(15, 335, 200, 50);
+    _match->setGeometry(15, 42, 200, 50);
+
+    _join->setAutoDefault(0);
+    _match->setAutoDefault(0);
+
+    _iServ = new QLabel("<font color=\"#e7d593\">Liste des serveurs :</font>", _serversPage);
+    _iServ->setGeometry(52, 95, 150, 20);
+
     _tab->addTab(_serversPage, "       Servers       ");
 }
 
@@ -72,6 +99,11 @@ void    GamesWindow::createTabSucces()
 {
     _succesPage = new QWidget(_tab);
     _tab->addTab(_succesPage, "      Succes       ");
+}
+
+void    GamesWindow::tryToMatchmaking()
+{
+    std::cout << "TO DO : Implementation du matchmaking." << std::endl;
 }
 
 void    GamesWindow::tryToCoGame()
@@ -83,6 +115,8 @@ void    GamesWindow::tryToCoGame()
     QList<QListWidgetItem *>::Iterator  tmp;
 
     tmpList =_list->selectedItems();
+    if (tmpList.size() == 0)
+        return;
     tmp = tmpList.begin();
     toPars = (*tmp)->text().toUtf8().constData();
     toSend = "";

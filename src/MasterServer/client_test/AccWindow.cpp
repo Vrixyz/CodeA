@@ -20,12 +20,14 @@ void    AccWindow::setCoPage()
     _CoQuit->setFont(QFont("", 12, 0));
     _CoQuit->setGeometry(100, 320, 200, 40);
     _CoQuit->setStyleSheet("QWidget { background-image: url(img/quitter.png); border: 0px; }");
+    _CoQuit->setDefault(0);
     QObject::connect(_CoQuit, SIGNAL(clicked()), qApp, SLOT(quit()));
 
     _co = new QPushButton("", this);
     _co->setFont(QFont("", 12, 0));
     _co->setGeometry(100, 220, 200, 40);
     _co->setStyleSheet("QWidget { background-image: url(img/connexion.png); border: 0px; }");
+    _co->setDefault(0);
     QObject::connect(_co, SIGNAL(clicked()), this, SLOT(checkCo()));
 
     _su = new QPushButton("", this);
@@ -33,6 +35,7 @@ void    AccWindow::setCoPage()
     _su->setGeometry(100, 270, 200, 40);
     _su->setStyleSheet("color : #FFFFFF");
     _su->setStyleSheet("QWidget { background-image: url(img/inscription.png); border: 0px; }");
+    _su->setDefault(0);
     QObject::connect(_su, SIGNAL(clicked()), _parent, SLOT(setSuWindow()));
 }
 
@@ -72,7 +75,6 @@ void    AccWindow::RecvInfosClient()
 
     res = _parent->getDataNet()->getNetwork()->ReceiveFromServer();
     std::cout << "INFO SIZE " << res.length() << std::endl;
-
 
     pac.reserve_buffer(res.length());
     memcpy(pac.buffer(), res.data(), res.length());
@@ -127,4 +129,7 @@ void    AccWindow::creatFields4CoPage()
     _passwLabel->setBuddy(_passwEdit);
     _loginEdit->setText(QString("toto42"));
     _passwEdit->setText(QString("passw"));
+
+    QObject::connect(_loginEdit, SIGNAL(returnPressed()), this, SLOT(checkCo()));
+    QObject::connect(_passwEdit, SIGNAL(returnPressed()), this, SLOT(checkCo()));
 }

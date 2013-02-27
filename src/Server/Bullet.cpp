@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Fri Sep 14 10:40:12 2012 thierry berger
-// Last update Thu Feb 21 16:17:26 2013 mathieu leurquin
+// Last update Wed Feb 27 10:21:43 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -59,7 +59,7 @@ Server::Bullet::~Bullet()
 
 void Server::Bullet::intraCollision(Object *o)
 {
-  _world.bulletsErase.insert(this);
+  _world.addBulletToDestroy(this);
   if (o->getType() == Object::Element)
     this->intraCollisionElement(o);
   else if(o->getType() == Object::Bullet)

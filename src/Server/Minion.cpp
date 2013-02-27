@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Fri Feb 22 10:41:33 2013 mathieu leurquin
-// Last update Fri Feb 22 12:45:09 2013 mathieu leurquin
+// Last update Wed Feb 27 10:11:05 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -108,7 +108,7 @@ void Server::Minion::update(float elapsedMilliseconds)
 {
   if (_data.health <= 0)
     {
-      _world.addPlayerToDestroy(this);
+      _world.addUnitToDestroy(this);
       return;
     }
   

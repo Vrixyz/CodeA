@@ -71,8 +71,14 @@ void    GamesWindow::setTabAndAll()
 
 void    GamesWindow::sendMsg()
 {
-    _readChat->insertPlainText(_writeChat->text() + "\n");
-    _writeChat->clear();
+  msgpack::sbuffer sbuf;
+  msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+
+  packet.pack((int)MasterData::Command::SEND_CHAT);
+  MasterData::SendChat tosend(_writeChat->text().toUtf8().constData());
+  _writeChat->clear();
+  packet.pack(tosend);
+  _parent->getDataNet()->getNetwork()->sendToServer(sbuf);
 }
 
 void    GamesWindow::createTabNews()
@@ -200,6 +206,22 @@ void    GamesWindow::RecvServer(QByteArray res)
     }
 }
 
+void	GamesWindow::RecvChat(QByteArray res)
+{
+  msgpack::unpacked result;
+  msgpack::unpacker pac;
+  
+  pac.reserve_buffer(res.length());
+  memcpy(pac.buffer(), res.data(), res.length());
+  pac.buffer_consumed(res.length());
+  if (pac.next(&result))
+    {
+      MasterData::RecvChat recv("", "");
+      pac.next(&result);
+      result.get().convert(&recv);
+      _readChat->insertPlainText(QString(recv.from.data()) + ": " + QString(recv.msg.data()) + "\n");
+    }
+}
 
 void    GamesWindow::RecvData()
 {
@@ -220,6 +242,9 @@ void    GamesWindow::RecvData()
 	{
 	case MasterData::Command::SEND_SERVER_LIST:
 	  RecvList(res);
+	  break;
+	case MasterData::Command::RECV_CHAT:
+	  RecvChat(res);
 	  break;
 	case MasterData::Command::INFOS_SERVER:
 	  RecvServer(res);

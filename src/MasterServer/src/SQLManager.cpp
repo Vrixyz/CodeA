@@ -68,7 +68,8 @@ int	SQLManager::insertElem(std::string name, std::string pass)
     }
   sqlite3_bind_text (stmt, 1, name.c_str(), name.size(), NULL);
   sqlite3_bind_text (stmt, 2, pass.c_str(), pass.size(), NULL);
-  if (sqlite3_step(stmt) != SQLITE_DONE)
+  ret = sqlite3_step(stmt);
+  if (ret != SQLITE_ROW && ret != SQLITE_DONE && ret != SQLITE_OK)
     ret = -1;
   sqlite3_reset (stmt);    
   return ret; 

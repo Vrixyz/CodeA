@@ -38,7 +38,6 @@ void    GamesWindow::test()
 //    ShowWarning*    te;
 
 //    te = new ShowWarning(_parent, "Erreur", "Ceci est une erreur");
-
     QMessageBox::warning(this, tr("asf"), tr("txf"));
 
 }

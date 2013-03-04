@@ -23,10 +23,10 @@ public:
 
 public slots:
 
-    void test();
     void sendMsg();
     void RecvData();
     void tryToCoGame();
+    void refreshServ();
     void tryToMatchmaking();
 
 private:
@@ -36,7 +36,7 @@ private:
     QPushButton*        _quit;
     QPushButton*        _join;
     QPushButton*        _match;
-    QPushButton*        _class;
+    QPushButton*        _refresh;
 
     QListWidget*        _list;
 

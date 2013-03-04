@@ -10,8 +10,8 @@ GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(par
     _parent = parent;
     setFixedSize(size_x, size_y);
 
-    setObjectName("toto");
-    setStyleSheet("#toto { background-image: url(img/mainwindowall.png); }");
+    setObjectName("gameswindow");
+    setStyleSheet("#gameswindow { background-image: url(img/mainwindowall.png); }");
 
     setTabAndAll();
 
@@ -23,21 +23,15 @@ GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(par
     QObject::connect(_list, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(tryToCoGame()));
     QObject::connect(_join, SIGNAL(clicked()), this, SLOT(tryToCoGame()));
     QObject::connect(_match, SIGNAL(clicked()), this, SLOT(tryToMatchmaking()));
-    QObject::connect(_class, SIGNAL(clicked()), this, SLOT(test()));
-//    QObject::connect(_class, SIGNAL(clicked()), _parent, SLOT(setClassWindow()));
+    QObject::connect(_refresh, SIGNAL(clicked()), this, SLOT(refreshServ()));
 }
 
 GamesWindow::~GamesWindow()
 {
 }
 
-void    GamesWindow::test()
+void    GamesWindow::refreshServ()
 {
-//    ShowWarning*    te;
-
-//    te = new ShowWarning(_parent, "Erreur", "Ceci est une erreur");
-    QMessageBox::warning(this, tr("asf"), tr("txf"));
-
 }
 
 void    GamesWindow::setTabAndAll()
@@ -103,20 +97,19 @@ void    GamesWindow::createTabServers()
     _serversPage = new QWidget(_tab);
 
     _match = new QPushButton("Matchmaking", _serversPage);
-    _class = new QPushButton("Class", _serversPage);
+    _refresh = new QPushButton("Refresh", _serversPage);
     _join = new QPushButton("Join", _serversPage);
 
     _match->setGeometry(15, 42, 200, 50);
-    _class->setGeometry(218, 42, 200, 50);
+    _refresh->setGeometry(218, 42, 200, 50);
     _join->setGeometry(15, 335, 200, 50);
 
     _match->setAutoDefault(0);
-    _class->setAutoDefault(0);
+    _refresh->setAutoDefault(0);
     _join->setAutoDefault(0);
 
     _iServ = new QLabel("<font color=\"#e7d593\">Liste des serveurs :</font>", _serversPage);
     _iServ->setGeometry(52, 95, 150, 20);
-
     _tab->addTab(_serversPage, "       Servers       ");
 }
 

@@ -215,13 +215,21 @@ void Server::JoinServer(User* u, msgpack::sbuffer &sbuf)
 	}
       else
 	{
-	  std::cout << "ENVOI DE DATA DE CO" << std::endl; 
-	  msgpack::sbuffer buf;
-	  msgpack::packer<msgpack::sbuffer> packet(&buf);
+	  std::cout << "ENVOI DE DATA DE CLIENT AU GAME SERVER" << std::endl; 
+	  msgpack::sbuffer buf1;
+	  msgpack::packer<msgpack::sbuffer> packet1(&buf1);
+	  MasterData::InfosPlayer player(u->getSoc()->getIP(), u->getName());  
+	  packet1.pack((int)MasterData::Command::PLAYER_JOIN);
+	  packet1.pack(player);
+	  s->getSoc()->sendToServer(buf1);
+
+	  std::cout << "ENVOI DE DATA DE CO AU CLIENT" << std::endl; 
+	  msgpack::sbuffer buf2;
+	  msgpack::packer<msgpack::sbuffer> packet2(&buf2);
 	  MasterData::InfosServer serv(s->getSoc()->getIP(), s->getPort());  
-	  packet.pack((int)MasterData::Command::INFOS_SERVER);
-	  packet.pack(serv);
-	  u->getSoc()->sendToServer(buf);
+	  packet2.pack((int)MasterData::Command::INFOS_SERVER);
+	  packet2.pack(serv);
+	  u->getSoc()->sendToServer(buf2);
 	}      
     }
 }

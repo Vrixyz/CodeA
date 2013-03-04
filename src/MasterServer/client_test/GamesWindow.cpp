@@ -32,6 +32,10 @@ GamesWindow::~GamesWindow()
 
 void    GamesWindow::refreshServ()
 {
+  msgpack::sbuffer sbuf;
+  msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+  packet.pack((int)MasterData::Command::ASK_SERVER_LIST);
+  _parent->getDataNet()->getNetwork()->sendToServer(sbuf);
 }
 
 void    GamesWindow::setTabAndAll()

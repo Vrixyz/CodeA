@@ -23,7 +23,8 @@ SOURCES +=      main.cpp \
                 GamesWindow.cpp \
     ClassWindow.cpp \
     SuWindow.cpp \
-    MyItemLi.cpp
+    MyItemLi.cpp \
+    ShowWarning.cpp
 
 HEADERS +=      Network.h \
                 MyWindow.h \ 
@@ -33,7 +34,8 @@ HEADERS +=      Network.h \
                 GamesWindow.h \
     ClassWindow.h \
     SuWindow.h \
-    MyItemLi.h
+    MyItemLi.h \
+    ShowWarning.h
 
 
 FORMS    +=

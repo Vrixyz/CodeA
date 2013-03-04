@@ -2,6 +2,8 @@
 #include "MyItemLi.h"
 #include "Define.h"
 
+#include "ShowWarning.h"
+
 GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(parent, 0/*Qt::FramelessWindowHint*/)
 {
     msgpack::sbuffer sbuf;
@@ -23,11 +25,21 @@ GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(par
     QObject::connect(_list, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(tryToCoGame()));
     QObject::connect(_join, SIGNAL(clicked()), this, SLOT(tryToCoGame()));
     QObject::connect(_match, SIGNAL(clicked()), this, SLOT(tryToMatchmaking()));
-    QObject::connect(_class, SIGNAL(clicked()), _parent, SLOT(setClassWindow()));
+    QObject::connect(_class, SIGNAL(clicked()), this, SLOT(test()));
+//    QObject::connect(_class, SIGNAL(clicked()), _parent, SLOT(setClassWindow()));
 }
 
 GamesWindow::~GamesWindow()
 {
+}
+
+void    GamesWindow::test()
+{
+    ShowWarning*    te;
+
+    te = new ShowWarning(_parent, "Ceci est un message d'erreur !");
+    te->setText(QString(te->getMsg().c_str()));
+    te->show();
 }
 
 void    GamesWindow::setTabAndAll()
@@ -138,7 +150,6 @@ void    GamesWindow::tryToCoGame()
     for (unsigned int i = 0; i < toPars.size() && (toPars[i] <= '9' && toPars[i] >= '0'); i++)
         toSend += toPars[i];
     nbGame = stringToInt(toSend);
-
 
     // ON ENVOI AU SERVEUR LE CHOIX DE GAME
     msgpack::sbuffer sbuf;

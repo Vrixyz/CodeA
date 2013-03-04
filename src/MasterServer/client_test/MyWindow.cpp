@@ -1,5 +1,4 @@
 #include "MyWindow.h"
-
 #include "SuWindow.h"
 #include "AccWindow.h"
 #include "ClassWindow.h"
@@ -7,8 +6,8 @@
 
 MyWindow::MyWindow(int size_x, int size_y) : QWidget()
 {
-    _dataNet = new Store();
     setFixedSize(size_x, size_y);
+    _dataNet = new Store();
     _suWindow = NULL;
     _accWindow = NULL;
     _gamesWindow = NULL;
@@ -22,6 +21,8 @@ MyWindow::~MyWindow()
 void    MyWindow::startGame(int port, std::string ip)
 {
     _gamesWindow->hide();
+    port = port;
+    ip = ip;
     show();
 }
 
@@ -35,6 +36,8 @@ void    MyWindow::setGamesWindow()
 {
     _gamesWindow = new GamesWindow(1000, 500, this);
     _gamesWindow->show();
+    if ((_suWindow != NULL) && _suWindow->isActiveWindow() == 1)
+        _suWindow->hide();
     if ((_accWindow != NULL) && _accWindow->isActiveWindow() == 1)
         _accWindow->hide();
     if ((_classWindow != NULL) && _classWindow->isActiveWindow() == 1)

@@ -23,6 +23,7 @@ public:
 
 public slots:
 
+    void test();
     void sendMsg();
     void RecvData();
     void tryToCoGame();

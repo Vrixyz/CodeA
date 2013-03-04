@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Sun Oct 28 12:04:50 2012 thierry berger
-// Last update Thu Feb 21 15:50:33 2013 mathieu leurquin
+// Last update Tue Feb 26 10:31:04 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -26,8 +26,8 @@ GameData::Physics Server::Object::getPhysics() const
 
       physics.vertices.push_back(GameData::Physics::Coord(vertice.x, vertice.y));
     }
-  physics.angle = _body->GetAngle() * 57.2957795;
-  physics.angle = (int)physics.angle % (int)360;
+  physics.angle = (_body->GetAngle() / M_PI) * 180;
   physics.angle = physics.angle  < 0 ? -physics.angle : physics.angle;
+  //  physics.angle = (int)physics.angle % (int)360;
   return physics;
 }

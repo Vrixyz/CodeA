@@ -40,6 +40,7 @@ class Server
   void	ManageGameServer();
   void	ManageUnknown();
   int	OdlerFd(void);
+  int	isCo(std::string);
   void	sendCoSucces(User *);
   void	sendFailure(Socket *, std::string);
   void	BroadcastMsg(User *, msgpack::sbuffer&);

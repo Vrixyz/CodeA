@@ -1,11 +1,10 @@
-//
 // World.cpp for  in /home/berger_t/PFA/src/Server
 // 
 // Made by thierry berger
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Fri Feb 22 12:46:41 2013 mathieu leurquin
+// Last update Wed Feb 27 10:15:50 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -37,7 +36,7 @@ void	Server::World::init(int masterPort, char* masterIp, int width, int height)
   // u = this->createUnit(b);
   // u->addPlayer(&this->createPlayer(0));
 
-  this->createElement(true, 100, 100, obs, -1);
+  //  this->createElement(true, 100, 100, obs, -1);
   
   // this->createElement(true, 1, 10, shield);
   
@@ -225,7 +224,7 @@ Server::Bullet* Server::World::getBullet(int id)
   return NULL;
 }
 
-void Server::World::addPlayerToDestroy(Server::IUnit *u)
+void Server::World::addUnitToDestroy(Server::IUnit *u)
 {
   for (std::list<IUnit*>::iterator it = units.begin(); it != units.end(); it++)
     {
@@ -233,6 +232,30 @@ void Server::World::addPlayerToDestroy(Server::IUnit *u)
 	{
 	  std::cout<<"T MORT"<<std::endl;
 	  unitsErase.insert(*it);
+	}
+    }
+}
+
+void Server::World::addElemToDestroy(Server::Element *u)
+{
+  for (std::list<Element*>::iterator it = elements.begin(); it != elements.end(); it++)
+    {
+      if ((*it) == u)
+	{
+	  std::cout<<"T MORT"<<std::endl;
+	  elementsErase.insert(*it);
+	}
+    }
+}
+
+void Server::World::addBulletToDestroy(Server::Bullet *u)
+{
+  for (std::list<Bullet*>::iterator it = bullets.begin(); it != bullets.end(); it++)
+    {
+      if ((*it) == u)
+	{
+	  std::cout<<"T MORT"<<std::endl;
+	  bulletsErase.insert(*it);
 	}
     }
 }
@@ -351,14 +374,15 @@ void Server::World::destroyBullet()
   for (; it!=end; ++it) {
     Bullet* dyingBullet = *it;
     
-    delete dyingBullet;
+    //delete dyingBullet;
     
     //... and remove it from main list of balls
     std::list<Bullet*>::iterator it = std::find(bullets.begin(), bullets.end(), dyingBullet);
     if (it != bullets.end())
       bullets.erase(it);
+    bulletsErase.erase(*it);
   } 
-  bulletsErase.clear();
+  //bulletsErase.clear();
 }
 
 void Server::World::destroyElement()
@@ -374,9 +398,10 @@ void Server::World::destroyElement()
     std::list<Element*>::iterator it = std::find(elements.begin(), elements.end(), dyingElement);
     if (it != elements.end())
       elements.erase(it);
+    elementsErase.erase(*it);
     //    delete dyingElement; // NOTE: deleted by erase();
   } 
-  elementsErase.clear();
+  //elementsErase.clear();
 }
 
 

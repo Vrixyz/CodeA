@@ -7,19 +7,29 @@
 #include "../../GameData/Bullet.hpp"
 #include "../../GameData/Element.hpp"
 #include "../../GameData/Information.hpp"
-#include "mainwindow.h"
+#include "../../GameData/Command.hpp"
+#include <QGraphicsItem>
+#include <QGraphicsScene>
+#include <QGraphicsView>
+#include <QMainWindow>
+#include <QKeyEvent>
+#include <QRect>
+#include <QPolygon>
+#include <QPoint>
+#include <QLine>
+#include <cmath>
+#include <QWheelEvent>
+#include <iostream>
+#include "gameview.h"
+#include "nm.h"
+#include "element.h"
 
-class MainWindow;
 class GameView;
-namespace Ui
-{
-class MainWindow;
-}
 
 class Game
 {
 public:
-    Game(MainWindow *, GameView *);
+    Game(QMainWindow *parent = 0);
     void drawWorld();
     void setPlayerDefinition(const GameData::Information::PlayerDefinition &);
     void setSelection(int unitId);
@@ -33,8 +43,9 @@ public:
     std::list<GameData::Physics> punit;
     std::list<GameData::Physics> pbullet;
     GameView *view;
-    MainWindow *ui;
-
+    Nm *n;
+    QGraphicsScene *scene;
+    QMainWindow *win;
     GameData::Information::PlayerDefinition* playerDefinition;
     unsigned int selectedUnit;
 private:

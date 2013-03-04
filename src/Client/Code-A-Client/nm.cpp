@@ -99,9 +99,10 @@ void    Nm::updateWorld(QByteArray ligne) {
             result.get().convert(&p);
             game->elem.push_back(e);
             game->pelem.push_back(p);
-            std::cout << "1 elem" << std::endl;
+	    //            std::cout << "angle: " << p.angle << std::endl;
+            //std::cout << "1 elem" << std::endl;
         }
-        std::cout << "over" << std::endl;
+        //std::cout << "over" << std::endl;
         for (i = 0; i < woo.nbUnit; i++)
         {
             pac.next(&result);

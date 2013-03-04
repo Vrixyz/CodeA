@@ -1,13 +1,22 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "game.h"
 
-Game::Game(MainWindow *u, GameView *v)
+Game::Game(QMainWindow *w)
 {
     angle = 0;
-    ui = u;
-    view = v;
+    win = w;
     playerDefinition = NULL;
     selectedUnit = -1;
+    scene = new QGraphicsScene(0, 0, 800, 600);
+    view = new GameView();
+    std::cout << "You just started a new game" << std::endl;
+    n = new Nm("127.0.0.1", 4242, this);
+    view->bindNet(n);
+    n->connectToServer();
+    // Sending information "I want to be a player"
+    msgpack::sbuffer sbuf;
+    msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+    packet.pack((int)GameData::Command::BePlayer);
+    n->sendToServer(sbuf);
 }
 
 void Game::setWorld(GameData::World w) {
@@ -21,7 +30,7 @@ GameData::World Game::getWorld() {
 void Game::drawWorld() {
     QGraphicsItem *item;
     GameData::Physics::Coord c;
-    QGraphicsScene *scene = new QGraphicsScene(0, 0, 800, 600, ui);
+    scene->clear();
     GameData::Physics p;
     GameData::Unit u(0, 0);
     //    De quoi vous faire un petit repaire

@@ -32,11 +32,14 @@ namespace Server
   public:
     mutable boost::mutex _m_clients;
     std::map<int, tcp_connection::pointer> clients;
+    tcp_connection::pointer master;
     std::list<int> clientsErase;
    // FIXME: ugly fixed size
     boost::array<char, 127> buf;
     CommandManager<C, int, int> *_command;
-    Communication(int port = 4242) : acceptor(io_service, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port))
+    CommandManager<C, int, int> *_master_cmd;
+
+    Communication(int port) : acceptor(io_service, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port))
     {
     }
 
@@ -44,9 +47,11 @@ namespace Server
     // bool tryAccept(int* clientId);
     void init();
     void setCommandManager(CommandManager<C, int, int>* commandManager);
+    void setCommandManagerMaster(CommandManager<C, int, int>* commandManager);
 
     /// return true to success, false if failed.
     bool sendToClient(const msgpack::sbuffer&packedInformation, int clientId);
+    bool sendToMaster(const msgpack::sbuffer& packedInformation);
 
     void cleanClients();
 
@@ -65,6 +70,21 @@ namespace Server
     {
       thread_accept.join();
     }
+
+    bool connect(int port, char* ip)
+    {
+
+      master = tcp_connection::create(acceptor.get_io_service());
+
+      
+      std::cout << "plop" << std::endl;
+
+      master->connect(ip, port);
+      std::cout << "plup" << std::endl;
+
+      return true; // FIXME: bla
+
+    }
     
   private:
     boost::thread thread_accept;
@@ -74,9 +94,17 @@ namespace Server
     class read_socket_handler
     {
     public:
-      read_socket_handler(Server::tcp_connection::pointer& connection, Communication *c, int connectionId) : _connection(connection), _com (c), id(connectionId){}
+      read_socket_handler(Server::tcp_connection::pointer& connection, CommandManager<C, int, int> *manager, int connectionId) : _connection(connection), _manager (manager), id(connectionId){}
       
-      void operator()(const boost::system::error_code& ec, std::size_t size);
+      void operator()(const boost::system::error_code& ec, std::size_t)
+      {
+	// FIXME: some errors might be less killing than others
+	if (ec != NULL)
+	  return;
+	// FIXME: data() should be copied
+	_manager->addCommandToQueue(id, buf.data());
+	setHandler();
+      }
       
       void	setHandler()
       {
@@ -89,7 +117,7 @@ namespace Server
     private:
       boost::array<char, 127> buf;
       Server::tcp_connection::pointer _connection;
-      Communication<C> *_com;
+      CommandManager<C, int, int> *_manager;
       const int id;
     };
   };
@@ -152,6 +180,31 @@ bool Server::Communication<C>::sendToClient(const msgpack::sbuffer& packedInform
 }
 
 template<typename C>
+bool Server::Communication<C>::sendToMaster(const msgpack::sbuffer& packedInformation)
+{
+  try
+    {
+      boost::system::error_code ignored_error;
+      // FIXME: that aint thread safe
+      boost::asio::write(master->socket(), boost::asio::buffer(packedInformation.data(), packedInformation.size()), ignored_error);
+      if (ignored_error)
+	{
+	  /// FIXME: some errors might be more or less killing than others.
+	  // std::cout<<"prepare to erase..."<<std::endl;
+	  exit(-42); // FIXME: that's ugly.
+	  return false;
+	}
+    }
+  catch (std::exception& e)
+    {
+      /// FIXME: I don't know how it could get here.
+      std::cerr<<"Send to master fail : "<< e.what() << std::endl;
+      exit(1);
+    }
+  return true;
+}
+
+template<typename C>
 void	Server::Communication<C>::cleanClients()
 {
   boost::lock_guard<boost::mutex> lock(_m_clients);
@@ -187,24 +240,13 @@ void Server::Communication<C>::handle_accept(tcp_connection::pointer& new_connec
       boost::lock_guard<boost::mutex> lock(_m_clients);
       clients[incr] = new_connection;
   
-      read_socket_handler* rsh = new read_socket_handler(new_connection, this, incr);
+      read_socket_handler* rsh = new read_socket_handler(new_connection, _command, incr);
       
       rsh->setHandler();
       // FIXME: searching an empty slot would be better
       incr++;
     }
   start_accept();
-}
-
-template<typename C>
-void Server::Communication<C>::read_socket_handler::operator()(const boost::system::error_code& ec, std::size_t)
-{
-  // FIXME: some errors might be less killing than others
-  if (ec != NULL)
-    return;
-  // FIXME: data() should be copied
-  _com->_command->addCommandToQueue(id, buf.data());
-  setHandler();
 }
 
 #endif

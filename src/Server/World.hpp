@@ -55,11 +55,12 @@ namespace Server
     b2World _physicWorld;
     static MyContactListener myContactListenerInstance;
 
-    World() : _physicWorld(b2Vec2(0, 0)) {
+    World(int port) : communication(port), _physicWorld(b2Vec2(0, 0)) {
       _physicWorld.SetContactListener(&myContactListenerInstance);
+      _port = port;
     }
     ~World();
-    void init(int width, int height);
+    void init(int masterPort, char* masterIp, int width, int height);
     void run();
     void handleContact(b2Body object1, b2Body object2);
     Player& createPlayer(int id);
@@ -97,7 +98,9 @@ namespace Server
     virtual int	getClassId() const;
 
   private:
+    int _port;
     CommandManager<World, int, int>* _commandManager;
+    CommandManager<World, int, int>* _commandManagerMaster;
     GameData::Physics getPhysics(const b2Body* body) const;
   };
 }

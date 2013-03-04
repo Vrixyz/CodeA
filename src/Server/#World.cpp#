@@ -59,7 +59,9 @@ void	Server::World::init(int masterPort, char* masterIp, int width, int height)
   packet.pack(serv);
   communication.sendToMaster(sbuf);
   
-  
+  _commandManagerMaster = new CommandManagerMaster<World, int, int>(this);
+  _commandManager->addCallback
+
 
 
   _commandManager = new CommandManager<World, int, int>(this);

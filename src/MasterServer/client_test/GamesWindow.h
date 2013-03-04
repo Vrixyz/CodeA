@@ -17,24 +17,41 @@ public:
     void createTabServers();
     void createTabSucces();
     void RecvList(QByteArray res);
+    void RecvChat(QByteArray res);
     void RecvError(QByteArray res);
     void RecvServer(QByteArray res);
 
 public slots:
+
+    void sendMsg();
     void RecvData();
     void tryToCoGame();
+    void tryToMatchmaking();
 
 private:
 
     MyWindow*           _parent;
+
     QPushButton*        _quit;
+    QPushButton*        _join;
+    QPushButton*        _match;
+    QPushButton*        _class;
+
     QListWidget*        _list;
 
     QTabWidget*         _tab;
 
+    QLabel*             _iServ;
+    QLabel*             _iIp;
+    QLabel*             _iPort;
+
     QWidget*            _newsPage;
     QWidget*            _serversPage;
     QWidget*            _succesPage;
+
+    QTextEdit*          _readChat;
+
+    QLineEdit*          _writeChat;
 
 };
 

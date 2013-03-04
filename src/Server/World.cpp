@@ -4,7 +4,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Mon Feb 25 16:18:23 2013 mathieu leurquin
+// Last update Wed Feb 27 10:15:50 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -202,7 +202,7 @@ Server::Bullet* Server::World::getBullet(int id)
   return NULL;
 }
 
-void Server::World::addPlayerToDestroy(Server::IUnit *u)
+void Server::World::addUnitToDestroy(Server::IUnit *u)
 {
   for (std::list<IUnit*>::iterator it = units.begin(); it != units.end(); it++)
     {
@@ -210,6 +210,30 @@ void Server::World::addPlayerToDestroy(Server::IUnit *u)
 	{
 	  std::cout<<"T MORT"<<std::endl;
 	  unitsErase.insert(*it);
+	}
+    }
+}
+
+void Server::World::addElemToDestroy(Server::Element *u)
+{
+  for (std::list<Element*>::iterator it = elements.begin(); it != elements.end(); it++)
+    {
+      if ((*it) == u)
+	{
+	  std::cout<<"T MORT"<<std::endl;
+	  elementsErase.insert(*it);
+	}
+    }
+}
+
+void Server::World::addBulletToDestroy(Server::Bullet *u)
+{
+  for (std::list<Bullet*>::iterator it = bullets.begin(); it != bullets.end(); it++)
+    {
+      if ((*it) == u)
+	{
+	  std::cout<<"T MORT"<<std::endl;
+	  bulletsErase.insert(*it);
 	}
     }
 }
@@ -328,14 +352,15 @@ void Server::World::destroyBullet()
   for (; it!=end; ++it) {
     Bullet* dyingBullet = *it;
     
-    delete dyingBullet;
+    //delete dyingBullet;
     
     //... and remove it from main list of balls
     std::list<Bullet*>::iterator it = std::find(bullets.begin(), bullets.end(), dyingBullet);
     if (it != bullets.end())
       bullets.erase(it);
+    bulletsErase.erase(*it);
   } 
-  bulletsErase.clear();
+  //bulletsErase.clear();
 }
 
 void Server::World::destroyElement()
@@ -351,9 +376,10 @@ void Server::World::destroyElement()
     std::list<Element*>::iterator it = std::find(elements.begin(), elements.end(), dyingElement);
     if (it != elements.end())
       elements.erase(it);
+    elementsErase.erase(*it);
     //    delete dyingElement; // NOTE: deleted by erase();
   } 
-  elementsErase.clear();
+  //elementsErase.clear();
 }
 
 

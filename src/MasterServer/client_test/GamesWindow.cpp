@@ -10,7 +10,8 @@ GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(par
     _parent = parent;
     setFixedSize(size_x, size_y);
 
-    setStyleSheet("QWidget { background-image: url(img/mainwindow.png); }");
+    setObjectName("toto");
+    setStyleSheet("#toto { background-image: url(img/mainwindowall.png); }");
 
     setTabAndAll();
 
@@ -20,6 +21,9 @@ GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(par
 
     QObject::connect(_parent->getDataNet()->getNetwork()->getSock(), SIGNAL(readyRead()), this, SLOT(RecvData()));
     QObject::connect(_list, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(tryToCoGame()));
+    QObject::connect(_join, SIGNAL(clicked()), this, SLOT(tryToCoGame()));
+    QObject::connect(_match, SIGNAL(clicked()), this, SLOT(tryToMatchmaking()));
+    QObject::connect(_class, SIGNAL(clicked()), _parent, SLOT(setClassWindow()));
 }
 
 GamesWindow::~GamesWindow()
@@ -30,65 +34,91 @@ void    GamesWindow::setTabAndAll()
 {
     _tab = new QTabWidget(this);
 
-    _tab->setGeometry(50, 75, 425, 400);
+    _tab->setGeometry(50, 77, 425, 400);
     _tab->setStyleSheet(" QTabWidget::pane {"
-" border-top: px solid #C2C7CB;"
+" border-top: px solid #000000;"
 " position: absolute;"
-" top: -1em;"
+" top: -2em;"
 " }"
 " QTabWidget::tab-bar {"
 " alignment: center;"
-" }"
-" QTabBar::tab {"
-" background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
-" stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,"
-" stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);"
-" border: 2px solid #C4C4C3;"
-" border-bottom-color: #C2C7CB;"
-" border-top-left-radius: 4px;"
-" border-top-right-radius: 4px;"
-" min-width: 8ex;"
-" padding: 2px;"
-" }"
-" QTabBar::tab:selected, QTabBar::tab:hover {"
-" background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
-" stop: 0 #fafafa, stop: 0.4 #f4f4f4,"
-" stop: 0.5 #e7e7e7, stop: 1.0 #fafafa);"
-" }"
-" QTabBar::tab:selected {"
-" border-color: #9B9B9B;"
-" border-bottom-color: #C2C7CB; }");
+" }");
 
-    createTabNews();
     createTabServers();
+    createTabNews();
     createTabSucces();
 
     _list = new QListWidget(_serversPage);
-    _list->setGeometry(10, 40, 380, 280);
+    _list->setGeometry(15, 122, 200, 200);
 
     QPalette Pal(palette());
     Pal.setColor(QPalette::Background, Qt::white);
     _list->setAutoFillBackground(true);
     _list->setPalette(Pal);
+
+    _readChat = new QTextEdit("", this);
+    _readChat->setAttribute(Qt::WA_TranslucentBackground);
+    _readChat->setGeometry(536, 103, 390, 320);
+    _readChat->setStyleSheet("QTextEdit { background-image : url(img/bg-chat.png) ; border: 0px; } ");
+    _readChat->setReadOnly(1);
+
+    _writeChat = new QLineEdit(this);
+    _writeChat->setAttribute(Qt::WA_TranslucentBackground);
+    _writeChat->setStyleSheet("QLineEdit { background-image : url(img/bg-chatdial.png) ; border: 0px; } ");
+    _writeChat->setGeometry(536, 430, 390, 25);
+
+    QObject::connect(_writeChat, SIGNAL(returnPressed()), this, SLOT(sendMsg()));
+}
+
+void    GamesWindow::sendMsg()
+{
+  msgpack::sbuffer sbuf;
+  msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+
+  packet.pack((int)MasterData::Command::SEND_CHAT);
+  MasterData::SendChat tosend(_writeChat->text().toUtf8().constData());
+  _writeChat->clear();
+  packet.pack(tosend);
+  _parent->getDataNet()->getNetwork()->sendToServer(sbuf);
 }
 
 void    GamesWindow::createTabNews()
 {
     _newsPage = new QWidget(_tab);
-//    _newsPage->setStyleSheet("QWidget { background-image: url(img/bg-accwin.png); }");
-    _tab->addTab(_newsPage, "      News      ");
+    _tab->addTab(_newsPage, "        News        ");
 }
 
 void    GamesWindow::createTabServers()
 {
     _serversPage = new QWidget(_tab);
-    _tab->addTab(_serversPage, "Servers");
+
+    _match = new QPushButton("Matchmaking", _serversPage);
+    _class = new QPushButton("Class", _serversPage);
+    _join = new QPushButton("Join", _serversPage);
+
+    _match->setGeometry(15, 42, 200, 50);
+    _class->setGeometry(218, 42, 200, 50);
+    _join->setGeometry(15, 335, 200, 50);
+
+    _match->setAutoDefault(0);
+    _class->setAutoDefault(0);
+    _join->setAutoDefault(0);
+
+    _iServ = new QLabel("<font color=\"#e7d593\">Liste des serveurs :</font>", _serversPage);
+    _iServ->setGeometry(52, 95, 150, 20);
+
+    _tab->addTab(_serversPage, "       Servers       ");
 }
 
 void    GamesWindow::createTabSucces()
 {
     _succesPage = new QWidget(_tab);
-    _tab->addTab(_succesPage, "      Succes      ");
+    _tab->addTab(_succesPage, "      Succes       ");
+}
+
+void    GamesWindow::tryToMatchmaking()
+{
+    std::cout << "TO DO : Implementation du matchmaking." << std::endl;
 }
 
 void    GamesWindow::tryToCoGame()
@@ -100,6 +130,8 @@ void    GamesWindow::tryToCoGame()
     QList<QListWidgetItem *>::Iterator  tmp;
 
     tmpList =_list->selectedItems();
+    if (tmpList.size() == 0)
+        return;
     tmp = tmpList.begin();
     toPars = (*tmp)->text().toUtf8().constData();
     toSend = "";
@@ -136,7 +168,8 @@ void    GamesWindow::RecvList(QByteArray res)
 	  addToList(serv.id, serv.name);
 	  std::cout << "ID " << serv.id << " NAME " << serv.name << std::endl;
 	}
-      _parent->getDataNet()->getNetwork()->getSock()->disconnect();
+    //  PAS DE CO POUR LES PROCHAINES LECTURES
+    //      _parent->getDataNet()->getNetwork()->getSock()->disconnect();
       _list->show();
     }
 }
@@ -177,6 +210,22 @@ void    GamesWindow::RecvServer(QByteArray res)
     }
 }
 
+void	GamesWindow::RecvChat(QByteArray res)
+{
+  msgpack::unpacked result;
+  msgpack::unpacker pac;
+  
+  pac.reserve_buffer(res.length());
+  memcpy(pac.buffer(), res.data(), res.length());
+  pac.buffer_consumed(res.length());
+  if (pac.next(&result))
+    {
+      MasterData::RecvChat recv("", "");
+      pac.next(&result);
+      result.get().convert(&recv);
+      _readChat->insertPlainText(QString(recv.from.data()) + ": " + QString(recv.msg.data()) + "\n");
+    }
+}
 
 void    GamesWindow::RecvData()
 {
@@ -197,6 +246,9 @@ void    GamesWindow::RecvData()
 	{
 	case MasterData::Command::SEND_SERVER_LIST:
 	  RecvList(res);
+	  break;
+	case MasterData::Command::RECV_CHAT:
+	  RecvChat(res);
 	  break;
 	case MasterData::Command::INFOS_SERVER:
 	  RecvServer(res);

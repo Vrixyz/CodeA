@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 13:21:11 2012 thierry berger
-// Last update Tue Feb 26 10:53:44 2013 mathieu leurquin
+// Last update Wed Feb 27 10:33:26 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -144,9 +144,7 @@ void Server::Mage::spell1(const GameData::CommandStruct::Fire &arg)
     }
 
   b->getBody()->ApplyLinearImpulse(b2Vec2(xd, yd), b->getBody()->GetWorldCenter());
-  std::cout<<"xd : "<<xd<<" yd : "<<yd<<std::endl;
   (*fire) = -1;
-  std::cout<<"caca : "<<angle<<std::endl;
 }
 
 void Server::Mage::spell2(const GameData::CommandStruct::Shield arg)
@@ -168,8 +166,6 @@ void Server::Mage::spell2(const GameData::CommandStruct::Shield arg)
     // Server::Element *e = new Server::Element(*this, (int)elements.size(), true, this->id);
   
   e->setBody(shield, 50 , 1,  position.x, position.y);
-  std::cout<<"body mage : "<<(this->getBody()->GetAngle() / M_PI) * 180<<std::endl;
-  std::cout<<"body shield : "<<((this->getBody()->GetAngle()) / M_PI) * 180<<std::endl;
   e->getBody()->SetTransform(position, this->getBody()->GetAngle());
   _world.elements.push_back(e); 
   (*sh) = -1;
@@ -181,44 +177,44 @@ void Server::Mage::update(float elapsedMilliseconds)
   // if (curVel.x != current.x && curVel.y != current.y)
   if (_data.health <= 0)
     {
-      _world.addPlayerToDestroy(this);
+      _world.addUnitToDestroy(this);
       return;
     }
 
   this->move();
-  std::vector<float>::iterator fire = this->spellTimer.begin();
-  std::vector<float>::iterator shield = this->spellTimer.end();
+  // std::vector<float>::iterator fire = this->spellTimer.begin();
+  // std::vector<float>::iterator shield = this->spellTimer.end();
 
    //update timer
   
-  if ((*fire) > 0)
-    (*fire) += elapsedMilliseconds;
-  if ((*shield) > 0)
-    (*shield) += elapsedMilliseconds;
+  // if ((*fire) > 0)
+  //   (*fire) += elapsedMilliseconds;
+  // if ((*shield) > 0)
+  //   (*shield) += elapsedMilliseconds;
  
   
-  //shield, fire active ?
+  // //shield, fire active ?
   
-  if ((*fire) == -1)
-    (*fire) += 1 + elapsedMilliseconds;
-  if ((*shield) != -1)
-    (*shield) += 1 + elapsedMilliseconds;
+  // if ((*fire) == -1)
+  //   (*fire) += 1 + elapsedMilliseconds;
+  // if ((*shield) != -1)
+  //   (*shield) += 1 + elapsedMilliseconds;
   
-  //shiled, fire finish ?
+  // //shiled, fire finish ?
 
-  if ((*fire) > 3000)
-    {
-      _world.bulletsErase.insert(_world.getBullet(this->id));
-      (*fire) = 0;
-    }
-  if ((*shield) > 5000)
-    {
+  // if ((*fire) > 3000)
+  //   {
+  //     _world.addBulletToDestroy(_world.getBullet(this->id));
+  //     (*fire) = 0;
+  //   }
+  // if ((*shield) > 5000)
+  //   {
       
-      _world.elementsErase.insert(_world.getElement(this->id));
-      (*shield) = 0;
-    }
+  //     // _world.elementsErase.insert(_world.getElement(this->id));
+  //     // (*shield) = 0;
+  //   }
   
-
+ 
   // TODO: do this in a function, and improve precision
 #define PI 3.14
   while (_body->GetAngle() > 2 * PI)

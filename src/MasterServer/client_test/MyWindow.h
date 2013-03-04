@@ -35,9 +35,13 @@ public:
     void setPort(int);
     int getPort(void);
 
+    void startGame(int, std::string);
+    void endGame(void);
+
 public slots:
 
     void setGamesWindow();
+    void setClassWindow();
     void setAccWindow();
     void setSuWindow();
 
@@ -48,6 +52,7 @@ private:
     QDialog *_accWindow;
     QDialog *_suWindow;
     QDialog *_gamesWindow;
+    QDialog *_classWindow;
 
     Store   *_dataNet;
 

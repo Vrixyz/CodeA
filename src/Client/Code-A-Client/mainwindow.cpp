@@ -10,12 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
     dvectorx = 0;
     dvectory = 0;
     ui->setupUi(this);
-    view = new GameView(ui->Main);
-//    ui->Gameview->hide();
-    // music = Phonon::createPlayer(Phonon::MusicCategory,
-    //                              Phonon::MediaSource("/home/edouard/proj_temp/CodeA/src/Client/Code-A-Client/Menu.mp3"));
-    // music->play();
-    // connect(music, SIGNAL(aboutToFinish()), this, SLOT(Playagain()));
+    this->setFocusProxy(view);
     ingame = false;
     NewGame();
 }
@@ -42,17 +37,11 @@ void MainWindow::NewGame()
     view->bindNet(n);
     n->connectToServer();
     ui->Loginpage->hide();
-
     // Sending information "I want to be a player"
     msgpack::sbuffer sbuf;
     msgpack::packer<msgpack::sbuffer> packet(&sbuf);
-
     packet.pack((int)GameData::Command::BePlayer);
     n->sendToServer(sbuf);
-<<<<<<< HEAD
-=======
-    //
->>>>>>> 584c7eaf164dd7db264077170d4821ea69ead3a1
 }
 
 void MainWindow::on_loginb_pressed()
@@ -66,99 +55,3 @@ void MainWindow::on_loginb_pressed()
     else
         std::cout << "login ko !" << std::endl;
 }
-
-void MainWindow::keyPressEvent(QKeyEvent *e) {
-    if (ingame && !(e->isAutoRepeat())) {
-        msgpack::sbuffer sbuf;
-        msgpack::packer<msgpack::sbuffer> packet(&sbuf);
-        switch (e->key()) {
-        case Qt::Key_unknown:
-            std::cout << "PATRON ELLE PIQUE PAS TA VITEL !" << std::endl;
-            break;
-        case Qt::Key_B:
-            GameData::CommandStruct::Fire f;
-            f.idUnit = n->game->selectedUnit;
-            std::cout << "BULLET !" << std::endl;
-            packet.pack((int)GameData::Command::Fire);
-            packet.pack(f);
-            n->sendToServer(sbuf);
-            break;
-        case Qt::Key_R:
-            GameData::CommandStruct::Shield s;
-            s.idUnit = n->game->selectedUnit;
-            std::cout << "shield !" << std::endl;
-            packet.pack((int)GameData::Command::Shield);
-            packet.pack(GameData::CommandStruct::Shield());
-            n->sendToServer(sbuf);
-            break;
-        case Qt::Key_W:
-            setMove(0, 1);
-            std::cout << "UP !" << std::endl;
-            break;
-        case Qt::Key_A:
-            std::cout << "LEFT !" << std::endl;
-            setMove(-1, 0);
-            break;
-        case Qt::Key_S:
-            std::cout << "DOWN !" << std::endl;
-            setMove(0, -1);
-            break;
-        case Qt::Key_D:
-            std::cout << "RIGHT !" << std::endl;
-            setMove(1, 0);
-            break;
-        default:
-            std::cout << "Left = " << Qt::Key_Left << ", Right = " << Qt::Key_Right << ", Value = " << e->key() << std::endl;
-            break;
-        }
-        std::cout << "press => vector : (" << dvectorx << ", " << dvectory << ")" << std::endl;
-    }
-}
-
-void MainWindow::keyReleaseEvent(QKeyEvent *e) {
-    if (ingame && !(e->isAutoRepeat())) {
-        switch (e->key()) {
-        case Qt::Key_unknown:
-            std::cout << "PATRON ELLE PIQUE PAS TA VITEL !" << std::endl;
-            break;
-        case Qt::Key_W:
-            setMove(0, -1);
-            std::cout << "UP !" << std::endl;
-            break;
-        case Qt::Key_A:
-            std::cout << "LEFT !" << std::endl;
-            setMove(1, 0);
-            break;
-        case Qt::Key_S:
-            std::cout << "DOWN !" << std::endl;
-            setMove(0, 1);
-            break;
-        case Qt::Key_D:
-            std::cout << "RIGHT !" << std::endl;
-            setMove(-1, 0);
-            break;
-        default:
-            std::cout << "Left = " << Qt::Key_Left << ", Right = " << Qt::Key_Right << ", Value = " << e->key() << std::endl;
-            break;
-        }
-        std::cout << "release => vector : (" << dvectorx << ", " << dvectory << ")" << std::endl;
-    }
-}
-
-void MainWindow::setMove(int x, int y)
-{
-    msgpack::sbuffer sbuf;
-    msgpack::packer<msgpack::sbuffer> packet(&sbuf);
-    GameData::CommandStruct::Move m;
-    dvectorx += x;
-    dvectory += y;
-    packet.pack((int)GameData::Command::Move);
-    m.x = dvectorx;
-    m.y = dvectory;
-    m.idUnit = n->game->selectedUnit;
-    std::cout << "unit id : " << m.idUnit << std::endl;
-    packet.pack(m);
-    n->sendToServer(sbuf);
-}
-
-

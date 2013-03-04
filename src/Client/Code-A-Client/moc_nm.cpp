@@ -1,13 +1,8 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'nm.h'
 **
-<<<<<<< HEAD
-** Created: Tue Feb 26 17:46:38 2013
+** Created: Mon Mar 4 13:46:03 2013
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.2)
-=======
-** Created: Thu Dec 27 17:25:55 2012
-**      by: The Qt Meta Object Compiler version 63 (Qt 4.8.4)
->>>>>>> 584c7eaf164dd7db264077170d4821ea69ead3a1
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -16,11 +11,7 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'nm.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 63
-<<<<<<< HEAD
 #error "This file was generated using the moc from 4.8.2. It"
-=======
-#error "This file was generated using the moc from 4.8.4. It"
->>>>>>> 584c7eaf164dd7db264077170d4821ea69ead3a1
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif

@@ -1,17 +1,14 @@
 #ifndef ELEMENT_H
 #define ELEMENT_H
 
-#include "mainwindow.h"
+#include "game.h"
 
 class Element : public QObject
 {
 public:
-    Element(int, float, float, float, std::list<GameData::Physics::Coord> );
-    unsigned int id;
-    float	x;
-    float	y;
-    float	angle;
-    std::list<GameData::Physics::Coord> vertices;
+    Element(GameData::Element , GameData::Physics);
+    GameData::Element elem;
+    GameData::Physics physics;
 };
 
 #endif // ELEMENT_H

@@ -1,8 +1,9 @@
 #ifndef NM_H
 #define NM_H
 
-#include "mainwindow.h"
 #include <msgpack.hpp>
+#include <QObject>
+#include <QTcpSocket>
 #include "../../GameData/World.hpp"
 
 class Game;

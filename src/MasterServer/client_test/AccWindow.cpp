@@ -1,5 +1,4 @@
 #include "AccWindow.h"
-#include "ShowWarning.h"
 
 AccWindow::AccWindow(int size_x, int size_y, MyWindow *parent) : QDialog(parent, Qt::FramelessWindowHint)
 {
@@ -95,13 +94,10 @@ void    AccWindow::RecvInfosClient()
         }
         else if (idData == MasterData::Command::ERROR)
         {
-            MasterData::ErrorMsg err("");
-	    ShowWarning*	 error;
-
-            pac.next(&result);
-            result.get().convert(&err);
-	    error = new ShowWarning(_parent, err.msg);
-	    error->show();
+        MasterData::ErrorMsg err("");
+        pac.next(&result);
+        result.get().convert(&err);
+        QMessageBox::warning(this, tr("Erreur"), tr(err.msg.c_str()));
         }
     }
 }

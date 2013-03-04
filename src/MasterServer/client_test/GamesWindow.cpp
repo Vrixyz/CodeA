@@ -1,7 +1,6 @@
 #include "GamesWindow.h"
 #include "MyItemLi.h"
 #include "Define.h"
-#include "ShowWarning.h"
 
 GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(parent, 0/*Qt::FramelessWindowHint*/)
 {
@@ -34,11 +33,11 @@ GamesWindow::~GamesWindow()
 
 void    GamesWindow::test()
 {
-    ShowWarning*    te;
+//    ShowWarning*    te;
 
-    te = new ShowWarning(_parent, "Ceci est un message d'erreur !");
-    te->setText(QString(te->getMsg().c_str()));
-    te->show();
+//    te = new ShowWarning(_parent, "Erreur", "Ceci est une erreur");
+    QMessageBox::warning(this, tr("asf"), tr("txf"));
+
 }
 
 void    GamesWindow::setTabAndAll()
@@ -188,7 +187,6 @@ void    GamesWindow::RecvError(QByteArray res)
 {
   msgpack::unpacked	result;
   msgpack::unpacker	pac;
-  ShowWarning*		error;
   
   pac.reserve_buffer(res.length());
   memcpy(pac.buffer(), res.data(), res.length());
@@ -198,8 +196,8 @@ void    GamesWindow::RecvError(QByteArray res)
       MasterData::ErrorMsg err("");
       pac.next(&result);
       result.get().convert(&err);
-      error = new ShowWarning(_parent, err.msg);
-      error->show();
+
+      QMessageBox::warning(this, tr("Erreur"), tr(err.msg.c_str()));
     }
 }
 

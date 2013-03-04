@@ -4,7 +4,10 @@ AccWindow::AccWindow(int size_x, int size_y, MyWindow *parent) : QDialog(parent,
 {
     _parent = parent;
     setFixedSize(size_x, size_y);
-    setStyleSheet("QWidget { background-image: url(img/bg-test.png); }");
+
+    setObjectName("accwin");
+    setStyleSheet("#accwin { background-image: url(img/bg-test.png); }");
+
     setCoPage();
 }
 

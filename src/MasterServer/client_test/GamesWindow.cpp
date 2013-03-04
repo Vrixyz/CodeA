@@ -35,11 +35,12 @@ GamesWindow::~GamesWindow()
 
 void    GamesWindow::test()
 {
-    ShowWarning*    te;
+//    ShowWarning*    te;
 
-    te = new ShowWarning(_parent, "Ceci est un message d'erreur !");
-    te->setText(QString(te->getMsg().c_str()));
-    te->show();
+//    te = new ShowWarning(_parent, "Erreur", "Ceci est une erreur");
+
+    QMessageBox::warning(this, tr("asf"), tr("txf"));
+
 }
 
 void    GamesWindow::setTabAndAll()

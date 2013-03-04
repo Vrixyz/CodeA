@@ -1,7 +1,6 @@
 #include "GamesWindow.h"
 #include "MyItemLi.h"
 #include "Define.h"
-
 #include "ShowWarning.h"
 
 GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(parent, 0/*Qt::FramelessWindowHint*/)
@@ -187,8 +186,9 @@ void    GamesWindow::RecvList(QByteArray res)
 
 void    GamesWindow::RecvError(QByteArray res)
 {
-  msgpack::unpacked result;
-  msgpack::unpacker pac;
+  msgpack::unpacked	result;
+  msgpack::unpacker	pac;
+  ShowWarning*		error;
   
   pac.reserve_buffer(res.length());
   memcpy(pac.buffer(), res.data(), res.length());
@@ -198,7 +198,8 @@ void    GamesWindow::RecvError(QByteArray res)
       MasterData::ErrorMsg err("");
       pac.next(&result);
       result.get().convert(&err);
-      std::cerr << "Erreur : " << err.msg << std::endl;
+      error = new ShowWarning(_parent, err.msg);
+      error->show();
     }
 }
 

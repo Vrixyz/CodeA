@@ -52,7 +52,7 @@ void    AccWindow::checkCo()
 
     toSendLogin = login.toUtf8().constData();
     toSendPassw = passw.toUtf8().constData();
-    _parent->getDataNet()->setNetwork(new Network("127.0.0.1", _parent->getPort()));
+    _parent->getDataNet()->setNetwork(new Network("10.18.207.183", _parent->getPort()));
     _parent->getDataNet()->getNetwork()->connectToServer();
 
     msgpack::sbuffer sbuf;

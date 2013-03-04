@@ -21,6 +21,7 @@ public:
     Game *game;
 public slots:
     void ReceiveFromServer();
+    void SocError();
 private:
     int port;
     QString host;

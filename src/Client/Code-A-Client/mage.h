@@ -1,7 +1,7 @@
 #ifndef MAGE_H
 #define MAGE_H
 
-#include "mainwindow.h"
+#include "game.h"
 
 class Mage
 {

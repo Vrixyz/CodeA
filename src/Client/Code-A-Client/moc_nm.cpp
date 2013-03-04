@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'nm.h'
 **
-** Created: Mon Mar 4 13:46:03 2013
+** Created: Mon Mar 4 14:57:14 2013
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.2)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_Nm[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       1,   14, // methods
+       2,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -32,12 +32,13 @@ static const uint qt_meta_data_Nm[] = {
 
  // slots: signature, parameters, type, tag, flags
        4,    3,    3,    3, 0x0a,
+      24,    3,    3,    3, 0x0a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_Nm[] = {
-    "Nm\0\0ReceiveFromServer()\0"
+    "Nm\0\0ReceiveFromServer()\0SocError()\0"
 };
 
 void Nm::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -47,6 +48,7 @@ void Nm::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_
         Nm *_t = static_cast<Nm *>(_o);
         switch (_id) {
         case 0: _t->ReceiveFromServer(); break;
+        case 1: _t->SocError(); break;
         default: ;
         }
     }
@@ -85,9 +87,9 @@ int Nm::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 1)
+        if (_id < 2)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 1;
+        _id -= 2;
     }
     return _id;
 }

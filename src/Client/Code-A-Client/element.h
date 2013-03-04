@@ -3,7 +3,7 @@
 
 #include "game.h"
 
-class Element : public QObject
+class Element : public QGraphicsItem
 {
 public:
     Element(GameData::Element , GameData::Physics);

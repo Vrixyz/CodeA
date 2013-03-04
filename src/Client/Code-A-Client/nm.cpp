@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+#include "game.h"
 
 Nm::Nm(QString h, int p, Game *g)
 {
@@ -6,10 +6,12 @@ Nm::Nm(QString h, int p, Game *g)
     host = h;
     port = p;
     QObject::connect(&soc, SIGNAL(readyRead()), this, SLOT(ReceiveFromServer()));
+    QObject::connect(&soc, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(SocError()));
 }
 
 Nm::~Nm()
 {
+    soc.disconnectFromHost();
     soc.close();
 }
 
@@ -22,7 +24,14 @@ void    Nm::sendToServer(const msgpack::sbuffer& packedInformation)
 
 void    Nm::connectToServer()
 {
-    soc.connectToHost(host, port);
+    try
+    {
+        soc.connectToHost(host, port);
+    }
+    catch (std::exception& e)
+    {
+        std::cerr << std::endl << e.what() << std::endl;
+    }
 }
 
 void    Nm::ReceiveFromServer()
@@ -55,6 +64,12 @@ void    Nm::ReceiveFromServer()
     {
         std::cerr << std::endl << e.what() << std::endl;
     }
+}
+
+void    Nm::SocError()
+{
+    std::cout << "Cannot connect !" << std::endl;
+    exit (0);
 }
 
 void    Nm::updatePlayerDefinition(QByteArray line)

@@ -17,6 +17,7 @@ public:
     void createTabServers();
     void createTabSucces();
     void RecvList(QByteArray res);
+    void RecvChat(QByteArray res);
     void RecvError(QByteArray res);
     void RecvServer(QByteArray res);
 
@@ -25,6 +26,7 @@ public slots:
     void sendMsg();
     void RecvData();
     void tryToCoGame();
+    void refreshServ();
     void tryToMatchmaking();
 
 private:
@@ -34,6 +36,7 @@ private:
     QPushButton*        _quit;
     QPushButton*        _join;
     QPushButton*        _match;
+    QPushButton*        _refresh;
 
     QListWidget*        _list;
 

@@ -34,7 +34,13 @@ namespace Server
     static pointer create(boost::asio::io_service& io_service);
     boost::asio::ip::tcp::socket& socket();
     void start();
- private:
+
+    bool connect(char* ip, int port)
+    {
+      boost::asio::ip::tcp::endpoint ep(boost::asio::ip::address::from_string(ip), port);
+      socket_.connect(ep);
+    }
+  private:
     tcp_connection(boost::asio::io_service& io_service)
       : socket_(io_service)
     {

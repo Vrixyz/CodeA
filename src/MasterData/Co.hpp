@@ -38,7 +38,6 @@ namespace MasterData
     MSGPACK_DEFINE(login, pass);
   };
 
-
   //ENVOI D'INFOS AU CLIENT SUR SON COMPTE(USEFULL POUR LE MOMENT)
   struct	InfosClient
   {
@@ -60,6 +59,16 @@ namespace MasterData
     MSGPACK_DEFINE(ip, port);
   };
 
+  // INFOS PLAYER
+  struct	InfosPlayer
+  {
+    InfosPlayer(std::string _ip = "127.0.0.1", std::string _name = "unknown") :
+      ip(_ip), name(_name) {}
+    std::string ip;
+    std::string name;
+    
+    MSGPACK_DEFINE(ip, name);
+  };
 }
 
 #endif

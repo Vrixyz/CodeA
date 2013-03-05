@@ -5,7 +5,11 @@ SuWindow::SuWindow(int size_x, int size_y, MyWindow *parent) : QDialog(parent, Q
 {
     _parent = parent;
     setFixedSize(size_x, size_y);
-    setStyleSheet("QWidget { background-image: url(img/bg-test.png); }");
+
+
+    setObjectName("suwindow");
+    setStyleSheet("#suwindow { background-image: url(img/bg-test.png); }");
+
     setSuPage();
 }
 

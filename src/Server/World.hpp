@@ -21,6 +21,11 @@
 #include "../GameData/Command.hpp"
 #include "../GameData/Information.hpp"
 #include "../GameData/Serializable.hpp"
+
+#include "../MasterData/Command.hpp"
+#include "../MasterData/Co.hpp"
+
+
 #include "myContactListener.hpp"
 #include "BitField.hpp"
 #include "Player.hpp"
@@ -55,11 +60,12 @@ namespace Server
     b2World _physicWorld;
     static MyContactListener myContactListenerInstance;
 
-    World() : _physicWorld(b2Vec2(0, 0)) {
+    World(int port) : communication(port), _physicWorld(b2Vec2(0, 0)) {
       _physicWorld.SetContactListener(&myContactListenerInstance);
+      _port = port;
     }
     ~World();
-    void init(int width, int height);
+    void init(int masterPort, char* masterIp, int width, int height);
     void run();
     void handleContact(b2Body object1, b2Body object2);
     Player& createPlayer(int id);
@@ -82,7 +88,7 @@ namespace Server
     void destroyElement();
     void destroyBullet();
     
-    //fct handling command
+    //fct handling command from clients
     void fire(int idClient, GameData::CommandStruct::Fire);
     void aimTo(int idClient, GameData::CommandStruct::Aim);
     void moveTo(int idClient, GameData::CommandStruct::Move);
@@ -93,13 +99,20 @@ namespace Server
     void askMove(int idClient, GameData::CommandStruct::Move cmd);
     void addPlayer(int idClient);
 
+
+    // fonctions handling communication from master
+    void prepare_new_client(int unused, MasterData::InfosPlayer);
+
+
     void sendUpdatesToClients();
     virtual void serialize(msgpack::packer<msgpack::sbuffer>& packet) const;
     virtual bool unSerialize(msgpack::packer<msgpack::sbuffer>& packet);
     virtual int	getClassId() const;
 
   private:
+    int _port;
     CommandManager<World, int, int>* _commandManager;
+    CommandManager<World, int, int>* _commandManagerMaster;
     GameData::Physics getPhysics(const b2Body* body) const;
   };
 }

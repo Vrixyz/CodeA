@@ -13,29 +13,16 @@
 #include <msgpack.hpp>
 #include <string>
 
-int	main()
+int	main(int ac, char **av)
 {
-  Server::World w;
+  if (ac < 3)
+    {
+      std::cout << av[0] << " serverPort masterPort masterIp" << std::endl;
+      return 0;
+    }
+  Server::World w(atoi(av[1]));
 
-  w.init(100, 100);
-  // msgpack::sbuffer buffer;
-  // msgpack::packer<msgpack::sbuffer> pk(&buffer);
-  // w.serialize(pk);
-
-
-  // // deserializes these objects using msgpack::unpacker.
-  // msgpack::unpacker pac;
- 
-  // // feeds the buffer.
-  // pac.reserve_buffer(buffer.size());
-  // memcpy(pac.buffer(), buffer.data(), buffer.size());
-  // pac.buffer_consumed(buffer.size());
- 
-  // // now starts streaming deserialization.
-  // msgpack::unpacked result;
-  // while(pac.next(&result)) {
-  //   std::cout << result.get() << std::endl;
-  // }
+  w.init(atoi(av[2]), av[3], 100, 100);
   w.run();
   return 0;
 }

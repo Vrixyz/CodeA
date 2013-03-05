@@ -19,12 +19,15 @@ Server::World::~World()
   // TODO: we certainly have stuff to do there.
 }
 
-void	Server::World::init(int width, int height)
+
+void	Server::World::init(int masterPort, char* masterIp, int width, int height)
 {
   srand (time(NULL));
   // // FIXME: we must create the player and the unit at the connection !
   // BitField *b = new  BitField(Server::BitField::MAGE, Server::BitField::MAGE);
-    
+  
+
+
   BitField *obs = new BitField(Server::BitField::OBSTACLE, Server::BitField::TEAM1_UNIT | Server::BitField::TEAM2_UNIT 
 			       | Server::BitField::TEAM1_BULLET | Server::BitField::TEAM2_BULLET | Server::BitField::PORTAL);
   
@@ -38,6 +41,29 @@ void	Server::World::init(int width, int height)
   // _physicWorld.SetContactListener(&World::myContactListenerInstance);
   
   communication.init();
+
+  
+  _commandManagerMaster = new CommandManager<World, int, int>(this);
+  _commandManagerMaster->addCallback(MasterData::Command::PLAYER_JOIN, 
+				     _commandManagerMaster->createCallback(&World::prepare_new_client));
+  
+  communication.setCommandManagerMaster(_commandManagerMaster);
+
+  communication.connect(masterPort, masterIp);
+
+
+  std::string				name;
+  
+  msgpack::sbuffer sbuf;
+  msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+  
+  
+  name = "No name";
+  packet.pack((int)MasterData::Command::CONNECT_SERVER);
+  MasterData::CoServer serv(_port, name);
+  packet.pack(serv);
+  communication.sendToMaster(sbuf);
+
 
   _commandManager = new CommandManager<World, int, int>(this);
   // TODO: commandManager a factory !
@@ -78,6 +104,8 @@ void	Server::World::run()
 	  _physicWorld.Step(TIMESTEP, VELOCITY_ITERATION, POSITION_ITERATION);
  	    
 	  communication._command->interpretCommands();
+	  communication._master_cmd->interpretCommands();
+	  // std::cout << "end interpret cmd master :" << std::endl;
 	  for (std::list<Server::IUnit*>::iterator itu = units.begin(); itu != units.end(); itu++)
 	    {
 	      (*itu)->update(TIMESTEP);
@@ -513,4 +541,9 @@ void	Server::World::addPlayer(int idClient)
   packet.pack(playerDefinition);
 	       
   communication.sendToClient(sbuf, idClient);
+}
+
+void Server::World::prepare_new_client(int, MasterData::InfosPlayer data)
+{
+  std::cout << "player " << data.name << " wants to connect from ip : " << data.ip << std::endl;
 }

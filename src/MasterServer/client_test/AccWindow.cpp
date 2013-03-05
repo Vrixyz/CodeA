@@ -4,7 +4,10 @@ AccWindow::AccWindow(int size_x, int size_y, MyWindow *parent) : QDialog(parent,
 {
     _parent = parent;
     setFixedSize(size_x, size_y);
-    setStyleSheet("QWidget { background-image: url(img/bg-test.png); }");
+
+    setObjectName("accwin");
+    setStyleSheet("#accwin { background-image: url(img/bg-test.png); }");
+
     setCoPage();
 }
 
@@ -52,7 +55,7 @@ void    AccWindow::checkCo()
 
     toSendLogin = login.toUtf8().constData();
     toSendPassw = passw.toUtf8().constData();
-    _parent->getDataNet()->setNetwork(new Network("127.0.0.1", _parent->getPort()));
+    _parent->getDataNet()->setNetwork(new Network("10.18.207.183", _parent->getPort()));
     _parent->getDataNet()->getNetwork()->connectToServer();
 
     msgpack::sbuffer sbuf;
@@ -94,10 +97,10 @@ void    AccWindow::RecvInfosClient()
         }
         else if (idData == MasterData::Command::ERROR)
         {
-            MasterData::ErrorMsg err("");
-            pac.next(&result);
-            result.get().convert(&err);
-            std::cerr << "Erreur connexion : " << err.msg << std::endl;
+        MasterData::ErrorMsg err("");
+        pac.next(&result);
+        result.get().convert(&err);
+        QMessageBox::warning(this, tr("Erreur"), tr(err.msg.c_str()));
         }
     }
 }

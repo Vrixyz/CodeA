@@ -215,13 +215,25 @@ void Server::JoinServer(User* u, msgpack::sbuffer &sbuf)
 	}
       else
 	{
-	  std::cout << "ENVOI DE DATA DE CO" << std::endl; 
-	  msgpack::sbuffer buf;
-	  msgpack::packer<msgpack::sbuffer> packet(&buf);
+	  std::cout << "ENVOI DE DATA DE CLIENT AU GAME SERVER" << std::endl; 
+
+	  msgpack::sbuffer buf1;
+	  msgpack::packer<msgpack::sbuffer> packet1(&buf1);
+	  MasterData::InfosPlayer player(u->getSoc()->getIP(), u->getName());  
+	  packet1.pack((int)MasterData::Command::PLAYER_JOIN);
+	  packet1.pack(player);
+	  std::cout << "taille envoyee : "<< s->getSoc()->sendToServer(buf1) << std::endl;
+	  
+
+	  std::cout << "ip : " << player.ip << ", name: " << player.name << std::endl;
+
+	  std::cout << "ENVOI DE DATA DE CO AU CLIENT" << std::endl; 
+	  msgpack::sbuffer buf2;
+	  msgpack::packer<msgpack::sbuffer> packet2(&buf2);
 	  MasterData::InfosServer serv(s->getSoc()->getIP(), s->getPort());  
-	  packet.pack((int)MasterData::Command::INFOS_SERVER);
-	  packet.pack(serv);
-	  u->getSoc()->sendToServer(buf);
+	  packet2.pack((int)MasterData::Command::INFOS_SERVER);
+	  packet2.pack(serv);
+	  u->getSoc()->sendToServer(buf2);
 	}      
     }
 }
@@ -235,7 +247,7 @@ void Server::ManageUser()
 
   for (i = 0, it = _users.begin(); i < _users.size(); i++, it++)
     if (FD_ISSET((*it)->getSoc()->getFD(), &_readfds))
-      {	
+      {
 	msgpack::sbuffer sbuf;
 	std::cout << "USER " << (*it)->getName() << std::endl;
 	(*it)->getSoc()->RecvString(sbuf);
@@ -400,6 +412,19 @@ void	Server::AddServer(Socket *soc, msgpack::sbuffer &sbuf)
   soc->Close();
 }
 
+int	Server::isCo(std::string login)
+{
+  std::list<User *>::iterator		it;
+  unsigned int				i;
+
+  for (i = 0, it = _users.begin(); i < _users.size(); i++, it++)
+    {
+      if((*it)->getName() == login)
+	return 1;
+    }
+  return 0;
+}
+
 void	Server::CheckCoUser(Socket *soc, msgpack::sbuffer &sbuf)
 {
   User*			u;
@@ -416,7 +441,12 @@ void	Server::CheckCoUser(Socket *soc, msgpack::sbuffer &sbuf)
       if (pac.next(&result))
 	{
 	  result.get().convert(&co);
-	  if ((u = _sql->findUser(co.login, co.pass)) != NULL)
+	  if(isCo(co.login))
+	    {
+	      sendFailure(soc, "Utilisateur deja loguer");
+	      std::cout << "Compte deja loguer" << std::endl;
+	    }
+	  else if ((u = _sql->findUser(co.login, co.pass)) != NULL)
 	    {	      
 	      u->setSoc(soc);
 	      _users.push_back(u);
@@ -425,7 +455,8 @@ void	Server::CheckCoUser(Socket *soc, msgpack::sbuffer &sbuf)
 	      sendCoSucces(u);
 	      return; 
 	    }
-	  sendFailure(soc, "Combinaison user/pass invalid");
+	  else
+	    sendFailure(soc, "Combinaison user/pass invalid");
 	}
     }
   _unknown.remove(soc);
@@ -448,7 +479,7 @@ void	Server::CheckRegUser(Socket *soc, msgpack::sbuffer &sbuf)
       if (pac.next(&result))
 	{
 	  result.get().convert(&reg);
-	  if (_sql->insertElem(reg.login, reg.pass))
+	  if (_sql->insertElem(reg.login, reg.pass) != -1)
 	    {
 	      u = new User(reg.login);	      
 	      u->setSoc(soc);

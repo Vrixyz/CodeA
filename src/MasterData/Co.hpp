@@ -62,7 +62,7 @@ namespace MasterData
   // INFOS PLAYER
   struct	InfosPlayer
   {
-    InfosPlayer(std::string _ip, std::string _name) :
+    InfosPlayer(std::string _ip = "127.0.0.1", std::string _name = "unknown") :
       ip(_ip), name(_name) {}
     std::string ip;
     std::string name;

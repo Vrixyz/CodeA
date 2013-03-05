@@ -21,6 +21,11 @@
 #include "../GameData/Command.hpp"
 #include "../GameData/Information.hpp"
 #include "../GameData/Serializable.hpp"
+
+#include "../MasterData/Command.hpp"
+#include "../MasterData/Co.hpp"
+
+
 #include "myContactListener.hpp"
 #include "BitField.hpp"
 #include "Player.hpp"
@@ -83,7 +88,7 @@ namespace Server
     void destroyElement();
     void destroyBullet();
     
-    //fct handling command
+    //fct handling command from clients
     void fire(int idClient, GameData::CommandStruct::Fire);
     void aimTo(int idClient, GameData::CommandStruct::Aim);
     void moveTo(int idClient, GameData::CommandStruct::Move);
@@ -93,6 +98,11 @@ namespace Server
     void shield(int idClient, GameData::CommandStruct::Shield);
     void askMove(int idClient, GameData::CommandStruct::Move cmd);
     void addPlayer(int idClient);
+
+
+    // fonctions handling communication from master
+    void prepare_new_client(int unused, MasterData::InfosPlayer);
+
 
     void sendUpdatesToClients();
     virtual void serialize(msgpack::packer<msgpack::sbuffer>& packet) const;

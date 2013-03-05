@@ -2,9 +2,11 @@
 ## Custom config
 #################
 
+
 *.o
 *~
-#*#
+\#*\#
+.\#
 Documentation/
 
 

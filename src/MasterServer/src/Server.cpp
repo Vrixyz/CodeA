@@ -216,12 +216,16 @@ void Server::JoinServer(User* u, msgpack::sbuffer &sbuf)
       else
 	{
 	  std::cout << "ENVOI DE DATA DE CLIENT AU GAME SERVER" << std::endl; 
+
 	  msgpack::sbuffer buf1;
 	  msgpack::packer<msgpack::sbuffer> packet1(&buf1);
 	  MasterData::InfosPlayer player(u->getSoc()->getIP(), u->getName());  
 	  packet1.pack((int)MasterData::Command::PLAYER_JOIN);
 	  packet1.pack(player);
-	  s->getSoc()->sendToServer(buf1);
+	  std::cout << "taille envoyee : "<< s->getSoc()->sendToServer(buf1) << std::endl;
+	  
+
+	  std::cout << "ip : " << player.ip << ", name: " << player.name << std::endl;
 
 	  std::cout << "ENVOI DE DATA DE CO AU CLIENT" << std::endl; 
 	  msgpack::sbuffer buf2;
@@ -243,7 +247,7 @@ void Server::ManageUser()
 
   for (i = 0, it = _users.begin(); i < _users.size(); i++, it++)
     if (FD_ISSET((*it)->getSoc()->getFD(), &_readfds))
-      {	
+      {
 	msgpack::sbuffer sbuf;
 	std::cout << "USER " << (*it)->getName() << std::endl;
 	(*it)->getSoc()->RecvString(sbuf);

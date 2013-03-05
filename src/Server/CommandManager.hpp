@@ -16,7 +16,7 @@
 #include <boost/array.hpp>
 
 #include <msgpack.hpp>
-
+#include <stdio.h>
 
 namespace Server
 {
@@ -30,7 +30,7 @@ namespace Server
     class	ICallback
     {
     public:
-      virtual void call(C* caller, IdClient, char* data) const = 0;
+      virtual void call(C* caller, IdClient, msgpack::sbuffer* data) const = 0;
     };
 
     CommandManager(C *c);
@@ -39,7 +39,7 @@ namespace Server
     void removeCallback(IdCom commandId);
 
     // called by Communication
-    void addCommandToQueue(IdClient sender, char* cmd); // msgpack::sbuffer ou equivalent (suite du packet envoye apres l'id de la commande
+    void addCommandToQueue(IdClient sender, char* cmd, int size); // data d'un msgpack::sbuffer (suite du packet envoye apres l'id de la commande
     
     // will call adequate caller functions to prepare the next update (function pointer)
     // then will delete handled commands
@@ -62,7 +62,7 @@ namespace Server
     mutable boost::mutex _m_cmds;
     mutable boost::mutex _m_fcts;
     std::map<IdCom, ICallback*> fcts;
-    std::vector<std::pair<char*, IdClient> >cmds;
+    std::vector<std::pair<msgpack::sbuffer*, IdClient> >cmds;
 
 
     template<typename ArgType>
@@ -76,20 +76,26 @@ namespace Server
 	callback = methodToCall;
       }
 
-      virtual void call(C* caller, IdClient idClient, char* data) const
+      virtual void call(C* caller, IdClient idClient, msgpack::sbuffer* data) const
       {
+	int size = data->size();
 	ArgType arg;
 
 	msgpack::unpacker pac;
 	msgpack::unpacked result;
-
-	int size = sizeof(IdCom) + sizeof(ArgType);      
+	
+	// 
+	
+	//	std::cout << "taille attendue : " << data.size << std::endl;
 	pac.reserve_buffer(size);
-	memcpy(pac.buffer(), data, size);
+	memcpy(pac.buffer(), data->data(), size);
 	pac.buffer_consumed(size);
-	pac.next(&result); // bypass already parsed index
+	if (!pac.next(&result)) // bypass already parsed index
+	  std::cout << "fuck pas d'id pas possible" << std::endl;
+
 	if (pac.next(&result))
 	  {
+	    
 	    msgpack::object obj = result.get();
 	    obj = result.get();
 	    try{
@@ -97,8 +103,13 @@ namespace Server
 	    }
 	    catch(std::exception e)
 	      {
+		std::cout << "msgpack broken" << std::endl;
 		return ; // FIXME: if you happen to be there, the communication might be broken thereafter.
 	      }
+	  }
+	else
+	  {
+	    std::cout << "fuck pas d'arg pas possible" << std::endl;
 	  }
 	(caller->*callback)(idClient, arg);
       }
@@ -114,7 +125,7 @@ namespace Server
 	callback = methodToCall;
       }
 
-      virtual void call(C* caller, IdClient idClient, char* data) const
+      virtual void call(C* caller, IdClient idClient, msgpack::sbuffer*) const
       {
 	(caller->*callback)(idClient);
       }
@@ -150,10 +161,13 @@ void Server::CommandManager<C, IdCom, IdClient>::removeCallback(IdCom commandId)
       
 // TODO: addCommandToSend, and interpretCommandToSend, this would become addCommandReceived
 template<typename C, typename IdCom, typename IdClient>
-void	Server::CommandManager<C, IdCom, IdClient>::addCommandToQueue(IdClient sender, char* cmd)
+void	Server::CommandManager<C, IdCom, IdClient>::addCommandToQueue(IdClient sender, char* cmd, int size)
 {
   boost::lock_guard<boost::mutex> lock(_m_cmds);
-  cmds.push_back(std::pair<char*, IdClient>(cmd, sender));
+  
+  msgpack::sbuffer* sbuf = new msgpack::sbuffer();
+  sbuf->write(cmd, size);
+  cmds.push_back(std::pair<msgpack::sbuffer*, IdClient>(sbuf, sender));
 }
 
 template<typename C, typename IdCom, typename IdClient>
@@ -162,24 +176,27 @@ void	Server::CommandManager<C, IdCom, IdClient>::interpretCommands()
   boost::lock_guard<boost::mutex> lock(_m_cmds);
   for (unsigned int i = 0; i < cmds.size(); i++)
     {
+      std::cout << "commande appelee" << std::endl;
       IdCom id;
       int size = sizeof(IdCom);
       msgpack::unpacker pac;
       msgpack::unpacked result;
       
       pac.reserve_buffer(size);
-      memcpy(pac.buffer(), cmds[i].first, size);
+      memcpy(pac.buffer(), cmds[i].first->data(), size);
       pac.buffer_consumed(size);
       if (pac.next(&result))
 	{
 	  msgpack::object obj = result.get();
 	  obj.convert(&id);
 	}
+      std::cout << "id received : " << id << std::endl;
       if (fcts[(IdCom)id])
 	fcts[(IdCom)id]->call(caller, cmds[i].second, cmds[i].first);
     }
   while (cmds.size() > 0)
     {
+      delete cmds.back().first;
       cmds.pop_back();
     }
 }

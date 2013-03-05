@@ -29,6 +29,41 @@ namespace Server
   template<typename C>
   class	Communication
   {
+  private:
+    class read_socket_handler
+    {
+    public:
+      read_socket_handler(Server::tcp_connection::pointer& connection, CommandManager<C, int, int> *manager, int connectionId) : _connection(connection), _manager (manager), id(connectionId)
+{
+  
+}
+      
+      void operator()(const boost::system::error_code& ec, std::size_t size)
+      {
+	// FIXME: some errors might be less killing than others
+	if (ec != NULL)
+	  return;
+	// FIXME: data() should be copied
+	
+	_manager->addCommandToQueue(id, buf.data(), size);
+	setHandler();
+      }
+      
+    
+      Server::tcp_connection::pointer &getConnection(){return _connection;}
+      void	setHandler()
+      {
+	_connection->socket().
+	  async_read_some(boost::asio::buffer(buf, 127),
+			  bind(boost::type<void>(), boost::ref(*this), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
+      }
+    private:
+      boost::array<char, 127> buf;
+      Server::tcp_connection::pointer _connection;
+      CommandManager<C, int, int> *_manager;
+      const int id;
+    };
+
   public:
     mutable boost::mutex _m_clients;
     std::map<int, tcp_connection::pointer> clients;
@@ -47,7 +82,10 @@ namespace Server
     // bool tryAccept(int* clientId);
     void init();
     void setCommandManager(CommandManager<C, int, int>* commandManager);
-    void setCommandManagerMaster(CommandManager<C, int, int>* commandManager);
+    void setCommandManagerMaster(CommandManager<C, int, int>* commandManager)
+    {
+      _master_cmd = commandManager;
+    }
 
     /// return true to success, false if failed.
     bool sendToClient(const msgpack::sbuffer&packedInformation, int clientId);
@@ -76,10 +114,12 @@ namespace Server
 
       master = tcp_connection::create(acceptor.get_io_service());
 
-      
+      master->connect(ip, port);
+
+      rsm = new read_socket_handler(master, _master_cmd, 0);
+      rsm->setHandler();
       std::cout << "plop" << std::endl;
 
-      master->connect(ip, port);
       std::cout << "plup" << std::endl;
 
       return true; // FIXME: bla
@@ -87,39 +127,11 @@ namespace Server
     }
     
   private:
+    read_socket_handler* rsm;
     boost::thread thread_accept;
     boost::asio::io_service io_service;
     boost::asio::ip::tcp::acceptor acceptor;
 
-    class read_socket_handler
-    {
-    public:
-      read_socket_handler(Server::tcp_connection::pointer& connection, CommandManager<C, int, int> *manager, int connectionId) : _connection(connection), _manager (manager), id(connectionId){}
-      
-      void operator()(const boost::system::error_code& ec, std::size_t)
-      {
-	// FIXME: some errors might be less killing than others
-	if (ec != NULL)
-	  return;
-	// FIXME: data() should be copied
-	_manager->addCommandToQueue(id, buf.data());
-	setHandler();
-      }
-      
-      void	setHandler()
-      {
-	_connection->socket().
-	  async_read_some(boost::asio::buffer(buf, 127),
-			  bind(boost::type<void>(), boost::ref(*this), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
-      }
-    
-      Server::tcp_connection::pointer &getConnection(){return _connection;}
-    private:
-      boost::array<char, 127> buf;
-      Server::tcp_connection::pointer _connection;
-      CommandManager<C, int, int> *_manager;
-      const int id;
-    };
   };
 }
 

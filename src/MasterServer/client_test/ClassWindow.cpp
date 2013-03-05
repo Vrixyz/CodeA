@@ -34,9 +34,13 @@ void    ClassWindow::buildButtons()
 void    ClassWindow::choiceClass1()
 {
     std::cout << "Class1 choisie" << std::endl;
+    _parent->getDataNet()->setClass("class1");
+    _parent->startGame();
 }
 
 void    ClassWindow::choiceClass2()
 {
     std::cout << "Class2 choisie" << std::endl;
+    _parent->getDataNet()->setClass("class2");
+    _parent->startGame();
 }

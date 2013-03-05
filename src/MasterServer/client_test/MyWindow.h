@@ -35,7 +35,7 @@ public:
     void setPort(int);
     int getPort(void);
 
-    void startGame(int, std::string);
+    void startGame(void);
     void endGame(void);
 
 public slots:

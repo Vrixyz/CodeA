@@ -20,22 +20,27 @@
 #include <cmath>
 #include <QWheelEvent>
 #include <iostream>
+#include <QRubberBand>
 #include "gameview.h"
 #include "nm.h"
 #include "element.h"
+#include "bullet.h"
+#include "unit.h"
 
 class GameView;
+class Element;
 
 class Game
 {
 public:
-    Game(QMainWindow *parent = 0);
+    Game(const std::string &, unsigned int , QMainWindow *parent = 0);
     void drawWorld();
     void setPlayerDefinition(const GameData::Information::PlayerDefinition &);
     void setSelection(int unitId);
     void setWorld(GameData::World);
     int angle;
     GameData::World getWorld();
+    std::list<Element *> e;
     std::list<GameData::Element> elem;
     std::list<GameData::Unit> unit;
     std::list<GameData::Bullet> bullet;

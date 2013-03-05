@@ -12,11 +12,13 @@
 #include "Network.h"
 #include "Store.h"
 
+#include "game.h"
+
 #include <QtGui>
 
 class Network;
 
-class MyWindow : public QWidget
+class MyWindow : public QMainWindow
 {
     Q_OBJECT
 
@@ -56,6 +58,7 @@ private:
 
     Store   *_dataNet;
 
+    Game    *_game;
 };
 
 #endif // MYWINDOW_H

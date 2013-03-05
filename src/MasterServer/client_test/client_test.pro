@@ -24,10 +24,12 @@ SOURCES +=      GamesWindow.cpp \
                 Basic.cpp \
                 Store.cpp \
                 main.cpp \
-                element.cpp \
                 gameview.cpp \
+                element.cpp \
+                bullet.cpp \
                 game.cpp \
                 mage.cpp \
+                unit.cpp \
                 nm.cpp
 
 HEADERS +=      GamesWindow.h \

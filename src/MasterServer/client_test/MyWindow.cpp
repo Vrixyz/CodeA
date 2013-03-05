@@ -4,7 +4,7 @@
 #include "ClassWindow.h"
 #include "GamesWindow.h"
 
-MyWindow::MyWindow(int size_x, int size_y) : QWidget()
+MyWindow::MyWindow(int size_x, int size_y) : QMainWindow()
 {
     setFixedSize(size_x, size_y);
     _dataNet = new Store();
@@ -21,6 +21,7 @@ MyWindow::~MyWindow()
 void    MyWindow::startGame()
 {
     _classWindow->hide();
+    _game = new Game(getDataNet()->getServIP(), getDataNet()->getServPort(), this);
     show();
 }
 

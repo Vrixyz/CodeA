@@ -18,11 +18,9 @@ MyWindow::~MyWindow()
 {
 }
 
-void    MyWindow::startGame(int port, std::string ip)
+void    MyWindow::startGame()
 {
-    _gamesWindow->hide();
-    port = port;
-    ip = ip;
+    _classWindow->hide();
     show();
 }
 
@@ -62,11 +60,11 @@ void    MyWindow::setAccWindow()
 
 void    MyWindow::setClassWindow()
 {
+    if ((_gamesWindow != NULL) && _gamesWindow->isActiveWindow() == 1)
+        _gamesWindow->hide();
     if (_classWindow == NULL)
         _classWindow = new ClassWindow(400, 400, this);
     _classWindow->show();
-    if ((_gamesWindow != NULL) && _gamesWindow->isActiveWindow() == 1)
-        _gamesWindow->hide();
 }
 
 QDialog *MyWindow::getGamesWindow(void)

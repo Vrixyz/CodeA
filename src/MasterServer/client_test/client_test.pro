@@ -14,26 +14,36 @@ TARGET = client_test
 TEMPLATE = app
 
 
-SOURCES +=      main.cpp \
+SOURCES +=      GamesWindow.cpp \
+                ClassWindow.cpp \
+                AccWindow.cpp \
                 MyWindow.cpp \
+                SuWindow.cpp \
+                MyItemLi.cpp \
                 Network.cpp \
                 Basic.cpp \
-                AccWindow.cpp \
                 Store.cpp \
-                GamesWindow.cpp \
-                ClassWindow.cpp \
-                SuWindow.cpp \
-                MyItemLi.cpp
+                main.cpp \
+                element.cpp \
+                gameview.cpp \
+                game.cpp \
+                mage.cpp \
+                nm.cpp
 
-HEADERS +=      Network.h \
-                MyWindow.h \ 
-                AccWindow.h \
-                Store.h \
-                Define.h \
-                GamesWindow.h \
+HEADERS +=      GamesWindow.h \
                 ClassWindow.h \
+                AccWindow.h \
+                MyWindow.h \
                 SuWindow.h \
-                MyItemLi.h
+                MyItemLi.h \
+                Network.h \
+                Define.h \
+                Store.h \
+                element.h \
+                gameview.h \
+                game.h \
+                mage.h \
+                nm.h
 
 
 FORMS    +=

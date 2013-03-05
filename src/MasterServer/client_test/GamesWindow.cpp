@@ -213,8 +213,9 @@ void    GamesWindow::RecvServer(QByteArray res)
         pac.next(&result);
         result.get().convert(&serv);
         std::cerr << "INFOS DE CONNEXION IP:" << serv.ip << " PORT:" << serv.port << std::endl;
-        //PARSER LA STRUCT D'infos SERVEUR ET FAIRE LE BORDEL QUE DORIAN DOIT FAIRE!
-
+        _parent->getDataNet()->setServIP(serv.ip);
+        _parent->getDataNet()->setServPort(serv.port);
+        _parent->setClassWindow();
     }
 }
 

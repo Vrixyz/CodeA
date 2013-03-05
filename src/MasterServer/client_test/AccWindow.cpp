@@ -92,15 +92,16 @@ void    AccWindow::RecvInfosClient()
             pac.next(&result);
             result.get().convert(&info);
             std::cout << "CONNEXION DONE de " << info.name << std::endl;
+            _parent->getDataNet()->setLogin(info.name);
             _parent->getDataNet()->getNetwork()->getSock()->disconnect();
             _parent->setGamesWindow();
         }
         else if (idData == MasterData::Command::ERROR)
         {
-        MasterData::ErrorMsg err("");
-        pac.next(&result);
-        result.get().convert(&err);
-        QMessageBox::warning(this, tr("Erreur"), tr(err.msg.c_str()));
+            MasterData::ErrorMsg err("");
+            pac.next(&result);
+            result.get().convert(&err);
+            QMessageBox::warning(this, tr("Erreur"), tr(err.msg.c_str()));
         }
     }
 }

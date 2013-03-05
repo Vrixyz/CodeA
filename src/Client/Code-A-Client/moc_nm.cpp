@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'nm.h'
 **
-** Created: Mon Mar 4 14:57:14 2013
+** Created: Tue Mar 5 16:17:15 2013
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.2)
 **
 ** WARNING! All changes made in this file will be lost!

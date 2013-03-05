@@ -13,11 +13,17 @@ public:
     void keyPressEvent(QKeyEvent *);
     void mouseMoveEvent(QMouseEvent *);
     void mousePressEvent(QMouseEvent *);
+    void mouseReleaseEvent(QMouseEvent *);
     void wheelEvent(QWheelEvent *);
     void setMove(int, int);
     void rotationUpdate();
     void bindNet(Nm *);
     Nm *n;
+    QPoint base;
+    QRect selecrect;
+    QPoint cur;
+    QRubberBand *rubberBand;
+    bool baseknown;
     int cangle;
     int angle;
     int status;

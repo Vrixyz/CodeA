@@ -2,6 +2,7 @@
 
 GameView::GameView(QWidget *parent) : QGraphicsView(parent)
 {
+    baseknown = false;
     status = 6;
     dvectorx = 0;
     dvectory = 0;
@@ -9,14 +10,16 @@ GameView::GameView(QWidget *parent) : QGraphicsView(parent)
     setObjectName(QString::fromUtf8("Gameview"));
     setGeometry(QRect(0, 0, 800, 600));
     setMouseTracking(true);
-    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setInteractive(true);
     setSceneRect(QRectF(-400, -300, 800, 600));
 }
 
 void GameView::mouseMoveEvent(QMouseEvent *e)
 {
+    if (rubberBand)
+        rubberBand->setGeometry(QRect(base, e->pos()).normalized());
     int stat;
     msgpack::sbuffer sbuf;
     msgpack::packer<msgpack::sbuffer> packet(&sbuf);
@@ -105,22 +108,32 @@ void GameView::rotationUpdate()
 
 void GameView::mousePressEvent(QMouseEvent *event)
 {
-    msgpack::sbuffer sbuf;
-    msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+//    msgpack::sbuffer sbuf;
+//    msgpack::packer<msgpack::sbuffer> packet(&sbuf);
     switch (event->button())
     {
     case Qt::LeftButton:
-        packet.pack((int)GameData::Command::Fire);
-        GameData::CommandStruct::Fire f;
-        f.x = 0;
-        f.y = 0;
-        f.idUnit = n->game->selectedUnit;
-        packet.pack(f);
-        n->sendToServer(sbuf);
+        base = event->pos();
+        rubberBand = new QRubberBand(QRubberBand::Rectangle, this);
+        rubberBand->setGeometry(QRect(base, QSize()));
+        rubberBand->show();
         break;
 
     default:
         std::cout << "nothing" << std::endl;
+        break;
+    }
+}
+
+void GameView::mouseReleaseEvent(QMouseEvent *event)
+{
+    switch (event->button())
+    {
+    case Qt::LeftButton:
+        rubberBand->hide();
+//        std::cout << "unset rect base " << event->x() << " " << event->y() << std::endl;
+        break;
+    default:
         break;
     }
 }

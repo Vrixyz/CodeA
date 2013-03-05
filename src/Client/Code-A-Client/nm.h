@@ -12,7 +12,7 @@ class Nm : public QObject
 {
     Q_OBJECT
 public:
-    Nm(QString, int, Game *);
+    Nm(QString, unsigned int, Game *);
     ~Nm();
     void connectToServer();
     void sendToServer(const msgpack::sbuffer&);

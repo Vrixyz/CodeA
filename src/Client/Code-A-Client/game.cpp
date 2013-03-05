@@ -1,6 +1,6 @@
 #include "game.h"
 
-Game::Game(QMainWindow *w)
+Game::Game(const std::string &ip, unsigned int port, QMainWindow *w)
 {
     angle = 0;
     win = w;
@@ -9,7 +9,7 @@ Game::Game(QMainWindow *w)
     scene = new QGraphicsScene(0, 0, 800, 600);
     view = new GameView();
     std::cout << "You just started a new game" << std::endl;
-    n = new Nm("127.0.0.1", 4242, this);
+    n = new Nm(QString(ip.c_str()), port, this);
     view->bindNet(n);
     n->connectToServer();
     // Sending information "I want to be a player"
@@ -39,20 +39,19 @@ void Game::drawWorld() {
     scene->addLine(lx);
     scene->addLine(ly);
     std::list<GameData::Unit>::iterator unitit = unit.begin();
-    for (std::list<GameData::Physics>::iterator it = pelem.begin(); it != pelem.end(); it++) { // elems physics loop
-        QPolygon *poly = new QPolygon();
-        p = *it;
-        for (std::list<GameData::Physics::Coord>::iterator ite = p.vertices.begin(); ite != p.vertices.end(); ite++) {
-            c = *ite;
-            (*poly) << QPoint(c.x, c.y * -1);
-            //            std::cout << c.x << " " << c.y << std::endl;
-        }
-        item = scene->addPolygon(*poly);
-        item->setRotation(p.angle);
-        //        std::cout << "Elem : " << p.x << " " << p.y << std::endl;
-        item->setPos(p.x * 1, p.y * -1);
-    }
-    unitit = unit.begin();
+//    for (std::list<GameData::Physics>::iterator it = pelem.begin(); it != pelem.end(); it++) { // elems physics loop
+//        QPolygon *poly = new QPolygon();
+//        p = *it;
+//        for (std::list<GameData::Physics::Coord>::iterator ite = p.vertices.begin(); ite != p.vertices.end(); ite++) {
+//            c = *ite;
+//            (*poly) << QPoint(c.x, c.y * -1);
+//            //            std::cout << c.x << " " << c.y << std::endl;
+//        }
+//        item = scene->addPolygon(*poly);
+//        item->setRotation(p.angle);
+//                std::cout << "Elem : " << p.x << " " << p.y << std::endl;
+//        item->setPos(p.x * 1, p.y * -1);
+//    }
     for (std::list<GameData::Physics>::iterator it = punit.begin(); it != punit.end(); it++, unitit++) { // units physics loop
         p = *it;
         u = *unitit;

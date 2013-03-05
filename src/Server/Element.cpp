@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 17:53:20 2012 thierry berger
-// Last update Thu Feb 21 15:51:43 2013 mathieu leurquin
+// Last update Mon Mar  4 15:57:00 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -13,9 +13,10 @@
 
 static unsigned int _incr_id = 0;
 
-Server::Element::Element(World& world, bool walkable) :
+Server::Element::Element(World& world, bool walkable, int idU) :
   Object(world, Object::Element, _incr_id), _data(_incr_id, walkable)
 {
+  _idU = idU;
   std::cout << "new element" << std::endl;
   _incr_id++;
 }

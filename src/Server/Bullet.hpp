@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 17:37:09 2012 thierry berger
-// Last update Thu Feb 21 16:17:38 2013 mathieu leurquin
+// Last update Sat Mar  2 13:20:10 2013 mathieu leurquin
 //
 
 #ifndef SERVER_BULLET_HPP
@@ -20,8 +20,9 @@ namespace Server
   class Bullet : public Object
   {
   public:
+    int _idU;
     GameData::Bullet _data;
-    Bullet(World& w, int damage);
+    Bullet(World& w, int damage, int idU);
     ~Bullet();
     virtual b2Body* setBody(float angle, b2Vec2 position, BitField * b);
     /// TODO: implement these functions (or delete all serialized related stuff (nah..))

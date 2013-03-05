@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Fri Feb 22 10:41:33 2013 mathieu leurquin
-// Last update Wed Feb 27 10:11:05 2013 mathieu leurquin
+// Last update Tue Mar  5 10:30:03 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -36,6 +36,9 @@ b2Body*	Server::Minion::setBody(BitField *b, float x, float y)
   // fDef.filter.categoryBits = -1;
   // fDef.filter.maskBits = -1;
   this->_body->CreateFixture(&fDef);
+  this->current.x = this->getBody()->GetPosition().x;
+  this->current.y = this->getBody()->GetPosition().y;
+
   return this->_body;
 }
 
@@ -63,16 +66,19 @@ void	Server::Minion::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
 
 void Server::Minion::move()
 {
-  float impulseX;
-  float impulseY;
-  b2Vec2 actualLinearVelocity;
+   // TEST FOR MOVE WITH MOUSE
+  
+  _body->ApplyLinearImpulse(b2Vec2((this->current.x - this->getBody()->GetPosition().x), (this->current.y - this->getBody()->GetPosition().y)), _body->GetWorldCenter());
+  // float impulseX;
+  // float impulseY;
+  // b2Vec2 actualLinearVelocity;
 
-  actualLinearVelocity = _body->GetLinearVelocity();
-  impulseX = _body->GetMass() * current.x - actualLinearVelocity.x;
-  impulseY = _body->GetMass() * current.y - actualLinearVelocity.y;
+  // actualLinearVelocity = _body->GetLinearVelocity();
+  // impulseX = _body->GetMass() * current.x - actualLinearVelocity.x;
+  // impulseY = _body->GetMass() * current.y - actualLinearVelocity.y;
 
-  _body->ApplyLinearImpulse(b2Vec2(impulseX, impulseY), _body->GetWorldCenter());
-  actualLinearVelocity = _body->GetLinearVelocity();
+  // _body->ApplyLinearImpulse(b2Vec2(impulseX, impulseY), _body->GetWorldCenter());
+  // actualLinearVelocity = _body->GetLinearVelocity();
 }
 
 void Server::Minion::setMove(const GameData::CommandStruct::Move& arg)
@@ -94,6 +100,12 @@ void Server::Minion::setRotateRight()
 void Server::Minion::setRotateStop()
 {
   rotation = 0.0;
+}
+
+void Server::Minion::moveTo(int x, int y)
+{
+  current.x = x;
+  current.y = y;
 }
 
 void Server::Minion::spell1(const GameData::CommandStruct::Fire &arg)
@@ -139,6 +151,7 @@ void Server::Minion::intraCollisionUnit(Object *o)
 
 void Server::Minion::intraCollisionElement(Object *o)
 {
+  
   std::cout<<"Unit::Collision with a unit and element!"<<std::endl;
 }
 

@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Thu Feb 21 14:03:36 2013 mathieu leurquin
-// Last update Fri Feb 22 12:35:55 2013 mathieu leurquin
+// Last update Tue Mar  5 10:30:29 2013 mathieu leurquin
 //
 
 #ifndef SERVER_PORTAL_HPP
@@ -42,7 +42,7 @@ namespace Server
     virtual void spell1(const GameData::CommandStruct::Fire&);
     virtual void spell2(const GameData::CommandStruct::Shield arg);
 
-
+    virtual void moveTo(int x, int y);
     virtual b2Body* setBody(BitField *b, float x, float y);
     const GameData::Unit& getData() const {return _data;}
     void createMinion();

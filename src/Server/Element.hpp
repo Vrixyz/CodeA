@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:16:58 2012 mathieu leurquin
-// Last update Wed Dec 12 10:35:56 2012 mathieu leurquin
+// Last update Sat Mar  2 13:20:10 2013 mathieu leurquin
 //
 
 #ifndef SERVER_ELEMENT_HPP
@@ -20,8 +20,9 @@ namespace Server
   class	Element : public Object
   {
   public:
+    int _idU;
     GameData::Element _data;
-    Element(World& world, bool walkable);
+    Element(World& world, bool walkable, int idU);
     ~Element();
     virtual b2Body* setBody(BitField *b, float width = 100, float height = 100, int x = 10, int y = 10);
     const GameData::Element& getData()const {return _data;}

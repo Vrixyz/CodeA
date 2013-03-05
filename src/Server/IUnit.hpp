@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Jan 02 13:00:00 2013 thierry berger
-// Last update Thu Feb 21 15:57:31 2013 mathieu leurquin
+// Last update Tue Mar  5 10:28:58 2013 mathieu leurquin
 //
 
 #ifndef SERVER_I_UNIT_HPP_
@@ -35,7 +35,7 @@ namespace Server
     virtual void setRotateLeft() = 0;
     virtual void setRotateRight() = 0;
     virtual void setRotateStop() = 0;
-
+    virtual void moveTo(int x, int y) = 0;
     virtual void spell1(const GameData::CommandStruct::Fire& arg) = 0;
     virtual void spell2(const GameData::CommandStruct::Shield arg) = 0;
   };

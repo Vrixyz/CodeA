@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Wed Sep 12 13:00:00 2012 mathieu leurquin
-// Last update Fri Feb 22 12:36:20 2013 mathieu leurquin
+// Last update Tue Mar  5 10:31:21 2013 mathieu leurquin
 //
 
 #ifndef SERVER_UNIT_HPP
@@ -47,7 +47,7 @@ namespace Server
     virtual void setRotateStop();
     virtual void spell1(const GameData::CommandStruct::Fire&);
     virtual void spell2(const GameData::CommandStruct::Shield arg);
-
+    virtual void moveTo(int x, int y);
 
     virtual b2Body*	setBody(BitField *b);
     const GameData::Unit& getData() const {return _data;}

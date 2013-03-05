@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Fri Sep 14 10:40:12 2012 thierry berger
-// Last update Wed Feb 27 10:21:43 2013 mathieu leurquin
+// Last update Sat Mar  2 13:20:10 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -13,8 +13,9 @@
 
 static unsigned int _incr_id = 0;
 
-Server::Bullet::Bullet(World& w, int damage) : Object(w, Object::Bullet, _incr_id), _data(damage, _incr_id)
+Server::Bullet::Bullet(World& w, int damage, int idU) : Object(w, Object::Bullet, _incr_id), _data(damage, _incr_id)
 {
+  _idU = idU;
   _incr_id++;
 }
 

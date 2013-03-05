@@ -4,7 +4,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Wed Feb 27 10:15:50 2013 mathieu leurquin
+// Last update Tue Mar  5 10:28:05 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -31,7 +31,7 @@ void	Server::World::init(int width, int height)
   // u = this->createUnit(b);
   // u->addPlayer(&this->createPlayer(0));
 
-  //  this->createElement(true, 100, 100, obs, -1);
+  //  this->createElement(true, 10, 10, obs, -1);
   
   // this->createElement(true, 1, 10, shield);
   
@@ -98,7 +98,7 @@ void	Server::World::run()
 	  destroyUnit();
 	  destroyBullet();
 	  destroyElement();
-	}
+ 	}
       // FIXME: think more about that sleep.
       usleep(500);
     }  
@@ -145,7 +145,7 @@ Server::Portal* Server::World::createPortal(BitField *b, Player* player)
 
 Server::Element* Server::World::createElement(bool walkable, float width, float height, BitField *b, int idU)
 {
-  Server::Element* e = new Element(*this, walkable);
+  Server::Element* e = new Element(*this, walkable, idU);
   e->setBody(b, width, height);
   elements.push_back(e);  
   return e;
@@ -153,7 +153,7 @@ Server::Element* Server::World::createElement(bool walkable, float width, float 
 
 Server::Bullet*  Server::World::createBullet(int damage, float angle, b2Vec2 pos, int idUnit, BitField *bit)
 {
-  Server::Bullet* b = new Bullet(*this, damage);
+  Server::Bullet* b = new Bullet(*this, damage, idUnit);
 
   b->setBody(angle, pos, bit);
   bullets.push_back(b);
@@ -186,8 +186,11 @@ Server::Element* Server::World::getElement(int id)
 {
   for (std::list<Element*>::iterator it = elements.begin(); it != elements.end(); it++)
     {
-      if ((*it)->id == id)
-	return (*it);
+      if ((*it)->_idU == id)
+	{
+	  std::cout<<"trouver"<<std::endl;
+	  return (*it);
+	}
     }
   return NULL;
 }
@@ -196,7 +199,7 @@ Server::Bullet* Server::World::getBullet(int id)
 {
   for (std::list<Bullet*>::iterator it = bullets.begin(); it != bullets.end(); it++)
     {
-      if ((*it)->id == id)
+      if ((*it)->_idU == id)
       	return (*it);
     }
   return NULL;
@@ -208,7 +211,6 @@ void Server::World::addUnitToDestroy(Server::IUnit *u)
     {
       if ((*it) == u)
 	{
-	  std::cout<<"T MORT"<<std::endl;
 	  unitsErase.insert(*it);
 	}
     }
@@ -219,10 +221,7 @@ void Server::World::addElemToDestroy(Server::Element *u)
   for (std::list<Element*>::iterator it = elements.begin(); it != elements.end(); it++)
     {
       if ((*it) == u)
-	{
-	  std::cout<<"T MORT"<<std::endl;
-	  elementsErase.insert(*it);
-	}
+	elementsErase.insert(*it);
     }
 }
 
@@ -232,7 +231,6 @@ void Server::World::addBulletToDestroy(Server::Bullet *u)
     {
       if ((*it) == u)
 	{
-	  std::cout<<"T MORT"<<std::endl;
 	  bulletsErase.insert(*it);
 	}
     }
@@ -373,11 +371,11 @@ void Server::World::destroyElement()
   
   
     //... and remove it from main list of balls
-    std::list<Element*>::iterator it = std::find(elements.begin(), elements.end(), dyingElement);
-    if (it != elements.end())
-      elements.erase(it);
+    std::list<Element*>::iterator p = std::find(elements.begin(), elements.end(), dyingElement);
+    //if (it != elements.end())
+    elements.erase(p);
     elementsErase.erase(*it);
-    //    delete dyingElement; // NOTE: deleted by erase();
+    delete dyingElement; // NOTE: deleted by erase();
   } 
   //elementsErase.clear();
 }
@@ -415,8 +413,13 @@ void Server::World::aimTo(int idClient, GameData::CommandStruct::Aim)
 {
 }
 
-void Server::World::moveTo(int idClient, GameData::CommandStruct::Move)
+void Server::World::moveTo(int idClient, GameData::CommandStruct::Move arg)
 {
+  IUnit* u = getUnit(arg.idUnit);
+  
+  if (u == NULL || u->belongsToPlayer(idClient) == false)
+    return;
+  u->moveTo(arg.x, arg.y);
 }
 
 void Server::World::rotateLeft(int idClient, GameData::CommandStruct::Rotate arg)
@@ -488,7 +491,7 @@ void	Server::World::addPlayer(int idClient)
   else
     {
       BitField *bp = new  BitField(Server::BitField::PORTAL, Server::BitField::TEAM2_BULLET | Server::BitField::TEAM2_UNIT | Server::BitField::TEAM1_BULLET | Server::BitField::TEAM1_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL);
-      createPortal(bp, &(p));
+       createPortal(bp, &(p));
       createPortal(bp, &(p));
       createPortal(bp, &(p));
     }

@@ -22,6 +22,7 @@ void    MyWindow::startGame()
 {
     _classWindow->hide();
     _game = new Game(getDataNet()->getServIP(), getDataNet()->getServPort(), this);
+    std::cout << "KEEP WORKING" << std::endl;
     show();
 }
 

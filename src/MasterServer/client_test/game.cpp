@@ -1,6 +1,6 @@
 #include "game.h"
 
-Game::Game(const std::string &ip, unsigned int port, QMainWindow *w)
+Game::Game(const std::string &ip, unsigned int port, MyWindow *w)
 {
     angle = 0;
     win = w;
@@ -17,6 +17,15 @@ Game::Game(const std::string &ip, unsigned int port, QMainWindow *w)
     msgpack::packer<msgpack::sbuffer> packet(&sbuf);
     packet.pack((int)GameData::Command::BePlayer);
     n->sendToServer(sbuf);
+}
+
+Game::~Game()
+{
+    std::cout << "deleteing" << std::endl;
+    delete this->n;
+    delete this->view;
+    delete this->scene;
+    this->win->endGame();
 }
 
 void Game::setWorld(GameData::World w) {

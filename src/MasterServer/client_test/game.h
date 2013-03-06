@@ -26,14 +26,17 @@
 #include "element.h"
 #include "bullet.h"
 #include "unit.h"
+#include "MyWindow.h"
 
 class GameView;
 class Element;
+class MyWindow;
 
 class Game
 {
 public:
-    Game(const std::string &, unsigned int , QMainWindow *parent = 0);
+    Game(const std::string &, unsigned int , MyWindow *parent = 0);
+    ~Game();
     void drawWorld();
     void setPlayerDefinition(const GameData::Information::PlayerDefinition &);
     void setSelection(int unitId);
@@ -50,7 +53,7 @@ public:
     GameView *view;
     Nm *n;
     QGraphicsScene *scene;
-    QMainWindow *win;
+    MyWindow *win;
     GameData::Information::PlayerDefinition* playerDefinition;
     unsigned int selectedUnit;
 private:

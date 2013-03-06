@@ -19,7 +19,7 @@ GameView::GameView(QWidget *parent) : QGraphicsView(parent)
 
 void GameView::mouseMoveEvent(QMouseEvent *e)
 {
-  rubberBand->setGeometry(QRect(base, e->pos()).normalized());
+    rubberBand->setGeometry(QRect(base, e->pos()).normalized());
     int stat;
     msgpack::sbuffer sbuf;
     msgpack::packer<msgpack::sbuffer> packet(&sbuf);
@@ -108,17 +108,17 @@ void GameView::rotationUpdate()
 
 void GameView::mousePressEvent(QMouseEvent *event)
 {
-  switch (event->button())
+    switch (event->button())
     {
     case Qt::LeftButton:
-      base = event->pos();
-      rubberBand->setGeometry(QRect(base, QSize()));
-      rubberBand->show();
-      break;
+        base = event->pos();
+        rubberBand->setGeometry(QRect(base, QSize()));
+        rubberBand->show();
+        break;
 
     default:
-      std::cout << "nothing" << std::endl;
-      break;
+        std::cout << "nothing" << std::endl;
+        break;
     }
 }
 
@@ -183,6 +183,10 @@ void GameView::keyPressEvent(QKeyEvent *e) {
         case Qt::Key_D:
             std::cout << "RIGHT !" << std::endl;
             setMove(1, 0);
+            break;
+        case Qt::Key_Escape:
+            std::cout << "QUIT !" << std::endl;
+            delete this->n->game;
             break;
         default:
             std::cout << "Left = " << Qt::Key_Left << ", Right = " << Qt::Key_Right << ", Value = " << e->key() << std::endl;

@@ -14,12 +14,12 @@ GameView::GameView(QWidget *parent) : QGraphicsView(parent)
     this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setInteractive(true);
     setSceneRect(QRectF(-400, -300, 800, 600));
+    rubberBand = new QRubberBand(QRubberBand::Rectangle, this);
 }
 
 void GameView::mouseMoveEvent(QMouseEvent *e)
 {
-    if (rubberBand)
-        rubberBand->setGeometry(QRect(base, e->pos()).normalized());
+  rubberBand->setGeometry(QRect(base, e->pos()).normalized());
     int stat;
     msgpack::sbuffer sbuf;
     msgpack::packer<msgpack::sbuffer> packet(&sbuf);
@@ -108,20 +108,17 @@ void GameView::rotationUpdate()
 
 void GameView::mousePressEvent(QMouseEvent *event)
 {
-//    msgpack::sbuffer sbuf;
-//    msgpack::packer<msgpack::sbuffer> packet(&sbuf);
-    switch (event->button())
+  switch (event->button())
     {
     case Qt::LeftButton:
-        base = event->pos();
-        rubberBand = new QRubberBand(QRubberBand::Rectangle, this);
-        rubberBand->setGeometry(QRect(base, QSize()));
-        rubberBand->show();
-        break;
+      base = event->pos();
+      rubberBand->setGeometry(QRect(base, QSize()));
+      rubberBand->show();
+      break;
 
     default:
-        std::cout << "nothing" << std::endl;
-        break;
+      std::cout << "nothing" << std::endl;
+      break;
     }
 }
 
@@ -131,7 +128,6 @@ void GameView::mouseReleaseEvent(QMouseEvent *event)
     {
     case Qt::LeftButton:
         rubberBand->hide();
-//        std::cout << "unset rect base " << event->x() << " " << event->y() << std::endl;
         break;
     default:
         break;

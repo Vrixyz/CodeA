@@ -98,7 +98,7 @@ void    Nm::updateWorld(QByteArray ligne) {
     pac.next(&result); // remove unused id
     if (pac.next(&result)) {
         result.get().convert(&woo);
-        game->e.clear();
+        // game->e.clear();
         game->setWorld(woo);
         game->unit.clear();
         game->punit.clear();
@@ -113,8 +113,8 @@ void    Nm::updateWorld(QByteArray ligne) {
             result.get().convert(&e);
             pac.next(&result);
             result.get().convert(&p);
-            Element *el = new Element(e, p, game->scene);
-            game->e.push_back(el);
+//            Element *el = new Element(e, p, game->scene);
+//            game->e.push_back(el);
             game->elem.push_back(e);
             game->pelem.push_back(p);
 	    //            std::cout << "angle: " << p.angle << std::endl;

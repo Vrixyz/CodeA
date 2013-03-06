@@ -4,7 +4,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Tue Mar  5 10:28:05 2013 mathieu leurquin
+// Last update Wed Mar  6 11:44:06 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -49,7 +49,7 @@ void	Server::World::init(int masterPort, char* masterIp, int width, int height)
   
   communication.setCommandManagerMaster(_commandManagerMaster);
 
-  communication.connect(masterPort, masterIp);
+    communication.connect(masterPort, masterIp);
 
 
   std::string				name;

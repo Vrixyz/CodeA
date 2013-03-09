@@ -2,7 +2,6 @@
 
 GameView::GameView(QWidget *parent) : QGraphicsView(parent)
 {
-    baseknown = false;
     status = 6;
     dvectorx = 0;
     dvectory = 0;
@@ -127,9 +126,39 @@ void GameView::mouseReleaseEvent(QMouseEvent *event)
     switch (event->button())
     {
     case Qt::LeftButton:
+    {
         rubberBand->hide();
+        QList<QGraphicsItem *> list = this->n->game->scene->items(rubberBand->rect());
+        std::cout << "Il se passe quelque chose ! " << list.size() << std::endl;
+        for (int i = 0; i < list.length(); i++)
+        {
+            QGraphicsItem *item = list.at(i);
+            std::cout << "item pos => x : " << item->x() << " y : " << item->y() << std::endl;
+        }
+//        for (int i = 0; i < list.size(); i++)
+//        {
+//            item = dynamic_cast<Item *>(list[i]);
+//            switch (item->t)
+//            {
+//            case 0:
+//                std::cout << "selected BULLET" << std::endl;
+//                break;
+//            case 2:
+//                std::cout << "selected UNIT" << std::endl;
+//                break;
+//            case 1:
+//                std::cout << "selected ELEMENT" << std::endl;
+//                break;
+//            default:
+//                std::cout << "c'est l'echec" << std::endl;
+//                break;
+//            }
+//        }
         break;
+    }
+
     default:
+        std::cout << "whatever" << std::endl;
         break;
     }
 }

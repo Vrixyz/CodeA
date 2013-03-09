@@ -1,13 +1,13 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "../../GameData/World.hpp"
-#include "../../GameData/Physics.hpp"
-#include "../../GameData/Unit.hpp"
-#include "../../GameData/Bullet.hpp"
-#include "../../GameData/Element.hpp"
-#include "../../GameData/Information.hpp"
-#include "../../GameData/Command.hpp"
+#include "../GameData/World.hpp"
+#include "../GameData/Physics.hpp"
+#include "../GameData/Unit.hpp"
+#include "../GameData/Bullet.hpp"
+#include "../GameData/Element.hpp"
+#include "../GameData/Information.hpp"
+#include "../GameData/Command.hpp"
 #include <QGraphicsItem>
 #include <QGraphicsScene>
 #include <QGraphicsView>
@@ -23,6 +23,7 @@
 #include <QRubberBand>
 #include "gameview.h"
 #include "nm.h"
+#include "item.h"
 #include "element.h"
 #include "bullet.h"
 #include "unit.h"
@@ -30,11 +31,14 @@
 
 class GameView;
 class Element;
+class Bullet;
+class Unit;
 class MyWindow;
 
 class Game
 {
 public:
+
     Game(const std::string &, unsigned int , MyWindow *parent = 0);
     ~Game();
     void drawWorld();
@@ -44,12 +48,8 @@ public:
     int angle;
     GameData::World getWorld();
     std::list<Element *> e;
-    std::list<GameData::Element> elem;
-    std::list<GameData::Unit> unit;
-    std::list<GameData::Bullet> bullet;
-    std::list<GameData::Physics> pelem;
-    std::list<GameData::Physics> punit;
-    std::list<GameData::Physics> pbullet;
+    std::list<Bullet *> b;
+    std::list<Unit *> u;
     GameView *view;
     Nm *n;
     QGraphicsScene *scene;

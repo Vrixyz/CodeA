@@ -4,7 +4,7 @@
 #include <msgpack.hpp>
 #include <QObject>
 #include <QTcpSocket>
-#include "../../GameData/World.hpp"
+#include "../GameData/World.hpp"
 
 class Game;
 

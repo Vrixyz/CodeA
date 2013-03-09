@@ -36,7 +36,7 @@ void    Nm::connectToServer()
 
 void    Nm::ReceiveFromServer()
 {
-//    std::cout << "received" << std::endl;
+    //    std::cout << "received" << std::endl;
     QByteArray ligne;
     ligne = soc.readAll();
     try
@@ -98,14 +98,10 @@ void    Nm::updateWorld(QByteArray ligne) {
     pac.next(&result); // remove unused id
     if (pac.next(&result)) {
         result.get().convert(&woo);
-        // game->e.clear();
+        game->b.clear();
+        game->e.clear();
+        game->u.clear();
         game->setWorld(woo);
-        game->unit.clear();
-        game->punit.clear();
-        game->elem.clear();
-        game->pelem.clear();
-        game->bullet.clear();
-        game->pbullet.clear();
         for (i = 0; i < woo.nbElement; i++)
         {
             pac.next(&result);
@@ -113,29 +109,21 @@ void    Nm::updateWorld(QByteArray ligne) {
             result.get().convert(&e);
             pac.next(&result);
             result.get().convert(&p);
-//            Element *el = new Element(e, p, game->scene);
-//            game->e.push_back(el);
-            game->elem.push_back(e);
-            game->pelem.push_back(p);
-	    //            std::cout << "angle: " << p.angle << std::endl;
-            //std::cout << "1 elem" << std::endl;
+            Element *el = new Element(e, p, game->scene);
+            game->e.push_back(el);
         }
-        //std::cout << "over" << std::endl;
         for (i = 0; i < woo.nbUnit; i++)
         {
             pac.next(&result);
             GameData::Unit u(0,0);
             result.get().convert(&u);
-
-
             if (game->playerDefinition && game->playerDefinition->idPlayer == (int)u.playersId.front())
                 // we make the client select the first unit sent by server owned by the player associated.
                 game->setSelection(u.id);
-
             pac.next(&result);
             result.get().convert(&p);
-            game->unit.push_back(u);
-            game->punit.push_back(p);
+            Unit *un = new Unit(u, p, game->scene);
+            game->u.push_back(un);
         }
         for (i = 0; i < woo.nbBullet; i++)
         {
@@ -144,8 +132,8 @@ void    Nm::updateWorld(QByteArray ligne) {
             result.get().convert(&b);
             pac.next(&result);
             result.get().convert(&p);
-            game->bullet.push_back(b);
-            game->pbullet.push_back(p);
+            Bullet *bu = new Bullet(b, p, game->scene);
+            game->b.push_back(bu);
         }
         game->drawWorld();
     }

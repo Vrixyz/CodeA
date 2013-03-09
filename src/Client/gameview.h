@@ -20,10 +20,7 @@ public:
     void bindNet(Nm *);
     Nm *n;
     QPoint base;
-    QRect selecrect;
-    QPoint cur;
     QRubberBand *rubberBand;
-    bool baseknown;
     int cangle;
     int angle;
     int status;

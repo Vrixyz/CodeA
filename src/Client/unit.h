@@ -1,12 +1,20 @@
 #ifndef UNIT_H
 #define UNIT_H
 
-#include "mage.h"
+#include "game.h"
 
-class Unit
+class Unit : public QGraphicsItem, public Item
 {
 public:
-    Unit();
+    Unit(GameData::Unit, GameData::Physics, QGraphicsScene *);
+    void Draw();
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    QRectF boundingRect() const;
+    GameData::Unit unit;
+    GameData::Physics physics;
+    QGraphicsScene *scene;
+    QRectF bound;
+    int t;
 };
 
 #endif // UNIT_H

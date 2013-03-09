@@ -1,9 +1,9 @@
 #ifndef ACCWINDOW_H
 #define ACCWINDOW_H
 
-#include "../../MasterData/MasterData.hpp"
-#include "../../MasterData/Command.hpp"
-#include "../../MasterData/Co.hpp"
+#include "../MasterData/MasterData.hpp"
+#include "../MasterData/Command.hpp"
+#include "../MasterData/Co.hpp"
 
 #include <iostream>
 #include <list>

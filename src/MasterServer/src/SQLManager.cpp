@@ -42,7 +42,7 @@ void	SQLManager::dcDB()
 int	SQLManager::createUsersTable()
 {
   char		*zErrMsg;
-  std::string requete0 = "CREATE TABLE user (login varchar(30) unique, pass varchar(30));";
+  std::string requete0 = "CREATE TABLE user (login varchar(30) unique, pass varchar(30), wins int(10));";
 
   if (sqlite3_exec(_db, requete0.c_str(), 0, 0, &zErrMsg) != SQLITE_OK)
     {
@@ -55,23 +55,24 @@ int	SQLManager::createUsersTable()
 int	SQLManager::insertElem(std::string name, std::string pass)
 {
   std::string	req;
+
   int ret;
   sqlite3_stmt	*stmt;
 
   ret = 1;
-  req = "INSERT INTO user values(?, ?);";
+  req = "INSERT INTO user values(?, ?, 0);";
   stmt = NULL;
-  if (sqlite3_prepare_v2(this->_db, req.c_str(), 50, &stmt, NULL) != SQLITE_OK)
+  if (sqlite3_prepare_v2(this->_db, req.c_str(), req.size(), &stmt, NULL) != SQLITE_OK)
     {
       std::cerr << "[ERROR] Erreur dans l'ajout d'un nouveau element." << std::endl;
       return -1;
     }
-  sqlite3_bind_text (stmt, 1, name.c_str(), name.size(), NULL);
-  sqlite3_bind_text (stmt, 2, pass.c_str(), pass.size(), NULL);
+  sqlite3_bind_text(stmt, 1, name.c_str(), name.size(), NULL);
+  sqlite3_bind_text(stmt, 2, pass.c_str(), pass.size(), NULL);
   ret = sqlite3_step(stmt);
   if (ret != SQLITE_ROW && ret != SQLITE_DONE && ret != SQLITE_OK)
     ret = -1;
-  sqlite3_reset (stmt);    
+  sqlite3_reset(stmt);    
   return ret; 
 }
 
@@ -119,9 +120,27 @@ User	*SQLManager::findUser(std::string name, std::string pass)
   //   }
 }
 
-int	SQLManager::modifElem()
+int	SQLManager::modifElem(int nb_win, std::string name)
 {
+  std::string	req;
+  int ret;
+  sqlite3_stmt	*stmt;
 
+  ret = 1;
+  req = "UPDATE user win = ? WHERE login = ?;";
+  stmt = NULL;
+  if (sqlite3_prepare_v2(this->_db, req.c_str(), req.size(), &stmt, NULL) != SQLITE_OK)
+    {
+      std::cerr << "[ERROR] Erreur dans l'ajout d'un nouveau element." << std::endl;
+      return -1;
+    }
+  sqlite3_bind_int(stmt, 1, nb_win);
+  sqlite3_bind_text(stmt, 2, name.c_str(), name.size(), NULL);
+  ret = sqlite3_step(stmt);
+  if (ret != SQLITE_ROW && ret != SQLITE_DONE && ret != SQLITE_OK)
+    ret = -1;
+  sqlite3_reset(stmt);    
+  return ret;
 }
 
 int	SQLManager::delElem()

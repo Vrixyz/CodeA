@@ -21,7 +21,7 @@ public:
   void dcDB();
   int delElem();
   User *findUser(std::string, std::string);
-  int modifElem();
+  int modifElem(int, std::string);
   int insertElem(std::string, std::string);
   sqlite3 *getDB();
   sqlite3 **getPtrDB();

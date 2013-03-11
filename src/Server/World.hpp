@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 10:46:49 2012 thierry berger
-// Last update Wed Mar  6 11:35:27 2013 mathieu leurquin
+// Last update Thu Mar  7 11:02:22 2013 mathieu leurquin
 //
 
 #ifndef SERVER_WORLD_HPP
@@ -68,7 +68,7 @@ namespace Server
     void init(int masterPort, char* masterIp, int width, int height);
     void run();
     void handleContact(b2Body object1, b2Body object2);
-    Player& createPlayer(int id);
+    Player& createPlayer(int id, Server::Player::race r);
     Server::Mage* createMage(BitField *b, Player* p = NULL);
     Server::Portal* createPortal(BitField *b, Player* player);
     Server::Minion* createMinion(BitField *b, Player* player, float x, float y);
@@ -78,6 +78,9 @@ namespace Server
     Server::IUnit* getUnit(int id);
     Server::Element* getElement(int id);
     Server::Bullet* getBullet(int id);
+
+    int checkEnd();
+    bool haveUnit(Server::Player &p);
 
     void addUnitToDestroy(Server::IUnit*);
     void addElemToDestroy(Server::Element*);

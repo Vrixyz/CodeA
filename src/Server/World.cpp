@@ -4,13 +4,19 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Wed Mar  6 11:44:06 2013 mathieu leurquin
+// Last update Mon Mar 11 09:55:22 2013 mathieu leurquin
 //
 
 #include "World.hpp"
 #include <cmath>
 #include <stdlib.h>
 #include <time.h>
+
+#define TIMER_END 50000
+#define DRAW 0
+#define CONTINU -1
+#define TEAM1_WIN 1
+#define TEAM2_WIN 2
 
 MyContactListener Server::World::myContactListenerInstance;
 
@@ -102,14 +108,20 @@ void	Server::World::run()
 	  rest = timer.GetMilliseconds() + rest - TIMESTEP;
 	  timer.Reset();
 	  _physicWorld.Step(TIMESTEP, VELOCITY_ITERATION, POSITION_ITERATION);
- 	    
+	  
 	  communication._command->interpretCommands();
 	  communication._master_cmd->interpretCommands();
 	  // std::cout << "end interpret cmd master :" << std::endl;
+
+	  //update timer player
+	  for (std::list<Server::Player*>::iterator it = players.begin(); it !=players.end(); it++)
+	    (*it)->time += TIMESTEP;
+	  
 	  for (std::list<Server::IUnit*>::iterator itu = units.begin(); itu != units.end(); itu++)
-	    {
-	      (*itu)->update(TIMESTEP);
-	    }
+	    (*itu)->update(TIMESTEP);
+
+	  //check end by time or death
+	  std::cout<<"resultat de la boucle de fin de partie : "<<checkEnd()<<std::endl;
 
 	  sendUpdatesToClients();
 	  
@@ -132,12 +144,48 @@ void	Server::World::run()
     }  
 }
 
-Server::Player&	Server::World::createPlayer(int id)
+Server::Player&	Server::World::createPlayer(int id, Server::Player::race r)
 {
-  Player* p = new Player(id);
+  Player* p = new Player(id, r);
 
   players.push_back(p);
   return *p;
+}
+
+int Server::World::checkEnd()
+{
+  //1->win player 1
+  //2->win player 2
+  //0->draw
+  //-1->not finish
+  Server::Player *first = players.front();
+  Server::Player *second = players.back();
+
+  //end by death
+  if (haveUnit(*first) == false)
+    return (TEAM2_WIN);
+  if (haveUnit(*second) == false)
+    return (TEAM1_WIN);
+  // end of game by the timer
+  if (first->time >= TIMER_END)
+    {
+      if ((first->type == Server::Player::Mage && second->type == Server::Player::Minion))
+	return (TEAM1_WIN);
+      else if ((first->type == Server::Player::Minion && second->type == Server::Player::Mage))
+	return (TEAM2_WIN);
+      return (DRAW);
+    }
+  return (CONTINU);
+}
+
+bool Server::World::haveUnit(Server::Player &p)
+{
+  for (std::list<Server::IUnit*>::iterator itu = units.begin(); itu != units.end(); itu++)
+    {
+      if ((*itu)->belongsToPlayer(p.id) == true)
+	return (true);
+    }
+  return (false);
 }
 
 Server::Mage* Server::World::createMage(BitField *b, Player* p)
@@ -507,17 +555,19 @@ void	Server::World::addPlayer(int idClient)
     }
 
   //FOR MAGE VS MAGE TEST
-  Player p = createPlayer(idClient);
  
   BitField *b;
+
   if (players.size() == 1)
     {
+      Player p = createPlayer(idClient, Server::Player::Mage);
       b = new  BitField(Server::BitField::TEAM1_UNIT, Server::BitField::TEAM2_BULLET | Server::BitField::TEAM2_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL);
       createMage(b, &(p));
       std::cout<<"team1"<<std::endl;      
     }
   else
     {
+      Player p = createPlayer(idClient, Server::Player::Minion);
       BitField *bp = new  BitField(Server::BitField::PORTAL, Server::BitField::TEAM2_BULLET | Server::BitField::TEAM2_UNIT | Server::BitField::TEAM1_BULLET | Server::BitField::TEAM1_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL);
        createPortal(bp, &(p));
       createPortal(bp, &(p));

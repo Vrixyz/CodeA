@@ -14,6 +14,8 @@ class SQLManager
 private:
   std::string	_name;
   sqlite3	*_db;
+
+  int tmp_win;
 public:
   SQLManager();
   ~SQLManager();
@@ -26,6 +28,9 @@ public:
   sqlite3 *getDB();
   sqlite3 **getPtrDB();
   int createUsersTable();
+
+  void toto();
+  int findWin(std::string);
 };
 
 #endif

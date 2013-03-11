@@ -99,25 +99,38 @@ User	*SQLManager::findUser(std::string name, std::string pass)
   else
     return(NULL);
   return (NULL);
-  // while (1)
-  //   {
-  //     s = sqlite3_step (stmt);
-  //     if (s == SQLITE_ROW) {
-  // 	int bytes;
-  // 	const unsigned char * text;
-  // 	bytes = sqlite3_column_bytes(stmt, 0);
-  // 	text  = sqlite3_column_text (stmt, 0);
-  // 	printf ("%d: %s\n", row, text);
-  // 	row++;
-  //     }
-  //     else if (s == SQLITE_DONE) {
-  // 	break;
-  //     }
-  //     else {
-  // 	fprintf (stderr, "Failed.\n");
-  // 	exit (1);
-  //     }
-  //   }
+}
+
+int	SQLManager::findWin(std::string name)
+{
+  std::string	sql;
+  sqlite3_stmt	*stmt;
+  int		s;
+  int		nb_win;
+
+
+  sql = "SELECT win FROM user where name = ";
+  sql += name;
+  sql += ";";
+
+  sqlite3_prepare_v2(this->_db, sql.c_str(), sql.size() + 1, &stmt, NULL);
+
+    
+  s = sqlite3_step (stmt);
+  if (s == SQLITE_ROW)
+    {
+      nb_win  = sqlite3_column_int(stmt, 0);
+      return (nb_win);
+    }
+  else if (s == SQLITE_DONE)
+    {
+      return (0);
+    }
+  else
+    {
+      std::cerr << "Erreur lors de la recuperation du nombre de victoire." << std::endl;
+      return (0);
+    }
 }
 
 int	SQLManager::modifElem(int nb_win, std::string name)

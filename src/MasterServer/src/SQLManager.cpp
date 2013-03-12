@@ -124,22 +124,34 @@ User	*SQLManager::returnStats(sqlite3_stmt *stmt, std::string login)
   return (toRet);
 }
 
-int	SQLManager::modifElem(int nb_win, std::string name)
+int	SQLManager::modifElem(User* toEdit)
 {
   std::string	req;
-  int ret;
+  int		ret;
   sqlite3_stmt	*stmt;
 
   ret = 1;
-  req = "UPDATE user win = ? WHERE login = ?;";
+  req = "UPDATE user SET";
+  req += " games_win = ?,";
+  req += " games_win_1 = ?,";
+  req += " games_win_2 = ?,";
+  req += " games_played = ?,";
+  req += " games_played_1 = ?,";
+  req += " games_played_2 = ?";
+  req += " WHERE login = ?;";
   stmt = NULL;
   if (sqlite3_prepare_v2(this->_db, req.c_str(), req.size(), &stmt, NULL) != SQLITE_OK)
     {
       std::cerr << "[ERROR] Erreur dans l'ajout d'un nouveau element." << std::endl;
       return -1;
     }
-  sqlite3_bind_int(stmt, 1, nb_win);
-  sqlite3_bind_text(stmt, 2, name.c_str(), name.size(), NULL);
+  sqlite3_bind_int(stmt, 1, toEdit->games_win);
+  sqlite3_bind_int(stmt, 2, toEdit->games_win_1);
+  sqlite3_bind_int(stmt, 3, toEdit->games_win_2);
+  sqlite3_bind_int(stmt, 4, toEdit->games_played);
+  sqlite3_bind_int(stmt, 5, toEdit->games_played_1);
+  sqlite3_bind_int(stmt, 6, toEdit->games_played_2);
+  sqlite3_bind_text(stmt, 7, toEdit->getName().c_str(), toEdit->getName().size(), NULL);
   ret = sqlite3_step(stmt);
   if (ret != SQLITE_ROW && ret != SQLITE_DONE && ret != SQLITE_OK)
     ret = -1;

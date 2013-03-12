@@ -29,8 +29,7 @@ public:
   sqlite3 **getPtrDB();
   int createUsersTable();
 
-  void toto();
-  int findWin(std::string);
+  User *returnStats(sqlite3_stmt*, std::string);
 };
 
 #endif

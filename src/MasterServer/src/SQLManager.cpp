@@ -42,9 +42,20 @@ void	SQLManager::dcDB()
 int	SQLManager::createUsersTable()
 {
   char		*zErrMsg;
-  std::string requete0 = "CREATE TABLE user (login varchar(30) unique, pass varchar(30), wins int(10));";
+  std::string	requet0;
 
-  if (sqlite3_exec(_db, requete0.c_str(), 0, 0, &zErrMsg) != SQLITE_OK)
+  requet0 = "CREATE TABLE user (";
+  requet0 += "login varchar(30) unique,";
+  requet0 += "pass varchar(30),";
+  requet0 += "games_win int(10),";
+  requet0 += "games_win_1 int(10),";
+  requet0 += "games_win_2 int(10)";
+  requet0 += "games_played int(10),";
+  requet0 += "games_played_1 int(10),";
+  requet0 += "games_played_2 int(10),";
+  requet0 += ");";
+
+  if (sqlite3_exec(_db, requet0.c_str(), 0, 0, &zErrMsg) != SQLITE_OK)
     {
       std::cerr << "[WARNING] Erreur dans la creation d'une table. (ou table deja creee)" << std::endl;
       return (-1);
@@ -55,12 +66,11 @@ int	SQLManager::createUsersTable()
 int	SQLManager::insertElem(std::string name, std::string pass)
 {
   std::string	req;
-
-  int ret;
+  int		ret;
   sqlite3_stmt	*stmt;
 
   ret = 1;
-  req = "INSERT INTO user values(?, ?, 0);";
+  req = "INSERT INTO user values(?, ?, 0, 0, 0, 0, 0, 0);";
   stmt = NULL;
   if (sqlite3_prepare_v2(this->_db, req.c_str(), req.size(), &stmt, NULL) != SQLITE_OK)
     {
@@ -88,49 +98,30 @@ User	*SQLManager::findUser(std::string name, std::string pass)
     {
       std::cerr << "[ERROR] Erreur dans la recuperation d'une utilisateur." << std::endl;
     }
-  sqlite3_bind_text (stmt, 1, name.c_str(), name.size(), NULL);
-  sqlite3_bind_text (stmt, 2, pass.c_str(), pass.size(), NULL);
+  sqlite3_bind_text(stmt, 1, name.c_str(), name.size(), NULL);
+  sqlite3_bind_text(stmt, 2, pass.c_str(), pass.size(), NULL);
   s = sqlite3_step(stmt);
-  sqlite3_reset (stmt);
   if (s == SQLITE_DONE)
     return (NULL);
   else if (s == SQLITE_ROW)
-    return (new User(name));
+    return (returnStats(stmt, name));
   else
     return(NULL);
   return (NULL);
 }
 
-int	SQLManager::findWin(std::string name)
+User	*SQLManager::returnStats(sqlite3_stmt *stmt, std::string login)
 {
-  std::string	sql;
-  sqlite3_stmt	*stmt;
-  int		s;
-  int		nb_win;
+  User* toRet;
 
-
-  sql = "SELECT win FROM user where name = ";
-  sql += name;
-  sql += ";";
-
-  sqlite3_prepare_v2(this->_db, sql.c_str(), sql.size() + 1, &stmt, NULL);
-
-    
-  s = sqlite3_step (stmt);
-  if (s == SQLITE_ROW)
-    {
-      nb_win  = sqlite3_column_int(stmt, 0);
-      return (nb_win);
-    }
-  else if (s == SQLITE_DONE)
-    {
-      return (0);
-    }
-  else
-    {
-      std::cerr << "Erreur lors de la recuperation du nombre de victoire." << std::endl;
-      return (0);
-    }
+  toRet = new User(login);
+  toRet->games_win = sqlite3_column_int(stmt, 2);
+  toRet->games_win_1 = sqlite3_column_int(stmt, 3);
+  toRet->games_win_2 = sqlite3_column_int(stmt, 4);
+  toRet->games_played = sqlite3_column_int(stmt, 5);
+  toRet->games_played_1 = sqlite3_column_int(stmt, 6);
+  toRet->games_played_2 = sqlite3_column_int(stmt, 7);
+  return (toRet);
 }
 
 int	SQLManager::modifElem(int nb_win, std::string name)

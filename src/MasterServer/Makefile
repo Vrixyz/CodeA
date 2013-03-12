@@ -8,7 +8,6 @@ SRC			=	src/User.cpp \
 				src/Socket.cpp \
 				src/SQLManager.cpp \
 				src/GameServer.cpp \
-#				src/OpSQL.cpp \
 
 OBJ			=	$(SRC:.cpp=.o)
 

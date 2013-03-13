@@ -107,12 +107,25 @@ void GameView::rotationUpdate()
 
 void GameView::mousePressEvent(QMouseEvent *event)
 {
+    msgpack::sbuffer sbuf;
+    msgpack::packer<msgpack::sbuffer> packet(&sbuf);
     switch (event->button())
     {
     case Qt::LeftButton:
         base = event->pos();
         rubberBand->setGeometry(QRect(base, QSize()));
         rubberBand->show();
+        break;
+
+    case Qt::RightButton:
+        GameData::CommandStruct::Move m;
+        for (std::list<unsigned int>::iterator it = n->game->idList.begin(); it !=  n->game->idList.end(); it++)
+        {
+            m.idUnit = *it;
+            packet.pack((int)GameData::Command::MoveTo);
+            packet.pack(m);
+            n->sendToServer(sbuf);
+        }
         break;
 
     default:
@@ -127,6 +140,8 @@ void GameView::mouseReleaseEvent(QMouseEvent *event)
     {
     case Qt::LeftButton:
     {
+        n->game->idList.clear();
+        QGraphicsItem *item;
         QRectF *rect = new QRectF(rubberBand->geometry().x() + sceneRect().x(), rubberBand->geometry().y() + sceneRect().y(), rubberBand->width(), rubberBand->height());
         std::cout << "Rectangle de selection " << rect->x() << " " << rect->y() << std::endl;
         rubberBand->hide();
@@ -134,8 +149,35 @@ void GameView::mouseReleaseEvent(QMouseEvent *event)
         std::cout << "Il se passe quelque chose ! " << list.size() << std::endl;
         for (int i = 0; i < list.length(); i++)
         {
-            QGraphicsItem *item = list.at(i);
+            item = list.at(i);
             std::cout << "item pos => x : " << item->x() << " y : " << item->y() << std::endl;
+            switch (list.at(i)->type())
+            {
+            case Bullet::Type:
+                std::cout << "Bullet" << std::endl;
+                Bullet *bullet;
+                bullet = static_cast<Bullet *>(item);
+                n->game->idList.push_back(bullet->bullet.id);
+                break;
+
+            case Element::Type:
+                Element *element;
+                element = static_cast<Element *>(item);
+                n->game->idList.push_back(element->elem.id);
+                std::cout << "Element" << std::endl;
+                break;
+
+            case Unit::Type:
+                Unit *unit;
+                unit = static_cast<Unit *>(item);
+                n->game->idList.push_back(unit->unit.id);
+                std::cout << "Unit" << std::endl;
+                break;
+
+            default:
+                std::cout << "whatever" << std::endl;
+                break;
+            }
         }
         break;
     }

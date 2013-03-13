@@ -42,7 +42,9 @@ HEADERS +=      GamesWindow.h \
                 Define.h \
                 Store.h \
                 element.h \
+                bullet.h \
                 gameview.h \
                 game.h \
                 mage.h \
+                unit.h \
                 nm.h

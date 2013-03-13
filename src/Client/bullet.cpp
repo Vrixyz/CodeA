@@ -4,19 +4,22 @@ Bullet::Bullet(GameData::Bullet _bullet, GameData::Physics _physics, QGraphicsSc
 {
 }
 
-void Bullet::Draw()
-{
-    QGraphicsItem *item;
-//    scene->addItem(this);
-    item = scene->addEllipse(physics.x, physics.y * -1, 5, 5);
-}
-
 void Bullet::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-//    painter->drawEllipse(physics.x, physics.y * -1, 5, 5);
+    painter->drawEllipse(physics.x, physics.y * -1, 5, 5);
+}
+
+void Bullet::Draw()
+{
+    scene->addItem(this);
 }
 
 QRectF Bullet::boundingRect() const
 {
-    return QRectF(physics.x, physics.y, 5, 5);
+    return QRectF(physics.x, physics.y * -1, 5, 5);
+}
+
+int Bullet::type() const
+{
+    return Type;
 }

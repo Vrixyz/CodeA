@@ -49,6 +49,7 @@ public:
     std::list<Element *> e;
     std::list<Bullet *> b;
     std::list<Unit *> u;
+    std::list<unsigned int> idList;
     GameView *view;
     Nm *n;
     QGraphicsScene *scene;

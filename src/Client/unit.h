@@ -14,6 +14,10 @@ public:
     GameData::Physics physics;
     QGraphicsScene *scene;
     QRectF bound;
+    int type() const;
+    enum {
+        Type = UserType + 3
+    };
 };
 
 #endif // UNIT_H

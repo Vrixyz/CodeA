@@ -13,6 +13,13 @@ public:
   void		setSoc(Socket* soc){_soc = soc;}
   std::string	getName(){return _login;}
   bool		isInGame(){return _ig;}
+  /* Stats */
+  int		games_win;
+  int		games_win_1;
+  int		games_win_2;
+  int		games_played;
+  int		games_played_1;
+  int		games_played_2;
 private:
   Socket*	_soc;
   std::string	_login;

@@ -3,7 +3,7 @@
 
 #include "game.h"
 
-class Bullet : public QGraphicsItem, public Item
+class Bullet : public QGraphicsItem
 {
 public:
     Bullet(GameData::Bullet , GameData::Physics, QGraphicsScene *);
@@ -14,7 +14,6 @@ public:
     GameData::Physics physics;
     QGraphicsScene *scene;
     QRectF bound;
-    int t;
 };
 
 #endif // BULLET_H

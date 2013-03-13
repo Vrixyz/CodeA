@@ -2,12 +2,13 @@
 
 Game::Game(const std::string &ip, unsigned int port, MyWindow *w)
 {
+    w->setFixedSize(800, 600);
     angle = 0;
     win = w;
     playerDefinition = NULL;
     selectedUnit = -1;
     scene = new QGraphicsScene(0, 0, 800, 600);
-    view = new GameView();
+    view = new GameView(w);
     std::cout << "You just started a new game" << std::endl;
     n = new Nm(QString(ip.c_str()), port, this);
     view->bindNet(n);
@@ -17,6 +18,8 @@ Game::Game(const std::string &ip, unsigned int port, MyWindow *w)
     msgpack::packer<msgpack::sbuffer> packet(&sbuf);
     packet.pack((int)GameData::Command::BePlayer);
     n->sendToServer(sbuf);
+    view->setScene(scene);
+    view->show();
 }
 
 Game::~Game()
@@ -57,8 +60,6 @@ void Game::drawWorld() {
     for (std::list<Bullet *>::iterator it = b.begin(); it != b.end(); it++) { // bullets physics loop
         (*it)->Draw();
     }
-    view->setScene(scene);
-    view->show();
 }
 
 void Game::setPlayerDefinition(const GameData::Information::PlayerDefinition& pd)

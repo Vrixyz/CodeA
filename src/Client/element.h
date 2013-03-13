@@ -3,7 +3,7 @@
 
 #include "game.h"
 
-class Element : public QGraphicsItem, public Item
+class Element : public QGraphicsItem
 {
 public:
     Element(GameData::Element , GameData::Physics, QGraphicsScene *);
@@ -14,7 +14,6 @@ public:
     GameData::Physics physics;
     QGraphicsScene *scene;
     QRectF bound;
-    int t;
 };
 
 #endif // ELEMENT_H

@@ -23,7 +23,6 @@
 #include <QRubberBand>
 #include "gameview.h"
 #include "nm.h"
-#include "item.h"
 #include "element.h"
 #include "bullet.h"
 #include "unit.h"

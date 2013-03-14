@@ -122,9 +122,12 @@ void GameView::mousePressEvent(QMouseEvent *event)
         for (std::list<unsigned int>::iterator it = n->game->idList.begin(); it !=  n->game->idList.end(); it++)
         {
             m.idUnit = *it;
+            m.x = ubberBand->geometry().x() + sceneRect().x();
+            my.y = -(rubberBand->geometry().y() + sceneRect().y());
             packet.pack((int)GameData::Command::MoveTo);
             packet.pack(m);
             n->sendToServer(sbuf);
+            std::cout << "send moveTo" << std::endl;
         }
         break;
 
@@ -154,10 +157,10 @@ void GameView::mouseReleaseEvent(QMouseEvent *event)
             switch (list.at(i)->type())
             {
             case Bullet::Type:
-                std::cout << "Bullet" << std::endl;
                 Bullet *bullet;
                 bullet = static_cast<Bullet *>(item);
                 n->game->idList.push_back(bullet->bullet.id);
+                std::cout << "Bullet" << std::endl;
                 break;
 
             case Element::Type:

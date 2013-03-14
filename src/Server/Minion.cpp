@@ -36,8 +36,8 @@ b2Body*	Server::Minion::setBody(BitField *b, float x, float y)
   // fDef.filter.categoryBits = -1;
   // fDef.filter.maskBits = -1;
   this->_body->CreateFixture(&fDef);
-  // this->current.x = this->getBody()->GetPosition().x;
-  // this->current.y = this->getBody()->GetPosition().y;
+  this->current.x = this->getBody()->GetPosition().x;
+  this->current.y = this->getBody()->GetPosition().y;
 
   return this->_body;
 }
@@ -119,8 +119,8 @@ void Server::Minion::spell2(const GameData::CommandStruct::Shield arg)
 void Server::Minion::update(float elapsedMilliseconds)
 {
 
-  current.x = _world.units.front()->getBody()->GetPosition().x;
-  current.y = _world.units.front()->getBody()->GetPosition().y;
+  //current.x = _world.units.front()->getBody()->GetPosition().x;
+  //current.y = _world.units.front()->getBody()->GetPosition().y;
   
   if (_data.health <= 0)
     {

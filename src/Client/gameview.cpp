@@ -122,12 +122,12 @@ void GameView::mousePressEvent(QMouseEvent *event)
         for (std::list<unsigned int>::iterator it = n->game->idList.begin(); it !=  n->game->idList.end(); it++)
         {
             m.idUnit = *it;
-            m.x = ubberBand->geometry().x() + sceneRect().x();
-            my.y = -(rubberBand->geometry().y() + sceneRect().y());
+            m.x = event->pos().x() + sceneRect().x();
+            m.y = -(event->pos().y() + sceneRect().y());
             packet.pack((int)GameData::Command::MoveTo);
             packet.pack(m);
             n->sendToServer(sbuf);
-            std::cout << "send moveTo" << std::endl;
+            std::cout << "send moveTo " << m.x << " " << m.y << std::endl;
         }
         break;
 

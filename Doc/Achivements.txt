@@ -1,0 +1,74 @@
+- FICHIER RECAPITULATIF DES HAUTS FAITS -
+
+Divers :
+         [Salade de phalanges] Infliger Xk points de degats en une seule partie.
+         [Vite, le DPR arrive !] Gagner une partie qui a dure moins de x secondes.
+         [Hmm.. Gagne d'avance !] Gagner une partie qui a dure plus de x secondes.
+
+Specifiques Mage :
+	 [Shields, shields everywhere] Faire apparaitre 20 boucliers durant une partie.
+
+Specifiques Invocateur :
+	 [Les renforts sont la !] Faire apparaitre au moins 20 unites durant une partie.
+
+Specifiques Class3 :
+
+Victoires/Matchs generales :
+	 [Apprenti Soldat] Jouer 1 partie.
+	 [Apprenti Caporal] Jouer 25 parties.
+	 [Apprenti Sergent] Jouer 100 parties.
+	 [Apprenti Chevalier] Jouer 500 parties.
+	 [Apprenti Commandant] Jouer 1000 parties.
+	 [Soldat] Gagner 1 partie.
+	 [Caporal] Gagner 25 parties.
+	 [Sergent] Gagner 100 parties.
+	 [Chevalier] Gagner 500 parties.
+	 [Commandant] Gagner 1000 parties.
+
+Victoires/Matchs Mage :
+	 [Apprenti Magicien] Jouer 1 partie en tant que Mage.
+	 [Apprenti Mage] Jouer 25 parties en tant que Mage.
+	 [Apprenti Mage de Guerre] Jouer 100 parties en tant que Mage.
+	 [Apprenti Maitre Mage] Jouer 500 parties en tant que Mage.
+	 [Apprenti Archimage] Jouer 1000 parties en tant que Mage.
+	 [Magicien] Gagner 1 partie en tant que Mage.
+	 [Mage] Gagner 25 parties en tant que Mage.
+	 [Mage de Guerre] Gagner 100 parties en tant que Mage.
+	 [Maitre Mage] Gagner 500 parties en tant que Mage.
+	 [Archimage] Gagner 1000 parties en tant que Mage.
+
+Victoires/Matchs Invocateur :
+	 [Apprenti Prestidigitateur] Jouer 1 partie en tant qu'Invocateur.
+	 [Apprenti Illusioniste] Jouer 25 parties en tant qu'Invocateur.
+	 [Apprenti Sorcier] Jouer 100 parties en tant qu'Invocateur.
+	 [Apprenti Ensorceleur] Jouer 500 parties en tant qu'Invocateur.
+	 [Apprenti Maitre des Illusions] Jouer 1000 parties en tant qu'Invocateur.
+	 [Prestidigitateur] Gagner 1 partie en tant qu'Invocateur.
+	 [Illusioniste] Gagner 25 parties en tant qu'Invocateur.
+	 [Sorcier] Gagner 100 parties en tant qu'Invocateur.
+	 [Ensorceleur] Gagner 500 parties en tant qu'Invocateur.
+	 [Maitre des Illusions] Gagner 1000 parties en tant qu'Invocateur.
+
+Victoires/Matchs Class3 :
+	 [] Jouer 1 partie en tant que Class3.
+	 [] Jouer 25 parties en tant que Class3.
+	 [] Jouer 100 parties en tant que Class3.
+	 [] Jouer 500 parties en tant que Class3.
+	 [] Jouer 1000 parties en tant que Class3.
+	 [] Gagner 1 partie en tant que Class3.
+	 [] Gagner 25 parties en tant que Class3.
+	 [] Gagner 100 parties en tant que Class3.
+	 [] Gagner 500 parties en tant que Class3.
+	 [] Gagner 1000 parties en tant que Class3.
+
+Victoires/Matchs All :
+	 [Apprenti Touche a Tout] Jouer 1 partie avec chaque classe..
+	 [Apprenti Tacticien] Jouer 25 parties avec chaque classe.
+	 [Apprenti Genie] Jouer 100 parties avec chaque classe.
+	 [Apprenti Prodige] Jouer 500 parties avec chaque classe.
+	 [Apprenti Maitre de Guerre] Jouer 1000 parties avec chaque classe.
+	 [Touche a Tout] Gagner 1 partie avec chaque classe.
+	 [Tacticien] Gagner 25 parties avec chaque classe.
+	 [Genie] Gagner 100 parties avec chaque classe.
+	 [Prodige] Gagner 500 parties avec chaque classe.
+	 [Maitre de Guerre] Gagner 1000 parties avec chaque classe.

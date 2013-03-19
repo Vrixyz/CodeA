@@ -121,7 +121,7 @@ void	Server::World::run()
 	    (*itu)->update(TIMESTEP);
 
 	  //check end by time or death
-	  std::cout<<"resultat de la boucle de fin de partie : "<<checkEnd()<<std::endl;
+	  // std::cout<<"resultat de la boucle de fin de partie : "<<checkEnd()<<std::endl;
 
 	  sendUpdatesToClients();
 	  
@@ -544,7 +544,7 @@ void Server::World::askMove(int idClient, GameData::CommandStruct::Move arg)
   u->setMove(arg);
 }
 
-void	Server::World::addPlayer(int idClient)
+void	Server::World::addPlayer(int idClient, GameData::CommandStruct::BePlayer arg)
 {
   std::list<Player*>::const_iterator it;
   // TODO: check if there's room for a new player
@@ -558,22 +558,30 @@ void	Server::World::addPlayer(int idClient)
  
   BitField *b;
 
-  if (players.size() == 1)
+  if (arg.type == GameData::CommandStruct::BePlayer::MAGE)
     {
       Player p = createPlayer(idClient, Server::Player::Mage);
-      b = new  BitField(Server::BitField::TEAM1_UNIT, Server::BitField::TEAM2_BULLET | Server::BitField::TEAM2_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL);
+      if (players.size() == 1)
+	b = new  BitField(Server::BitField::TEAM1_UNIT, Server::BitField::TEAM2_BULLET | Server::BitField::TEAM2_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL);
+      else
+	b = new  BitField(Server::BitField::TEAM2_UNIT, Server::BitField::TEAM1_BULLET | Server::BitField::TEAM1_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL);
       createMage(b, &(p));
       std::cout<<"team1"<<std::endl;      
     }
-  else
+  else if (arg.type == GameData::CommandStruct::BePlayer::INVOKER)
     {
       Player p = createPlayer(idClient, Server::Player::Minion);
-      BitField *bp = new  BitField(Server::BitField::PORTAL, Server::BitField::TEAM2_BULLET | Server::BitField::TEAM2_UNIT | Server::BitField::TEAM1_BULLET | Server::BitField::TEAM1_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL);
-       createPortal(bp, &(p));
+      BitField *bp;
+      if (players.size() == 1)
+	bp = new  BitField(Server::BitField::PORTAL, Server::BitField::TEAM2_BULLET | Server::BitField::TEAM2_UNIT | Server::BitField::TEAM1_BULLET | Server::BitField::TEAM1_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL);
+      else
+	bp = new  BitField(Server::BitField::PORTAL, Server::BitField::TEAM1_BULLET | Server::BitField::TEAM1_UNIT | Server::BitField::TEAM2_BULLET | Server::BitField::TEAM2_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL);
+      createPortal(bp, &(p));
       createPortal(bp, &(p));
       createPortal(bp, &(p));
     }
-
+  else
+    std::cout << "type unknown, crash might come" << std::endl;
   
   // TODO: we might want to wait all players before creating the units
      //createPortal(b, &(createPlayer(idClient)));

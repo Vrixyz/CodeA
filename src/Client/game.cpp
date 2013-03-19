@@ -18,6 +18,13 @@ Game::Game(const std::string &ip, unsigned int port, const std::string &type, My
     msgpack::sbuffer sbuf;
     msgpack::packer<msgpack::sbuffer> packet(&sbuf);
     packet.pack((int)GameData::Command::BePlayer);
+    GameData::CommandStruct::BePlayer player;
+    if (isRTS)
+        player.type = GameData::CommandStruct::BePlayer::INVOKER;
+    else
+        player.type = GameData::CommandStruct::BePlayer::MAGE;
+    player.login = "osella";
+    packet.pack(player);
     n->sendToServer(sbuf);
     view->setScene(scene);
     view->show();

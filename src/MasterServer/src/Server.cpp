@@ -2,6 +2,7 @@
 #include "./../include/Define.hh"
 #include "./../include/Server.hh"
 
+// CAN GO OUT
 int	main(int ac, char **av)
 {
   int port = 4242;
@@ -18,6 +19,7 @@ int	main(int ac, char **av)
   return EXIT_SUCCESS;
 }
 
+//BASE
 Server::Server(int port)
 {
   _idmax = 0;
@@ -58,30 +60,6 @@ int	Server::Initialisation(void)
   _sql->createUsersTable();
   _sql->insertElem("toto42", "passw");
   return EXIT_SUCCESS;
-}
-
-void    Server::AcceptCo()
-{
-  std::string	message;
-  Socket*	client;
-  int		soc;
-
-  soc = _socket->Accept(_sin_client, sizeof(_sin_client));
-  if (soc == -1)
-    {
-      std::cerr << "une erreur est survenue lors de la commande system accept" << std::endl;
-      _socket->Close();
-    }
-  else
-    {
-      //CREATION DE LA SOCKET
-      client  = new Socket();
-      client->setFD(soc);
-      client->setNonBlock();
-      client->setIP(_socket->getIP());
-      std::cout << "SUCCESS: Nouvelle socket" << std::endl;
-      _unknown.push_back(client);
-    }
 }
 
 int	Server::Run(void)
@@ -147,97 +125,31 @@ int	Server::Run(void)
   return EXIT_SUCCESS;
 }
 
-void Server::BroadcastMsg(User* u, msgpack::sbuffer &sbuf)
+void    Server::AcceptCo()
 {
-  MasterData::SendChat msg("");  
-  std::list<User *>::iterator		it;
-  unsigned int				i;
+  std::string	message;
+  Socket*	client;
+  int		soc;
 
-  msgpack::unpacker pac;
-  pac.reserve_buffer(sbuf.size());
-  memcpy(pac.buffer(), sbuf.data(), sbuf.size());
-  pac.buffer_consumed(sbuf.size());
-  msgpack::unpacked result;
-
-  if (pac.next(&result))
+  soc = _socket->Accept(_sin_client, sizeof(_sin_client));
+  if (soc == -1)
     {
-      pac.next(&result);
-      result.get().convert(&msg);
-      msgpack::sbuffer buf;
-      msgpack::packer<msgpack::sbuffer> packet(&buf);  
-      packet.pack((int)MasterData::Command::RECV_CHAT);
-      MasterData::RecvChat tosend(u->getName(), msg.msg);
-      packet.pack(tosend);    
-
-      for (i = 0, it = _users.begin(); i < _users.size(); i++, it++)
-	{
-	  if ((*it)->isInGame() == false)
-	    (*it)->getSoc()->sendToServer(buf);
-	}
-    }    
-}
-
-GameServer* Server::getServById(int id)
-{
-  std::list<GameServer *>::iterator		it;
-  unsigned int					i;
-  int						cmd;
-
-  for (i = 0, it = _server.begin(); i < _server.size(); i++, it++)
-    if ((*it)->getId() == id)
-      return *it;
-  return NULL;
-}
-
-void Server::JoinServer(User* u, msgpack::sbuffer &sbuf)
-{
-  std::list<User *>::iterator		it;
-  unsigned int				i;
-  GameServer *				s;
-  
-  msgpack::unpacker pac;
-  pac.reserve_buffer(sbuf.size());
-  memcpy(pac.buffer(), sbuf.data(), sbuf.size());
-  pac.buffer_consumed(sbuf.size());
-  msgpack::unpacked result;
-  
-  if (pac.next(&result))
+      std::cerr << "une erreur est survenue lors de la commande system accept" << std::endl;
+      _socket->Close();
+    }
+  else
     {
-      std::cout << "RECEPTION SERV" << std::endl;
-      pac.next(&result);
-      int idServ;
-      result.get().convert(&idServ);
-      s = getServById(idServ);
-      if (s == NULL || s->getFree() <= 0)
-	{
-	  sendFailure(u->getSoc(), "Serveur introuvable ou complet");
-	  return;
-	}
-      else
-	{
-	  std::cout << "ENVOI DE DATA DE CLIENT AU GAME SERVER" << std::endl; 
-
-	  msgpack::sbuffer buf1;
-	  msgpack::packer<msgpack::sbuffer> packet1(&buf1);
-	  MasterData::InfosPlayer player(u->getSoc()->getIP(), u->getName());  
-	  packet1.pack((int)MasterData::Command::PLAYER_JOIN);
-	  packet1.pack(player);
-	  std::cout << "taille envoyee : "<< s->getSoc()->sendToServer(buf1) << std::endl;
-	  
-
-	  std::cout << "ip : " << player.ip << ", name: " << player.name << std::endl;
-
-	  std::cout << "ENVOI DE DATA DE CO AU CLIENT" << std::endl; 
-	  msgpack::sbuffer buf2;
-	  msgpack::packer<msgpack::sbuffer> packet2(&buf2);
-	  MasterData::InfosServer serv(s->getSoc()->getIP(), s->getPort());  
-	  packet2.pack((int)MasterData::Command::INFOS_SERVER);
-	  packet2.pack(serv);
-	  u->getSoc()->sendToServer(buf2);
-	}      
+      //CREATION DE LA SOCKET
+      client  = new Socket();
+      client->setFD(soc);
+      client->setNonBlock();
+      client->setIP(_socket->getIP());
+      std::cout << "SUCCESS: Nouvelle socket" << std::endl;
+      _unknown.push_back(client);
     }
 }
 
+//MANAGE
 void Server::ManageUser()
 {
   std::string				message;
@@ -284,28 +196,6 @@ void Server::ManageUser()
       }
 }
 
-void Server::SendServList(Socket* soc)
-{
-  //SEGFAULT RANDOM ARRIVER 2 FOIS DANS CETTE FONCTION FAIRE DES TEST POUR LE TROUVER
-  GameServer *					s;
-  std::list<GameServer *>::iterator		it;
-  unsigned int					i;
-
-  std::cout << "Liste send" << std::endl;
-  msgpack::sbuffer sbuf;
-  msgpack::packer<msgpack::sbuffer> packet(&sbuf);
-  
-  packet.pack((int)MasterData::Command::SEND_SERVER_LIST);
-
-  for (i = 0, it = _server.begin(); i < _server.size(); i++, it++)
-    {
-      s = *it;
-      MasterData::Serv	serveur(s->getId(), s->getName());
-      packet.pack(serveur);
-    }
-  soc->sendToServer(sbuf);
-}
-
 void Server::ManageGameServer()
 {
   std::list<GameServer *>::iterator		it;
@@ -317,8 +207,34 @@ void Server::ManageGameServer()
       {	
 	msgpack::sbuffer sbuf;
 	(*it)->getSoc()->RecvString(sbuf);
+
 	if (sbuf.size() == 0)
-	  DelGameServer(*it);
+	  {
+	    DelGameServer(*it);
+	    break;
+	  }
+	
+	msgpack::unpacker pac;
+	pac.reserve_buffer(sbuf.size());
+	memcpy(pac.buffer(), sbuf.data(), sbuf.size());
+	pac.buffer_consumed(sbuf.size());
+	msgpack::unpacked result;
+	
+	if (pac.next(&result)) 
+	  {
+	    int idCmd;
+	    result.get().convert(&idCmd);
+	    switch(idCmd)
+	      {
+	      case MasterData::Command::ENDGAME:
+		EndGame((*it), sbuf);
+		break;
+	      default:
+		std::cerr << "Command inconnu" << std::endl;
+		break;
+	      }
+	  }
+
       }
 }
 
@@ -374,57 +290,7 @@ void Server::ManageUnknown()
       }
 }
 
-void	Server::DelUser(User *u)
-{
-  _users.remove(u);
-}
-
-void	Server::DelGameServer(GameServer *s)
-{
-  _server.remove(s);
-}
-
-void	Server::AddServer(Socket *soc, msgpack::sbuffer &sbuf)
-{
-  GameServer*		s;
-  MasterData::CoServer	co(0, "");
-
-  msgpack::unpacker pac;
-  pac.reserve_buffer(sbuf.size());
-  memcpy(pac.buffer(), sbuf.data(), sbuf.size());
-  pac.buffer_consumed(sbuf.size());
-  msgpack::unpacked result;
-
-  if (pac.next(&result)) 
-    {
-      if (pac.next(&result))
-	{
-	  result.get().convert(&co);
-	  s = new GameServer(co.port, co.name, _idmax++);
-	  s->setSoc(soc);
-	  _server.push_back(s);
-	  _unknown.remove(soc);
-	  std::cout << "SUCCES DE L'AJOUT D'UN SERVER" << std::endl;
-	  return; 
-	}
-    }
-  _unknown.remove(soc);
-  soc->Close();
-}
-
-int	Server::isCo(std::string login)
-{
-  std::list<User *>::iterator		it;
-  unsigned int				i;
-
-  for (i = 0, it = _users.begin(); i < _users.size(); i++, it++)
-    {
-      if((*it)->getName() == login)
-	return 1;
-    }
-  return 0;
-}
-
+//LOGIN
 void	Server::CheckCoUser(Socket *soc, msgpack::sbuffer &sbuf)
 {
   User*			u;
@@ -496,6 +362,106 @@ void	Server::CheckRegUser(Socket *soc, msgpack::sbuffer &sbuf)
   soc->Close();
 }
 
+void	Server::AddServer(Socket *soc, msgpack::sbuffer &sbuf)
+{
+  GameServer*		s;
+  MasterData::CoServer	co(0, "");
+
+  msgpack::unpacker pac;
+  pac.reserve_buffer(sbuf.size());
+  memcpy(pac.buffer(), sbuf.data(), sbuf.size());
+  pac.buffer_consumed(sbuf.size());
+  msgpack::unpacked result;
+
+  if (pac.next(&result)) 
+    {
+      if (pac.next(&result))
+	{
+	  result.get().convert(&co);
+	  s = new GameServer(co.port, co.name, _idmax++);
+	  s->setSoc(soc);
+	  _server.push_back(s);
+	  _unknown.remove(soc);
+	  std::cout << "SUCCES DE L'AJOUT D'UN SERVER" << std::endl;
+	  return; 
+	}
+    }
+  _unknown.remove(soc);
+  soc->Close();
+}
+
+//UTILE
+int	Server::isCo(std::string login)
+{
+  std::list<User *>::iterator		it;
+  unsigned int				i;
+
+  for (i = 0, it = _users.begin(); i < _users.size(); i++, it++)
+    {
+      if((*it)->getName() == login)
+	return 1;
+    }
+  return 0;
+}
+
+GameServer* Server::getServById(int id)
+{
+  std::list<GameServer *>::iterator		it;
+  unsigned int					i;
+  int						cmd;
+
+  for (i = 0, it = _server.begin(); i < _server.size(); i++, it++)
+    if ((*it)->getId() == id)
+      return *it;
+  return NULL;
+}
+
+void Server::resetIG(GameServer *s)
+{
+  std::list<User *>::iterator		it;
+  unsigned int				i;
+  
+  for (i = 0, it = _users.begin(); i < _users.size(); i++, it++)
+    if ((*it)->getServ() == s)
+      {
+	(*it)->setIG(false);
+	(*it)->setServ(NULL);
+      }
+}
+
+void	Server::DelUser(User *u)
+{
+  _users.remove(u);
+}
+
+void	Server::DelGameServer(GameServer *s)
+{
+  _server.remove(s);
+}
+
+//COMMAND
+void Server::SendServList(Socket* soc)
+{
+  //SEGFAULT RANDOM ARRIVER 2 FOIS DANS CETTE FONCTION FAIRE DES TEST POUR LE TROUVER
+  GameServer *					s;
+  std::list<GameServer *>::iterator		it;
+  unsigned int					i;
+
+  std::cout << "Liste send" << std::endl;
+  msgpack::sbuffer sbuf;
+  msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+  
+  packet.pack((int)MasterData::Command::SEND_SERVER_LIST);
+
+  for (i = 0, it = _server.begin(); i < _server.size(); i++, it++)
+    {
+      s = *it;
+      MasterData::Serv	serveur(s->getId(), s->getName());
+      packet.pack(serveur);
+    }
+  soc->sendToServer(sbuf);
+}
+
 void	Server::sendCoSucces(User *u)
 {
   msgpack::sbuffer sbuf;
@@ -516,4 +482,112 @@ void	Server::sendFailure(Socket *soc, std::string msg)
   packet.pack((int)MasterData::Command::ERROR);
   packet.pack(err);
   soc->sendToServer(sbuf);
+}
+
+void Server::BroadcastMsg(User* u, msgpack::sbuffer &sbuf)
+{
+  MasterData::SendChat msg("");  
+  std::list<User *>::iterator		it;
+  unsigned int				i;
+
+  msgpack::unpacker pac;
+  pac.reserve_buffer(sbuf.size());
+  memcpy(pac.buffer(), sbuf.data(), sbuf.size());
+  pac.buffer_consumed(sbuf.size());
+  msgpack::unpacked result;
+
+  if (pac.next(&result))
+    {
+      pac.next(&result);
+      result.get().convert(&msg);
+      msgpack::sbuffer buf;
+      msgpack::packer<msgpack::sbuffer> packet(&buf);  
+      packet.pack((int)MasterData::Command::RECV_CHAT);
+      MasterData::RecvChat tosend(u->getName(), msg.msg);
+      packet.pack(tosend);    
+
+      for (i = 0, it = _users.begin(); i < _users.size(); i++, it++)
+	{
+	  if ((*it)->isInGame() == false)
+	    (*it)->getSoc()->sendToServer(buf);
+	}
+    }    
+}
+
+void Server::JoinServer(User* u, msgpack::sbuffer &sbuf)
+{
+  std::list<User *>::iterator		it;
+  unsigned int				i;
+  GameServer *				s;
+  
+  msgpack::unpacker pac;
+  pac.reserve_buffer(sbuf.size());
+  memcpy(pac.buffer(), sbuf.data(), sbuf.size());
+  pac.buffer_consumed(sbuf.size());
+  msgpack::unpacked result;
+  
+  if (pac.next(&result))
+    {
+      std::cout << "RECEPTION SERV" << std::endl;
+      pac.next(&result);
+      int idServ;
+      result.get().convert(&idServ);
+      s = getServById(idServ);
+      if (s == NULL || s->getFree() <= 0)
+	{
+	  sendFailure(u->getSoc(), "Serveur introuvable ou complet");
+	  return;
+	}
+      else
+	{
+	  std::cout << "ENVOI DE DATA DE CLIENT AU GAME SERVER" << std::endl; 
+
+	  msgpack::sbuffer buf1;
+	  msgpack::packer<msgpack::sbuffer> packet1(&buf1);
+	  MasterData::InfosPlayer player(u->getSoc()->getIP(), u->getName());  
+	  packet1.pack((int)MasterData::Command::PLAYER_JOIN);
+	  packet1.pack(player);
+	  std::cout << "taille envoyee : "<< s->getSoc()->sendToServer(buf1) << std::endl;
+	  
+
+	  std::cout << "ip : " << player.ip << ", name: " << player.name << std::endl;
+
+	  std::cout << "ENVOI DE DATA DE CO AU CLIENT" << std::endl; 
+	  msgpack::sbuffer buf2;
+	  msgpack::packer<msgpack::sbuffer> packet2(&buf2);
+	  MasterData::InfosServer serv(s->getSoc()->getIP(), s->getPort());  
+	  packet2.pack((int)MasterData::Command::INFOS_SERVER);
+	  packet2.pack(serv);
+	  u->getSoc()->sendToServer(buf2);
+	  u->setIG(true);
+	  u->setServ(s);
+	  s->addPlayer();
+	}      
+    }
+}
+
+void Server::EndGame(GameServer *s, msgpack::sbuffer &sbuf)
+{
+  msgpack::unpacker pac;
+  pac.reserve_buffer(sbuf.size());
+  memcpy(pac.buffer(), sbuf.data(), sbuf.size());
+  pac.buffer_consumed(sbuf.size());
+  msgpack::unpacked result;
+  
+  if (pac.next(&result)) 
+    {
+      while(pac.next(&result))
+	{
+	  MasterData::EndGame eg("", false, 0);
+	  result.get().convert(&eg);	  
+	  std::cout << "FIN DE GAME DE " << eg.login;
+	  if (eg.win)
+	    std::cout << " VICTOIRE";
+	  else
+	    std::cout << " DEFAITE";
+	  std::cout << " EN TEMPS QUE " << eg.r << std::endl;
+	}
+    }
+  s->resetPlayer();
+  resetIG(s);
 }

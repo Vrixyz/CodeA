@@ -103,3 +103,13 @@ int     MyWindow::getPort(void)
 {
     return _port;
 }
+
+void    MyWindow::setIP(QString ip)
+{
+    _ip = ip;
+}
+
+QString	MyWindow::getIP(void)
+{
+    return _ip;
+}

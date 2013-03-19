@@ -17,8 +17,7 @@ Nm::~Nm()
 
 void    Nm::sendToServer(const msgpack::sbuffer& packedInformation)
 {
-    int i;
-    i = soc.write(packedInformation.data(), packedInformation.size());
+    soc.write(packedInformation.data(), packedInformation.size());
 }
 
 void    Nm::connectToServer()

@@ -17,10 +17,10 @@
 #include <QPolygon>
 #include <QPoint>
 #include <QLine>
-#include <cmath>
 #include <QWheelEvent>
-#include <iostream>
 #include <QRubberBand>
+#include <cmath>
+#include <iostream>
 #include "gameview.h"
 #include "nm.h"
 #include "element.h"
@@ -38,7 +38,7 @@ class Game
 {
 public:
 
-    Game(const std::string &, unsigned int , MyWindow *parent = 0);
+    Game(const std::string &, unsigned int , const std::string &, MyWindow *parent = 0);
     ~Game();
     void drawWorld();
     void setPlayerDefinition(const GameData::Information::PlayerDefinition &);
@@ -54,6 +54,7 @@ public:
     Nm *n;
     QGraphicsScene *scene;
     MyWindow *win;
+    bool isRTS;
     GameData::Information::PlayerDefinition* playerDefinition;
     unsigned int selectedUnit;
 private:

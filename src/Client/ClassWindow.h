@@ -18,11 +18,13 @@ public slots:
 
     void choiceClass1();
     void choiceClass2();
+    void choiceClass3();
 
 private:
 
     QPushButton*    _class1;
     QPushButton*    _class2;
+    QPushButton*    _class3;
     QPushButton*    _back;
 
     MyWindow*       _parent;

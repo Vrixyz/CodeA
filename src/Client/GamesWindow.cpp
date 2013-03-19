@@ -10,6 +10,8 @@ GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(par
     _parent = parent;
     setFixedSize(size_x, size_y);
 
+    this->move(300, 200);
+
     setObjectName("gameswindow");
     setStyleSheet("#gameswindow { background-image: url(img/mainwindowall.png); }");
 
@@ -73,7 +75,7 @@ void    GamesWindow::setTabAndAll()
     _writeChat = new QLineEdit(this);
     _writeChat->setAttribute(Qt::WA_TranslucentBackground);
     _writeChat->setStyleSheet("QLineEdit { background-image : url(img/bg-chatdial.png) ; border: 0px; } ");
-    _writeChat->setGeometry(536, 430, 390, 25);
+    _writeChat->setGeometry(576, 430, 330, 25);
 
     QObject::connect(_writeChat, SIGNAL(returnPressed()), this, SLOT(sendMsg()));
 }
@@ -100,17 +102,23 @@ void    GamesWindow::createTabServers()
 {
     _serversPage = new QWidget(_tab);
 
-    _match = new QPushButton("Matchmaking", _serversPage);
-    _refresh = new QPushButton("Refresh", _serversPage);
-    _join = new QPushButton("Join", _serversPage);
-
+    _match = new QPushButton("", _serversPage);
+    _match->setFont(QFont("", 12, 0));
     _match->setGeometry(15, 42, 200, 50);
-    _refresh->setGeometry(218, 42, 200, 50);
-    _join->setGeometry(15, 335, 200, 50);
+    _match->setStyleSheet("QWidget { background-image: url(img/matchmaking02.png); border: 0px; }");
+    _match->setDefault(0);
 
-    _match->setAutoDefault(0);
-    _refresh->setAutoDefault(0);
-    _join->setAutoDefault(0);
+    _join = new QPushButton("", _serversPage);
+    _join->setFont(QFont("", 12, 0));
+    _join->setGeometry(15, 335, 200, 50);
+    _join->setStyleSheet("QWidget { background-image: url(img/join02.png); border: 0px; }");
+    _join->setDefault(0);
+
+    _refresh = new QPushButton("", _serversPage);
+    _refresh->setFont(QFont("", 12, 0));
+    _refresh->setGeometry(218, 42, 200, 50);
+    _refresh->setStyleSheet("QWidget { background-image: url(img/refresh02.png); border: 0px; }");
+    _refresh->setDefault(0);
 
     _iServ = new QLabel("<font color=\"#e7d593\">Liste des serveurs :</font>", _serversPage);
     _iServ->setGeometry(52, 95, 150, 20);

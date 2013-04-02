@@ -4,7 +4,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Wed Mar 27 11:17:13 2013 mathieu leurquin
+// Last update Tue Apr  2 18:17:23 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -120,9 +120,29 @@ void	Server::World::run()
 	  for (std::list<Server::IUnit*>::iterator itu = units.begin(); itu != units.end(); itu++)
 	    (*itu)->update(TIMESTEP);
 
-	  //check end by time or death
-	  // std::cout<<"resultat de la boucle de fin de partie : "<<checkEnd()<<std::endl;
-
+	  //	  check end by time or death
+	  //std::cout<<"resultat de la boucle de fin de partie : "<<std::endl;
+	  int result = checkEnd();
+	  if ((result == TEAM1_WIN || result == TEAM2_WIN || result == DRAW) && check_on == true)
+	    {
+	      std::cout<<"passs : "<< result<<"  :  "<< check_on<<std::endl;
+	      msgpack::sbuffer sbuf;
+	      msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+	      
+	      packet.pack((int)MasterData::Command::END_GAME);
+	      
+	      MasterData::EndGame endGame;
+	      endGame.winner = result; // avoid negative value (msgpack, etc..)
+	      packet.pack(endGame);
+	      MasterData::EndPlayerDetails detailsPlayer;
+	      detailsPlayer.nbUnitKilled = 10;
+	      packet.pack(detailsPlayer); // P1
+	      packet.pack(detailsPlayer); // P2
+	      
+	      communication.sendToMaster(sbuf);
+	      
+	      break;
+	    }
 	  sendUpdatesToClients();
 	  
 	  
@@ -149,6 +169,11 @@ Server::Player&	Server::World::createPlayer(int id, Server::Player::race r)
   Player* p = new Player(id, r);
 
   players.push_back(p);
+  if (players.size() >= 2)
+    {
+      std::cout<<"coucou"<<std::endl;
+      check_on = true;
+    }
   return *p;
 }
 

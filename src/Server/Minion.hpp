@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Fri Feb 22 10:39:04 2013 mathieu leurquin
-// Last update Tue Mar  5 10:31:50 2013 mathieu leurquin
+// Last update Wed Mar 27 11:17:13 2013 mathieu leurquin
 //
 
 #ifndef SERVER_MINION_HPP
@@ -27,9 +27,10 @@ namespace Server
     //    GameData::Unit _data; // now in IUnit directly
     b2Vec2 current;
     float rotation;
-
-    Minion(World& world) : IUnit(world), current(0, 0), rotation(0) {
+    int team;
+    Minion(World& world, int _team) : IUnit(world), current(0, 0), rotation(0){
       _data.health = 2;
+      team = _team;
     }
     virtual ~Minion() {}
 

@@ -100,7 +100,7 @@ namespace Server
     void rotateStop(int idClient, GameData::CommandStruct::Rotate);
     void shield(int idClient, GameData::CommandStruct::Shield);
     void askMove(int idClient, GameData::CommandStruct::Move cmd);
-    void addPlayer(int idClient);
+    void addPlayer(int idClient, GameData::CommandStruct::BePlayer);
 
 
     // fonctions handling communication from master

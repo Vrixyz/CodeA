@@ -4,7 +4,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Mon Mar 11 09:55:22 2013 mathieu leurquin
+// Last update Wed Mar 27 11:17:13 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -198,9 +198,9 @@ Server::Mage* Server::World::createMage(BitField *b, Player* p)
   return u;
 }
 
-Server::Minion *Server::World::createMinion(BitField *b, Player* p, float x, float y)
+Server::Minion *Server::World::createMinion(BitField *b, Player* p, float x, float y, int team)
 {
-  Minion* m = new Server::Minion(*this);
+  Minion* m = new Server::Minion(*this, team);
   m->setBody(b, x, y);
   if (p != NULL)
     m->addPlayer(p);

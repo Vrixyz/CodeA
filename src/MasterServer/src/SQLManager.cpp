@@ -49,15 +49,16 @@ int	SQLManager::createUsersTable()
   requet0 += "pass varchar(30),";
   requet0 += "games_win int(10),";
   requet0 += "games_win_1 int(10),";
-  requet0 += "games_win_2 int(10)";
+  requet0 += "games_win_2 int(10),";
   requet0 += "games_played int(10),";
   requet0 += "games_played_1 int(10),";
-  requet0 += "games_played_2 int(10),";
+  requet0 += "games_played_2 int(10)";
   requet0 += ");";
 
   if (sqlite3_exec(_db, requet0.c_str(), 0, 0, &zErrMsg) != SQLITE_OK)
     {
       std::cerr << "[WARNING] Erreur dans la creation d'une table. (ou table deja creee)" << std::endl;
+      std::cerr << zErrMsg << std::endl;
       return (-1);
     }
   return (0);

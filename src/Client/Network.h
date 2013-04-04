@@ -33,9 +33,8 @@ public:
     QTcpSocket *getSock() {return &soc;}
 
 public slots:
-
-   QByteArray    ReceiveFromServer();
-
+   void		SocError();
+   QByteArray	ReceiveFromServer();
 private:
 
     int port;

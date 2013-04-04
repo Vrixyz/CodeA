@@ -49,7 +49,7 @@ void    SuWindow::checkSu()
     std::cout << std::endl << "Passw : " << _passw2SuEdit->text().toUtf8().constData();
     std::cout << std::endl << "AMail : " << _mailEdit->text().toUtf8().constData() << std::endl;
 
-    _parent->getDataNet()->setNetwork(new Network("127.0.0.1", _parent->getPort()));
+    _parent->getDataNet()->setNetwork(new Network(_parent->getIP(), _parent->getPort()));
     _parent->getDataNet()->getNetwork()->connectToServer();
 
     msgpack::sbuffer sbuf;
@@ -129,20 +129,25 @@ void    SuWindow::RecvInfosClient()
         int idData;
         result.get().convert(&idData);
         if (idData == MasterData::Command::INFOS_CLIENT)
-        {
+	  {
             MasterData::InfosClient info("");
             pac.next(&result);
             result.get().convert(&info);
             std::cout << "CONNEXION DONE de " << info.name << std::endl;
             _parent->getDataNet()->getNetwork()->getSock()->disconnect();
             _parent->setGamesWindow();
-        }
+	  }
         else if (idData == MasterData::Command::ERROR)
-        {
-            MasterData::ErrorMsg err("");
+	  {
+	    MasterData::ErrorMsg err("");
             pac.next(&result);
             result.get().convert(&err);
             std::cerr << "Erreur connexion : " << err.msg << std::endl;
-        }
+	  }
+	else
+	  {
+	    QMessageBox::warning(this, tr("Erreur"), tr("Master non conforme"));
+	    exit(0);
+	  }
     }
 }

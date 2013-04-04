@@ -16,6 +16,7 @@ public:
   int		getId(){return _id;}
   std::string	getName(){return _name;}
   void		addPlayer(){_player ++;}
+  void		resetPlayer(){_player = 0;}
   int		getPlayer(){return _player;}
   int		getFree(){return (MAXPLACE - _player);}
   int		getPort(){return _port;}

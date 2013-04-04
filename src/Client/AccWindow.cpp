@@ -5,6 +5,8 @@ AccWindow::AccWindow(int size_x, int size_y, MyWindow *parent) : QDialog(parent,
     _parent = parent;
     setFixedSize(size_x, size_y);
 
+    this->move(600, 250);
+
     setObjectName("accwin");
     setStyleSheet("#accwin { background-image: url(img/bg-test.png); }");
 

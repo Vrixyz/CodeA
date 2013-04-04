@@ -19,7 +19,6 @@ void    Nm::sendToServer(const msgpack::sbuffer& packedInformation)
 {
     int i;
     i = soc.write(packedInformation.data(), packedInformation.size());
-    std::cout << "send " << i << " " << packedInformation.size() << std::endl;
 }
 
 void    Nm::connectToServer()

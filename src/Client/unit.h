@@ -3,7 +3,7 @@
 
 #include "game.h"
 
-class Unit : public QGraphicsItem, public Item
+class Unit : public QGraphicsItem
 {
 public:
     Unit(GameData::Unit, GameData::Physics, QGraphicsScene *);
@@ -14,7 +14,10 @@ public:
     GameData::Physics physics;
     QGraphicsScene *scene;
     QRectF bound;
-    int t;
+    int type() const;
+    enum {
+        Type = UserType + 3
+    };
 };
 
 #endif // UNIT_H

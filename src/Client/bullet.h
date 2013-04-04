@@ -3,7 +3,7 @@
 
 #include "game.h"
 
-class Bullet : public QGraphicsItem, public Item
+class Bullet : public QGraphicsItem
 {
 public:
     Bullet(GameData::Bullet , GameData::Physics, QGraphicsScene *);
@@ -14,7 +14,10 @@ public:
     GameData::Physics physics;
     QGraphicsScene *scene;
     QRectF bound;
-    int t;
+    int type() const;
+    enum {
+        Type = UserType + 1
+    };
 };
 
 #endif // BULLET_H

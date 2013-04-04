@@ -107,12 +107,28 @@ void GameView::rotationUpdate()
 
 void GameView::mousePressEvent(QMouseEvent *event)
 {
+    msgpack::sbuffer sbuf;
+    msgpack::packer<msgpack::sbuffer> packet(&sbuf);
     switch (event->button())
     {
     case Qt::LeftButton:
         base = event->pos();
         rubberBand->setGeometry(QRect(base, QSize()));
         rubberBand->show();
+        break;
+
+    case Qt::RightButton:
+        GameData::CommandStruct::Move m;
+        for (std::list<unsigned int>::iterator it = n->game->idList.begin(); it !=  n->game->idList.end(); it++)
+        {
+            m.idUnit = *it;
+            m.x = event->pos().x() + sceneRect().x();
+            m.y = -(event->pos().y() + sceneRect().y());
+            packet.pack((int)GameData::Command::MoveTo);
+            packet.pack(m);
+            n->sendToServer(sbuf);
+            std::cout << "send moveTo " << m.x << " " << m.y << std::endl;
+        }
         break;
 
     default:
@@ -127,33 +143,45 @@ void GameView::mouseReleaseEvent(QMouseEvent *event)
     {
     case Qt::LeftButton:
     {
+        n->game->idList.clear();
+        QGraphicsItem *item;
+        QRectF *rect = new QRectF(rubberBand->geometry().x() + sceneRect().x(), rubberBand->geometry().y() + sceneRect().y(), rubberBand->width(), rubberBand->height());
+        std::cout << "Rectangle de selection " << rect->x() << " " << rect->y() << std::endl;
         rubberBand->hide();
-        QList<QGraphicsItem *> list = this->n->game->scene->items(rubberBand->rect());
+        QList<QGraphicsItem *> list = this->n->game->scene->items(*rect);
         std::cout << "Il se passe quelque chose ! " << list.size() << std::endl;
         for (int i = 0; i < list.length(); i++)
         {
-            QGraphicsItem *item = list.at(i);
+            item = list.at(i);
             std::cout << "item pos => x : " << item->x() << " y : " << item->y() << std::endl;
+            switch (list.at(i)->type())
+            {
+            case Bullet::Type:
+                Bullet *bullet;
+                bullet = static_cast<Bullet *>(item);
+                n->game->idList.push_back(bullet->bullet.id);
+                std::cout << "Bullet" << std::endl;
+                break;
+
+            case Element::Type:
+                Element *element;
+                element = static_cast<Element *>(item);
+                n->game->idList.push_back(element->elem.id);
+                std::cout << "Element" << std::endl;
+                break;
+
+            case Unit::Type:
+                Unit *unit;
+                unit = static_cast<Unit *>(item);
+                n->game->idList.push_back(unit->unit.id);
+                std::cout << "Unit" << std::endl;
+                break;
+
+            default:
+                std::cout << "whatever" << std::endl;
+                break;
+            }
         }
-//        for (int i = 0; i < list.size(); i++)
-//        {
-//            item = dynamic_cast<Item *>(list[i]);
-//            switch (item->t)
-//            {
-//            case 0:
-//                std::cout << "selected BULLET" << std::endl;
-//                break;
-//            case 2:
-//                std::cout << "selected UNIT" << std::endl;
-//                break;
-//            case 1:
-//                std::cout << "selected ELEMENT" << std::endl;
-//                break;
-//            default:
-//                std::cout << "c'est l'echec" << std::endl;
-//                break;
-//            }
-//        }
         break;
     }
 
@@ -184,7 +212,6 @@ void GameView::keyPressEvent(QKeyEvent *e) {
         case Qt::Key_B:
             GameData::CommandStruct::Fire f;
             f.idUnit = n->game->selectedUnit;
-            std::cout << "BULLET !" << std::endl;
             packet.pack((int)GameData::Command::Fire);
             packet.pack(f);
             n->sendToServer(sbuf);
@@ -192,33 +219,26 @@ void GameView::keyPressEvent(QKeyEvent *e) {
         case Qt::Key_R:
             GameData::CommandStruct::Shield s;
             s.idUnit = n->game->selectedUnit;
-            std::cout << "shield !" << std::endl;
             packet.pack((int)GameData::Command::Shield);
             packet.pack(s);
             n->sendToServer(sbuf);
             break;
         case Qt::Key_W:
             setMove(0, 1);
-            std::cout << "UP !" << std::endl;
             break;
         case Qt::Key_A:
-            std::cout << "LEFT !" << std::endl;
             setMove(-1, 0);
             break;
         case Qt::Key_S:
-            std::cout << "DOWN !" << std::endl;
             setMove(0, -1);
             break;
         case Qt::Key_D:
-            std::cout << "RIGHT !" << std::endl;
             setMove(1, 0);
             break;
         case Qt::Key_Escape:
-            std::cout << "QUIT !" << std::endl;
             delete this->n->game;
             break;
         default:
-            std::cout << "Left = " << Qt::Key_Left << ", Right = " << Qt::Key_Right << ", Value = " << e->key() << std::endl;
             break;
         }
         std::cout << "press => vector : (" << dvectorx << ", " << dvectory << ")" << std::endl;
@@ -233,22 +253,17 @@ void GameView::keyReleaseEvent(QKeyEvent *e) {
             break;
         case Qt::Key_W:
             setMove(0, -1);
-            std::cout << "UP !" << std::endl;
             break;
         case Qt::Key_A:
-            std::cout << "LEFT !" << std::endl;
             setMove(1, 0);
             break;
         case Qt::Key_S:
-            std::cout << "DOWN !" << std::endl;
             setMove(0, 1);
             break;
         case Qt::Key_D:
-            std::cout << "RIGHT !" << std::endl;
             setMove(-1, 0);
             break;
         default:
-            std::cout << "Left = " << Qt::Key_Left << ", Right = " << Qt::Key_Right << ", Value = " << e->key() << std::endl;
             break;
         }
         std::cout << "release => vector : (" << dvectorx << ", " << dvectory << ")" << std::endl;
@@ -266,7 +281,6 @@ void  GameView::setMove(int x, int y)
     m.x = dvectorx;
     m.y = dvectory;
     m.idUnit = n->game->selectedUnit;
-    std::cout << "unit id : " << m.idUnit << std::endl;
     packet.pack(m);
     n->sendToServer(sbuf);
 }

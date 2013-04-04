@@ -18,6 +18,10 @@ namespace MasterData
 	SEND_CHAT = 7,		// ENVOI DE MESSAGE DEPUIS UN CLIENT
 	RECV_CHAT = 8,		// RECEPTION DU BROADCAST DE MESSAGE
 	MATCHMAKING = 9,	// COMMANDE DE CHOIX DE SERVER DE MANIERE AUTO
+
+	// communication with server
+
+
 	REQUEST_SERVER = 10,	// COMMANDE DE CHOIX D'UN SERVEUR DE LA LISTE
 	INFOS_SERVER = 11,	// REPONSE AVEC LES INFOS DE CONNEXIONS DU SERVER
 	END_GAME = 12,		// COMMANDE CONFIRmANT LA FIN DE PARTI 
@@ -55,6 +59,27 @@ namespace MasterData
     
     MSGPACK_DEFINE(msg);
   };
+
+  
+  // END_GAME
+  typedef struct endgame{
+    int winner;
+    int duree;
+    // int nb_player ?
+    
+    MSGPACK_DEFINE(winner, duree);
+  } EndGame;
+  typedef struct endplayerdetails
+  {
+    int nbUnitKilled;
+    //	nbunitkilled;
+    //nbunitlost;
+    //...
+
+    MSGPACK_DEFINE(nbUnitKilled);
+  } EndPlayerDetails;
+  //
+
 }
 
 #endif

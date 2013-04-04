@@ -18,8 +18,10 @@ public:
     void setMove(int, int);
     void rotationUpdate();
     void bindNet(Nm *);
+    void viewMove();
     Nm *n;
     QPoint base;
+    QPoint mouse;
     QRubberBand *rubberBand;
     int cangle;
     int angle;

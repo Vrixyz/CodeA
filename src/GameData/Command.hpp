@@ -82,10 +82,19 @@ namespace GameData
     };
 
     // // No args for BePlayer (yet?)
-    // struct BePlayer
-    // {
-    //   MSGPACK_DEFINE();
-    // };
+    struct BePlayer
+    {
+      typedef enum e_player_class
+	{
+	  INVOKER,
+	  MAGE
+	} player_class;
+
+      std::string login;
+      int type;
+
+      MSGPACK_DEFINE(login, type);
+    };
 
   }
 }

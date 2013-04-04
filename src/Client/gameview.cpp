@@ -19,52 +19,60 @@ GameView::GameView(QWidget *parent) : QGraphicsView(parent)
 void GameView::mouseMoveEvent(QMouseEvent *e)
 {
     rubberBand->setGeometry(QRect(base, e->pos()).normalized());
-    int stat;
-    msgpack::sbuffer sbuf;
-    msgpack::packer<msgpack::sbuffer> packet(&sbuf);
-    double fa;
-    int a;
-    QPoint p;
-    e->pos();
-    p = e->pos();
-    p.setX(p.x() - 400);
-    p.setY(-(p.y() - 300));
-    if ((p.y() * p.x()) > 0)
-        fa = std::fabs(abs(p.x()) / std::fabs(p.y()));
-    else
-        fa = std::fabs(abs(p.y()) / std::fabs(p.x()));
-    a = std::atan(fa) * 180 / (4.0 * std::atan(1.0));
-    if (p.x() >= 0 && p.y() <= 0)
-        a += 90;
-    else if (p.x() <= 0 && p.y() < 0)
-        a += 180;
-    else if (p.x() <= 0 && p.y() >= 0)
-        a += 270;
-    cangle = a;
-    a -= angle;
-    if (a <= 0)
-        a = 360 + a;
-    if (a < 350 && a > 180)
-        stat = 4;
-    else if (a > 10 && a <= 180)
-        stat = 5;
-    else
-        stat = 6;
-    if (stat != status)
+    if (this->n->game->isRTS == false)
     {
-        GameData::CommandStruct::Rotate r;
-        r.idUnit = n->game->selectedUnit;
-        std::cout << "id: " << r.idUnit << std::endl;
-        packet.pack(stat);
-        packet.pack(r);
-        n->sendToServer(sbuf);
-        status = stat;
-        if (status == 4)
-            std::cout << "Go Left !" << std::endl;
-        else if (status == 5)
-            std::cout << "Go Right !" << std::endl;
+        int stat;
+        msgpack::sbuffer sbuf;
+        msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+        double fa;
+        int a;
+        QPoint p;
+        e->pos();
+        p = e->pos();
+        p.setX(p.x() - 400);
+        p.setY(-(p.y() - 300));
+        if ((p.y() * p.x()) > 0)
+            fa = std::fabs(abs(p.x()) / std::fabs(p.y()));
         else
-            std::cout << "Keep Going !" << std::endl;
+            fa = std::fabs(abs(p.y()) / std::fabs(p.x()));
+        a = std::atan(fa) * 180 / (4.0 * std::atan(1.0));
+        if (p.x() >= 0 && p.y() <= 0)
+            a += 90;
+        else if (p.x() <= 0 && p.y() < 0)
+            a += 180;
+        else if (p.x() <= 0 && p.y() >= 0)
+            a += 270;
+        cangle = a;
+        a -= angle;
+        if (a <= 0)
+            a = 360 + a;
+        if (a < 350 && a > 180)
+            stat = 4;
+        else if (a > 10 && a <= 180)
+            stat = 5;
+        else
+            stat = 6;
+        if (stat != status)
+        {
+            GameData::CommandStruct::Rotate r;
+            r.idUnit = n->game->selectedUnit;
+            std::cout << "id: " << r.idUnit << std::endl;
+            packet.pack(stat);
+            packet.pack(r);
+            n->sendToServer(sbuf);
+            status = stat;
+            if (status == 4)
+                std::cout << "Go Left !" << std::endl;
+            else if (status == 5)
+                std::cout << "Go Right !" << std::endl;
+            else
+                std::cout << "Keep Going !" << std::endl;
+        }
+    }
+    else
+    {
+        mouse = e->pos();
+        viewMove();
     }
 }
 
@@ -127,7 +135,8 @@ void GameView::mousePressEvent(QMouseEvent *event)
             packet.pack((int)GameData::Command::MoveTo);
             packet.pack(m);
             n->sendToServer(sbuf);
-            std::cout << "send moveTo " << m.x << " " << m.y << std::endl;
+            std::cout << "send moveTo " << m.x << " " << m.y << " id : " << m.idUnit << std::endl;
+            sbuf.clear();
         }
         break;
 
@@ -202,7 +211,7 @@ void GameView::wheelEvent(QWheelEvent *e)
 }
 
 void GameView::keyPressEvent(QKeyEvent *e) {
-    if (!(e->isAutoRepeat())) {
+    if (!(e->isAutoRepeat()) && !(n->game->isRTS)) {
         msgpack::sbuffer sbuf;
         msgpack::packer<msgpack::sbuffer> packet(&sbuf);
         switch (e->key()) {
@@ -243,10 +252,18 @@ void GameView::keyPressEvent(QKeyEvent *e) {
         }
         std::cout << "press => vector : (" << dvectorx << ", " << dvectory << ")" << std::endl;
     }
+    else if (!(e->isAutoRepeat()))
+    {
+        switch (e->key()) {
+        case Qt::Key_Escape:
+            delete this->n->game;
+            break;
+        }
+    }
 }
 
 void GameView::keyReleaseEvent(QKeyEvent *e) {
-    if (!(e->isAutoRepeat())) {
+    if (!(e->isAutoRepeat()) && !(n->game->isRTS)) {
         switch (e->key()) {
         case Qt::Key_unknown:
             std::cout << "PATRON ELLE PIQUE PAS TA VITEL !" << std::endl;
@@ -283,4 +300,25 @@ void  GameView::setMove(int x, int y)
     m.idUnit = n->game->selectedUnit;
     packet.pack(m);
     n->sendToServer(sbuf);
+}
+
+void GameView::viewMove()
+{
+    int xlcoef = mouse.x();
+    int xrcoef = mouse.x();
+    int yucoef = mouse.y();
+    int ydcoef = mouse.y();
+    xlcoef = (int)(round(1. / (xlcoef / (this->width() * 0.1)))) % 10;
+    yucoef = (int)(round(1. / (yucoef / (this->height() * 0.1)))) % 10;
+    xrcoef = (int)(round(1. / ((this->width() * 0.1) / xrcoef * 0.1))) % 10;
+    ydcoef = (int)(round(1. / ((this->height() * 0.1) / ydcoef * 0.1))) % 10;
+//    std::cout << "coeff x : " << xlcoef << " " << xrcoef << " coeff y : " << yucoef << " " << ydcoef << std::endl;
+    if (mouse.x() < (this->width() * 0.1))
+        this->setSceneRect(this->sceneRect().x() - xlcoef, this->sceneRect().y(), this->width(), this->height());
+    if (mouse.x() > (this->width() * 0.9))
+        this->setSceneRect(this->sceneRect().x() + xrcoef, this->sceneRect().y(), this->width(), this->height());
+    if (mouse.y() > (this->height() * 0.9))
+        this->setSceneRect(this->sceneRect().x(), this->sceneRect().y() + ydcoef, this->width(), this->height());
+    if (mouse.y() < (this->height() * 0.1))
+        this->setSceneRect(this->sceneRect().x(), this->sceneRect().y() - yucoef, this->width(), this->height());
 }

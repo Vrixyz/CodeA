@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Thu Feb 21 10:56:20 2013 mathieu leurquin
-// Last update Wed Mar  6 11:31:09 2013 mathieu leurquin
+// Last update Wed Mar 27 11:17:13 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -101,9 +101,9 @@ void Server::Portal::createMinion()
 
   b2Vec2 position = this->getBody()->GetPosition();
   if (belongsToPlayer(0) == true)
-    this->_world.createMinion(b, _world.players.front(), position.x, position.y);
+    this->_world.createMinion(b, _world.players.front(), position.x, position.y, 0);
   else
-    this->_world.createMinion(b, _world.players.back(), position.x, position.y);
+    this->_world.createMinion(b, _world.players.back(), position.x, position.y, 1);
 }
 
 void Server::Portal::update(float elapsedMilliseconds)

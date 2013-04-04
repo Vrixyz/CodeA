@@ -21,7 +21,7 @@ MyWindow::~MyWindow()
 void    MyWindow::startGame()
 {
     _classWindow->hide();
-    _game = new Game(getDataNet()->getServIP(), getDataNet()->getServPort(), this);
+    _game = new Game(getDataNet()->getServIP(), getDataNet()->getServPort(), getDataNet()->getClass(), this);
     std::cout << "KEEP WORKING" << std::endl;
     show();
 }

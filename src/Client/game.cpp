@@ -1,7 +1,8 @@
 #include "game.h"
 
-Game::Game(const std::string &ip, unsigned int port, MyWindow *w)
+Game::Game(const std::string &ip, unsigned int port, const std::string &type, MyWindow *w)
 {
+    isRTS = type == "class1" ? true : false;
     w->setFixedSize(800, 600);
     angle = 0;
     win = w;
@@ -17,6 +18,13 @@ Game::Game(const std::string &ip, unsigned int port, MyWindow *w)
     msgpack::sbuffer sbuf;
     msgpack::packer<msgpack::sbuffer> packet(&sbuf);
     packet.pack((int)GameData::Command::BePlayer);
+    GameData::CommandStruct::BePlayer player;
+    if (isRTS)
+        player.type = GameData::CommandStruct::BePlayer::INVOKER;
+    else
+        player.type = GameData::CommandStruct::BePlayer::MAGE;
+    player.login = "osella";
+    packet.pack(player);
     n->sendToServer(sbuf);
     view->setScene(scene);
     view->show();
@@ -41,15 +49,16 @@ GameData::World Game::getWorld() {
 void Game::drawWorld() {
     scene->clear();
     //    De quoi vous faire un petit repaire
-    QLine ly(0, -300, 0, 300);
-    QLine lx(-400, 0, 400, 0);
-    scene->addLine(lx);
-    scene->addLine(ly);
+    // QLine ly(0, -300, 0, 300);
+    // QLine lx(-400, 0, 400, 0);
+    // scene->addLine(lx);
+    // scene->addLine(ly);
+    view->viewMove();
     for (std::list<Element *>::iterator it = e.begin(); it != e.end(); it++) { // elems physics loop
         (*it)->Draw();
     }
     for (std::list<Unit *>::iterator it = u.begin(); it != u.end(); it++) { // units physics loop
-        if ((*it)->unit.id == selectedUnit)
+        if ((*it)->unit.id == selectedUnit && isRTS == false)
         {
             view->angle = (*it)->physics.angle;
             view->rotationUpdate();

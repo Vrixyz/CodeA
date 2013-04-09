@@ -125,25 +125,25 @@ void	Server::World::run()
 	  int result = checkEnd();
 	  if ((result == TEAM1_WIN || result == TEAM2_WIN || result == DRAW) && check_on == true)
 	    {
-	      std::cout<<"passs : "<< result<<"  :  "<< check_on<<std::endl;
-	      msgpack::sbuffer sbuf;
-	      msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+	      // std::cout<<"passs : "<< result<<"  :  "<< check_on<<std::endl;
+	      // msgpack::sbuffer sbuf;
+	      // msgpack::packer<msgpack::sbuffer> packet(&sbuf);
 	      
-	      packet.pack((int)MasterData::Command::END_GAME);
-	      MasterData::EndGame endGame;
-	      endGame.winner = result; // avoid negative value (msgpack, etc..)
-	      Player* p1 = players.first();
-	      endGame.login = p1->details.login;
-	      endGame.r = p1->details.race;
+	      // packet.pack((int)MasterData::Command::END_GAME);
+	      // MasterData::EndGame endGame;
+	      // endGame.winner = result; // avoid negative value (msgpack, etc..)
+	      // Player* p1 = players.first();
+	      // endGame.login = p1->details.login;
+	      // endGame.r = p1->details.race;
 	      
-	      packet.pack(endGame);
+	      // packet.pack(endGame);
 
 	      // MasterData::EndPlayerDetails detailsPlayer;
 	      // detailsPlayer.nbUnitKilled = 10;
 	      // packet.pack(detailsPlayer); // P1
 	      // packet.pack(detailsPlayer); // P2
 	      
-	      communication.sendToMaster(sbuf);
+	      // communication.sendToMaster(sbuf);
 	      
 	      break;
 	    }
@@ -170,7 +170,7 @@ void	Server::World::run()
 
 Server::Player*	Server::World::createPlayer(int id, const GameData::CommandStruct::BePlayer& details)
 {
-  Player* p = new Player(id, arg);
+  Player* p = new Player(id, details);
 
   players.push_back(p);
   if (players.size() >= 2)
@@ -198,9 +198,9 @@ int Server::World::checkEnd()
   // end of game by the timer
   if (first->time >= TIMER_END)
     {
-      if ((first->type == Server::Player::Mage && second->type == Server::Player::Minion))
+      if ((first->details.type == Server::Player::Mage && second->details.type == Server::Player::Minion))
 	return (TEAM1_WIN);
-      else if ((first->type == Server::Player::Minion && second->type == Server::Player::Mage))
+      else if ((first->details.type == Server::Player::Minion && second->details.type == Server::Player::Mage))
 	return (TEAM2_WIN);
       return (DRAW);
     }
@@ -595,20 +595,19 @@ void	Server::World::addPlayer(int idClient, GameData::CommandStruct::BePlayer ar
 	b = new  BitField(Server::BitField::TEAM1_UNIT, Server::BitField::TEAM2_BULLET | Server::BitField::TEAM2_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL);
       else
 	b = new  BitField(Server::BitField::TEAM2_UNIT, Server::BitField::TEAM1_BULLET | Server::BitField::TEAM1_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL);
-      createMage(b, &(p));
+      createMage(b, p);
       std::cout<<"team1"<<std::endl;      
     }
   else if (arg.type == GameData::CommandStruct::BePlayer::INVOKER)
     {
-      Player p = createPlayer(idClient, Server::Player::Minion);
       BitField *bp;
       if (players.size() == 1)
 	bp = new  BitField(Server::BitField::PORTAL, Server::BitField::TEAM2_BULLET | Server::BitField::TEAM2_UNIT | Server::BitField::TEAM1_BULLET | Server::BitField::TEAM1_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL);
       else
 	bp = new  BitField(Server::BitField::PORTAL, Server::BitField::TEAM1_BULLET | Server::BitField::TEAM1_UNIT | Server::BitField::TEAM2_BULLET | Server::BitField::TEAM2_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL);
-      createPortal(bp, &(p));
-      createPortal(bp, &(p));
-      createPortal(bp, &(p));
+      createPortal(bp, p);
+      createPortal(bp, p);
+      createPortal(bp, p);
     }
   else
     std::cout << "type unknown, crash might come" << std::endl;

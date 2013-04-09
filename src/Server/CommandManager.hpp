@@ -167,6 +167,7 @@ void	Server::CommandManager<C, IdCom, IdClient>::addCommandToQueue(IdClient send
   
   msgpack::sbuffer* sbuf = new msgpack::sbuffer();
   sbuf->write(cmd, size);
+  std::cout << "add command to queue: " << cmd << std::endl;
   cmds.push_back(std::pair<msgpack::sbuffer*, IdClient>(sbuf, sender));
 }
 

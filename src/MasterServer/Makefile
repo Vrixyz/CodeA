@@ -5,6 +5,11 @@ CC			=	g++
 SRC			=	src/User.cpp \
 				src/Client.cpp \
 				src/Server.cpp \
+				src/Server_base.cpp \
+				src/Server_login.cpp \
+				src/Server_util.cpp \
+				src/Server_manage.cpp \
+				src/Server_command.cpp \
 				src/Socket.cpp \
 				src/SQLManager.cpp \
 				src/GameServer.cpp \

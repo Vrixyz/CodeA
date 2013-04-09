@@ -63,7 +63,6 @@ class Server
   void	JoinServer(User* u, msgpack::sbuffer&);
   void	EndGame(GameServer *s, msgpack::sbuffer &sbuf);
 
-
  protected:
   SQLManager*			_sql;
   std::list<User *>		_users;

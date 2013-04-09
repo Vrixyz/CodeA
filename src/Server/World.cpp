@@ -131,16 +131,29 @@ void	Server::World::run()
 	      
 	      packet.pack((int)MasterData::Command::END_GAME);
 	      
-	      MasterData::EndGame endGame;
-	      endGame.winner = result; // avoid negative value (msgpack, etc..)
-	      packet.pack(endGame);
-	      MasterData::EndPlayerDetails detailsPlayer;
-	      detailsPlayer.nbUnitKilled = 10;
-	      packet.pack(detailsPlayer); // P1
-	      packet.pack(detailsPlayer); // P2
+	      MasterData::EndGame p1;
+	      MasterData::EndGame p2;
+	      if(result == TEAM2_WIN)
+		{
+		  p1.win = false;
+		  p2.win = true;
+		}
+	      else if(result == TEAM1_WIN)
+		{
+		  p1.win = true;
+		  p2.win = false;
+		}
+	      else
+		{
+		  p1.win = true;
+		  p2.win = true;
+		}
+
+
+	      packet.pack(p1);
+	      packet.pack(p2);
 	      
 	      communication.sendToMaster(sbuf);
-	      
 	      break;
 	    }
 	  sendUpdatesToClients();

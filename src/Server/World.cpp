@@ -130,7 +130,6 @@ void	Server::World::run()
 	      msgpack::packer<msgpack::sbuffer> packet(&sbuf);
 	      
 	      packet.pack((int)MasterData::Command::END_GAME);
-	      
 	      MasterData::EndGame p1;
 	      MasterData::EndGame p2;
 	      if(result == TEAM2_WIN)
@@ -149,10 +148,18 @@ void	Server::World::run()
 		  p2.win = true;
 		}
 
+	      Player* pl1 = players.first();
+	      Player* pl2 = players.first();
 
+	      p1.login = pl1->details.login;
+	      p1.r = pl1->details.race;
+
+	      p2.login = pl2->details.login;
+	      p2.r = pl2->details.race;
+	      
 	      packet.pack(p1);
 	      packet.pack(p2);
-	      
+
 	      communication.sendToMaster(sbuf);
 	      break;
 	    }
@@ -177,17 +184,17 @@ void	Server::World::run()
     }  
 }
 
-Server::Player&	Server::World::createPlayer(int id, Server::Player::race r)
+Server::Player*	Server::World::createPlayer(int id, const GameData::CommandStruct::BePlayer& details)
 {
-  Player* p = new Player(id, r);
+  Player* p = new Player(id, arg);
 
   players.push_back(p);
   if (players.size() >= 2)
     {
-      std::cout<<"coucou"<<std::endl;
+      // now we check end game
       check_on = true;
     }
-  return *p;
+  return p;
 }
 
 int Server::World::checkEnd()
@@ -207,9 +214,9 @@ int Server::World::checkEnd()
   // end of game by the timer
   if (first->time >= TIMER_END)
     {
-      if ((first->type == Server::Player::Mage && second->type == Server::Player::Minion))
+      if ((first->details.type == Server::Player::Mage && second->details.type == Server::Player::Minion))
 	return (TEAM1_WIN);
-      else if ((first->type == Server::Player::Minion && second->type == Server::Player::Mage))
+      else if ((first->details.type == Server::Player::Minion && second->details.type == Server::Player::Mage))
 	return (TEAM2_WIN);
       return (DRAW);
     }
@@ -596,9 +603,10 @@ void	Server::World::addPlayer(int idClient, GameData::CommandStruct::BePlayer ar
  
   BitField *b;
 
+  Player* p = createPlayer(idClient, arg);
   if (arg.type == GameData::CommandStruct::BePlayer::MAGE)
     {
-      Player p = createPlayer(idClient, Server::Player::Mage);
+
       if (players.size() == 1)
 	b = new  BitField(Server::BitField::TEAM1_UNIT, Server::BitField::TEAM2_BULLET | Server::BitField::TEAM2_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL);
       else

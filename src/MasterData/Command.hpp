@@ -69,8 +69,8 @@ namespace MasterData
     MSGPACK_DEFINE(msg);
   };
 
-  
   // END_GAME
+  /*
   typedef struct endgame{
     int winner;
     int duree;
@@ -80,7 +80,7 @@ namespace MasterData
   } EndGame;
   typedef struct endplayerdetails
   {
-    int nbUnitKilled;
+    int nbUnitKilled; 
     //	nbunitkilled;
     //nbunitlost;
     //...
@@ -88,18 +88,20 @@ namespace MasterData
     MSGPACK_DEFINE(nbUnitKilled);
   } EndPlayerDetails;
   //
-
+  */
   //UNE PAR JOUEUR
-  /*  struct	EndGame
+  struct	EndGame
   {
     EndGame(std::string _login, bool _win, int _r) :
       login(_login), win(_win), r(_r){}
     std::string login;
     bool	win;
     int		r;
+    //    int		duree;
+    //int		nbUnitKilled;
     
     MSGPACK_DEFINE(login, win, r);
-    };*/
+    };
 
 }
 

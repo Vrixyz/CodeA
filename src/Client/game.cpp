@@ -47,28 +47,19 @@ GameData::World Game::getWorld() {
 }
 
 void Game::drawWorld() {
-    scene->clear();
     //    De quoi vous faire un petit repaire
-    // QLine ly(0, -300, 0, 300);
-    // QLine lx(-400, 0, 400, 0);
-    // scene->addLine(lx);
-    // scene->addLine(ly);
+     QLine ly(0, -300, 0, 300);
+     QLine lx(-400, 0, 400, 0);
+     scene->addLine(lx);
+     scene->addLine(ly);
     view->viewMove();
-    for (std::list<Element *>::iterator it = e.begin(); it != e.end(); it++) { // elems physics loop
-        (*it)->Draw();
-    }
-    for (std::list<Unit *>::iterator it = u.begin(); it != u.end(); it++) { // units physics loop
+    for (std::list<Unit *>::iterator it = u.begin(); it != u.end(); it++) // units physics loop
         if ((*it)->unit.id == selectedUnit && isRTS == false)
         {
             view->angle = (*it)->physics.angle;
             view->rotationUpdate();
             view->setSceneRect((*it)->physics.x - 400., -300. - (*it)->physics.y, 800, 600);
         }
-        (*it)->Draw();
-    }
-    for (std::list<Bullet *>::iterator it = b.begin(); it != b.end(); it++) { // bullets physics loop
-        (*it)->Draw();
-    }
 }
 
 void Game::setPlayerDefinition(const GameData::Information::PlayerDefinition& pd)

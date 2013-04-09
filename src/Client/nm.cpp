@@ -96,9 +96,6 @@ void    Nm::updateWorld(QByteArray ligne) {
     pac.next(&result); // remove unused id
     if (pac.next(&result)) {
         result.get().convert(&woo);
-        game->b.clear();
-        game->e.clear();
-        game->u.clear();
         game->setWorld(woo);
         for (i = 0; i < woo.nbElement; i++)
         {
@@ -108,7 +105,14 @@ void    Nm::updateWorld(QByteArray ligne) {
             pac.next(&result);
             result.get().convert(&p);
             Element *el = new Element(e, p, game->scene);
-            game->e.push_back(el);
+            if (elemExist(el))
+                updateElem(el);
+            else
+            {
+                std::cout << "push elem" << std::endl;
+                game->e.push_back(el);
+                el->Draw();
+            }
         }
         for (i = 0; i < woo.nbUnit; i++)
         {
@@ -121,7 +125,14 @@ void    Nm::updateWorld(QByteArray ligne) {
             pac.next(&result);
             result.get().convert(&p);
             Unit *un = new Unit(u, p, game->scene);
-            game->u.push_back(un);
+            if (unitExist(un))
+                updateUnit(un);
+            else
+            {
+                std::cout << "push unit" << std::endl;
+                game->u.push_back(un);
+                un->Draw();
+            }
         }
         for (i = 0; i < woo.nbBullet; i++)
         {
@@ -131,8 +142,78 @@ void    Nm::updateWorld(QByteArray ligne) {
             pac.next(&result);
             result.get().convert(&p);
             Bullet *bu = new Bullet(b, p, game->scene);
-            game->b.push_back(bu);
+            if (bulletExist(bu))
+                updateBullet(bu);
+            else
+            {
+                std::cout << "push bullet" << std::endl;
+                game->b.push_back(bu);
+                bu->Draw();
+            }
         }
         game->drawWorld();
     }
+}
+
+bool Nm::elemExist(Element *e)
+{
+    for (std::list<Element *>::iterator it = game->e.begin(); it != game->e.end(); it++) {
+        if ((*it)->elem.id == e->elem.id)
+            return (true);
+    }
+    return (false);
+}
+
+void Nm::updateElem(Element *e)
+{
+    for (std::list<Element *>::iterator it = game->e.begin(); it != game->e.end(); it++) {
+        if ((*it)->elem.id == e->elem.id)
+        {
+            (*it)->elem = e->elem;
+            (*it)->physics = e->physics;
+        }
+    }
+    delete e;
+}
+
+bool Nm::unitExist(Unit *u)
+{
+    for (std::list<Unit *>::iterator it = game->u.begin(); it != game->u.end(); it++) {
+        if ((*it)->unit.id == u->unit.id)
+            return (true);
+    }
+    return (false);
+}
+
+void Nm::updateUnit(Unit *u)
+{
+    for (std::list<Unit *>::iterator it = game->u.begin(); it != game->u.end(); it++) {
+        if ((*it)->unit.id == u->unit.id)
+        {
+            (*it)->unit = u->unit;
+            (*it)->physics = u->physics;
+        }
+    }
+    delete u;
+}
+
+bool Nm::bulletExist(Bullet *b)
+{
+    for (std::list<Bullet *>::iterator it = game->b.begin(); it != game->b.end(); it++) {
+        if ((*it)->bullet.id == b->bullet.id)
+            return (true);
+    }
+    return (false);
+}
+
+void Nm::updateBullet(Bullet *b)
+{
+    for (std::list<Bullet *>::iterator it = game->b.begin(); it != game->b.end(); it++) {
+        if ((*it)->bullet.id == b->bullet.id)
+        {
+            (*it)->bullet = b->bullet;
+            (*it)->physics = b->physics;
+        }
+    }
+    delete b;
 }

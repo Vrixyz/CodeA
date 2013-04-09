@@ -1,7 +1,9 @@
 #ifndef MYITEM_H
 #define MYITEM_H
 
+#include "game.h"
 #include <QtGui>
+
 
 class MyItemLi : public QListWidgetItem
 {

@@ -203,7 +203,6 @@ void GameView::mouseReleaseEvent(QMouseEvent *event)
 void GameView::wheelEvent(QWheelEvent *e)
 {
     int delta = e->delta();
-    this->geometry();
     if (delta < 0)
         this->scale(0.9, 0.9);
     else

@@ -15,6 +15,7 @@
 #include <boost/asio/buffer.hpp>
 #include "Communication.hpp"
 #include <boost/asio.hpp>
+
 #include "../GameData/World.hpp"
 #include "../GameData/Physics.hpp"
 #include "../GameData/Unit.hpp"
@@ -49,7 +50,7 @@ namespace Server
   public:
     // static MyContactListener myContactListenerInstance;
     /// TODO: Add a trash list to remove safely the bodies
-    Communication<World>       communication;
+Communication<World>       communication;
     std::list<Server::Element*>	elements;
     std::list<Server::IUnit*> units;
     std::list<Server::Bullet*>	bullets;

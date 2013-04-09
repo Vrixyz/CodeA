@@ -71,7 +71,7 @@ namespace Server
     void init(int masterPort, char* masterIp, int width, int height);
     void run();
     void handleContact(b2Body object1, b2Body object2);
-    Player& createPlayer(int id, Server::Player::race r);
+    Player* createPlayer(int id, const GameData::CommandStruct& details);
     Server::Mage* createMage(BitField *b, Player* p = NULL);
     Server::Portal* createPortal(BitField *b, Player* player);
     Server::Minion* createMinion(BitField *b, Player* player, float x, float y, int team);

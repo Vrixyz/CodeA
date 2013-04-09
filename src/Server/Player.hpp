@@ -14,6 +14,8 @@
 #include <list>
 #include <Box2D/Box2D.h>
 
+#include "../GameData/Command.hpp"
+
 namespace Server
 {
 
@@ -30,9 +32,11 @@ namespace Server
     int id;
     int score;
     float time;
-    race type;
+    
+    const GameData::CommandStruct::BePlayer& details;
+    
 
-    Player(int playerId, race t) : id(playerId), type(t) 
+    Player(int playerId, const GameData::CommandStruct::BePlayer& d) : id(playerId), details(d) 
     {
       time = 0;
       score = 0;

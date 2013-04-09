@@ -118,10 +118,6 @@ namespace Server
 
       rsm = new read_socket_handler(master, _master_cmd, 0);
       rsm->setHandler();
-      std::cout << "plop" << std::endl;
-
-      std::cout << "plup" << std::endl;
-
       return true; // FIXME: bla
 
     }
@@ -141,15 +137,6 @@ void	Server::Communication<C>::init()
 {
   this->start_accept();
   _command = NULL;
-  // _command = new CommandManager<World, int, tcp_connection::pointer>(w);
-  // _command->addCallback(GameData::Command::Fire, &World::fire);
-  // _command->addCallback(GameData::Command::AimTo, &World::aimTo);
-  // _command->addCallback(GameData::Command::MoveTo, &World::moveTo);
-  // _command->addCallback(GameData::Command::Move, &World::askMove);
-  // _command->addCallback(GameData::Command::RotateLeft, &World::rotateLeft);
-  // _command->addCallback(GameData::Command::RotateRight, &World::rotateRight);
-  // _command->addCallback(GameData::Command::RotateStop, &World::rotateStop);
-  // _command->addCallback(GameData::Command::Shield, &World::shield);
 
   thread_accept = boost::thread(&Server::Communication<C>::accept_loop, this);
 }

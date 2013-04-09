@@ -130,14 +130,18 @@ void	Server::World::run()
 	      msgpack::packer<msgpack::sbuffer> packet(&sbuf);
 	      
 	      packet.pack((int)MasterData::Command::END_GAME);
-	      
 	      MasterData::EndGame endGame;
 	      endGame.winner = result; // avoid negative value (msgpack, etc..)
+	      Player* p1 = players.first();
+	      endGame.login = p1->details.login;
+	      endGame.r = p1->details.race;
+	      
 	      packet.pack(endGame);
-	      MasterData::EndPlayerDetails detailsPlayer;
-	      detailsPlayer.nbUnitKilled = 10;
-	      packet.pack(detailsPlayer); // P1
-	      packet.pack(detailsPlayer); // P2
+
+	      // MasterData::EndPlayerDetails detailsPlayer;
+	      // detailsPlayer.nbUnitKilled = 10;
+	      // packet.pack(detailsPlayer); // P1
+	      // packet.pack(detailsPlayer); // P2
 	      
 	      communication.sendToMaster(sbuf);
 	      
@@ -164,17 +168,17 @@ void	Server::World::run()
     }  
 }
 
-Server::Player&	Server::World::createPlayer(int id, Server::Player::race r)
+Server::Player*	Server::World::createPlayer(int id, const GameData::CommandStruct::BePlayer& details)
 {
-  Player* p = new Player(id, r);
+  Player* p = new Player(id, arg);
 
   players.push_back(p);
   if (players.size() >= 2)
     {
-      std::cout<<"coucou"<<std::endl;
+      // now we check end game
       check_on = true;
     }
-  return *p;
+  return p;
 }
 
 int Server::World::checkEnd()
@@ -583,9 +587,10 @@ void	Server::World::addPlayer(int idClient, GameData::CommandStruct::BePlayer ar
  
   BitField *b;
 
+  Player* p = createPlayer(idClient, arg);
   if (arg.type == GameData::CommandStruct::BePlayer::MAGE)
     {
-      Player p = createPlayer(idClient, Server::Player::Mage);
+
       if (players.size() == 1)
 	b = new  BitField(Server::BitField::TEAM1_UNIT, Server::BitField::TEAM2_BULLET | Server::BitField::TEAM2_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL);
       else

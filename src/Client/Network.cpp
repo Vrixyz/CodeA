@@ -4,8 +4,16 @@ Network::Network(QString h, int p)
 {
     host = h;
     port = p;
-//    QObject::connect(&soc, SIGNAL(readyRead()), this, SLOT(ReceiveFromServer()));
+    QObject::connect(&soc, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(SocError()));
 }
+
+
+void    Network::SocError()
+{
+    std::cout << "Cannot connect !" << std::endl;
+    exit (0);
+}
+
 
 Network::~Network()
 {

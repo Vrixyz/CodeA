@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Fri Feb 22 10:41:33 2013 mathieu leurquin
-// Last update Wed Mar  6 11:36:54 2013 mathieu leurquin
+// Last update Wed Mar 27 11:20:15 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -150,7 +150,18 @@ void Server::Minion::intraCollision(Object *o)
 
 void Server::Minion::intraCollisionUnit(Object *o)
 {
-  std::cout<<"Unit:!:Collision with a unit and unit!"<<std::endl;
+  Minion *m;
+  if ((m = dynamic_cast<Minion*>(o)))
+    {
+      if (m->team != this->team)
+	{
+	  std::cout<<"Unit:!:Collision with a mininon and minion enemie!"<<std::endl;
+	  _data.health -= 1;
+	}
+      std::cout<<"Unit:!:Collision with a mininon and minion ami!"<<std::endl;
+    }
+  else
+        std::cout<<"Unit:!:Collision with a minion and mage!"<<std::endl;
 }
 
 void Server::Minion::intraCollisionElement(Object *o)

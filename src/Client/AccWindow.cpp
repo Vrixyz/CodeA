@@ -57,7 +57,7 @@ void    AccWindow::checkCo()
 
     toSendLogin = login.toUtf8().constData();
     toSendPassw = passw.toUtf8().constData();
-    _parent->getDataNet()->setNetwork(new Network("127.0.0.1", _parent->getPort()));
+    _parent->getDataNet()->setNetwork(new Network(_parent->getIP(), _parent->getPort()));
     _parent->getDataNet()->getNetwork()->connectToServer();
 
     msgpack::sbuffer sbuf;
@@ -89,7 +89,7 @@ void    AccWindow::RecvInfosClient()
         int idData;
         result.get().convert(&idData);
         if (idData == MasterData::Command::INFOS_CLIENT)
-        {
+	  {
             MasterData::InfosClient info("");
             pac.next(&result);
             result.get().convert(&info);
@@ -97,14 +97,19 @@ void    AccWindow::RecvInfosClient()
             _parent->getDataNet()->setLogin(info.name);
             _parent->getDataNet()->getNetwork()->getSock()->disconnect();
             _parent->setGamesWindow();
-        }
+	  }
         else if (idData == MasterData::Command::ERROR)
-        {
-            MasterData::ErrorMsg err("");
+	  {
+	    MasterData::ErrorMsg err("");
             pac.next(&result);
             result.get().convert(&err);
             QMessageBox::warning(this, tr("Erreur"), tr(err.msg.c_str()));
-        }
+	  }
+	else
+	  {
+	    QMessageBox::warning(this, tr("Erreur"), tr("Master non conforme"));
+	    exit(0);
+	  }
     }
 }
 

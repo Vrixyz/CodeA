@@ -38,6 +38,9 @@ public:
     void setPort(int);
     int getPort(void);
 
+    void	setIP(QString);
+    QString	getIP(void);
+
     void startGame(void);
     void endGame(void);
 
@@ -49,17 +52,17 @@ public slots:
     void setSuWindow();
 
 private:
+    QString	_ip;
+    int		_port;
 
-    int _port;
+    QDialog *	_accWindow;
+    QDialog *	_suWindow;
+    QDialog *	_gamesWindow;
+    QDialog *	_classWindow;
 
-    QDialog *_accWindow;
-    QDialog *_suWindow;
-    QDialog *_gamesWindow;
-    QDialog *_classWindow;
+    Store   *	_dataNet;
 
-    Store   *_dataNet;
-
-    Game    *_game;
+    Game    *	_game;
 };
 
 #endif // MYWINDOW_H

@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 10:46:49 2012 thierry berger
-// Last update Thu Mar  7 11:02:22 2013 mathieu leurquin
+// Last update Tue Apr  2 18:09:46 2013 mathieu leurquin
 //
 
 #ifndef SERVER_WORLD_HPP
@@ -60,9 +60,12 @@ namespace Server
     b2World _physicWorld;
     static MyContactListener myContactListenerInstance;
 
+    bool check_on;
+    
     World(int port) : communication(port), _physicWorld(b2Vec2(0, 0)) {
       _physicWorld.SetContactListener(&myContactListenerInstance);
       _port = port;
+      check_on = false;
     }
     ~World();
     void init(int masterPort, char* masterIp, int width, int height);
@@ -71,7 +74,7 @@ namespace Server
     Player& createPlayer(int id, Server::Player::race r);
     Server::Mage* createMage(BitField *b, Player* p = NULL);
     Server::Portal* createPortal(BitField *b, Player* player);
-    Server::Minion* createMinion(BitField *b, Player* player, float x, float y);
+    Server::Minion* createMinion(BitField *b, Player* player, float x, float y, int team);
     Server::Element* createElement(bool walkable, float width, float height, BitField *b, int idUnit);
     Server::Bullet* createBullet(int damage, float angle, b2Vec2 position, int idUnit, BitField *b);
     Player* getPlayer(int id);

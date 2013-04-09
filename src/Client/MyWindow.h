@@ -17,6 +17,7 @@
 #include <QtGui>
 
 class Network;
+class Game;
 
 class MyWindow : public QMainWindow
 {

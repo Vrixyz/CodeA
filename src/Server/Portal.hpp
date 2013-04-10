@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Thu Feb 21 14:03:36 2013 mathieu leurquin
-// Last update Tue Mar  5 10:30:29 2013 mathieu leurquin
+// Last update Wed Apr 10 10:54:31 2013 mathieu leurquin
 //
 
 #ifndef SERVER_PORTAL_HPP
@@ -26,9 +26,11 @@ namespace Server
     //    GameData::Unit _data;
     b2Vec2 current;
     float pop;
-    Portal(World& world) : IUnit(world), current(0, 0){
+    int team;
+    Portal(World& world, int _team) : IUnit(world), current(0, 0){
       pop = 0;
       _data.health = 50;
+      team = _team;
     }
     virtual ~Portal() {}
 

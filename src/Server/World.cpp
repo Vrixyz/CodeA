@@ -26,7 +26,7 @@ Server::World::~World()
 }
 
 
-void	Server::World::init(int masterPort, char* masterIp, int width, int height)
+void	Server::World::init(int masterPort, char* masterIp, int, int)
 {
   srand (time(NULL));
   // // FIXME: we must create the player and the unit at the connection !
@@ -34,8 +34,8 @@ void	Server::World::init(int masterPort, char* masterIp, int width, int height)
   
 
 
-  BitField *obs = new BitField(Server::BitField::OBSTACLE, Server::BitField::TEAM1_UNIT | Server::BitField::TEAM2_UNIT 
-			       | Server::BitField::TEAM1_BULLET | Server::BitField::TEAM2_BULLET | Server::BitField::PORTAL);
+  // BitField *obs = new BitField(Server::BitField::OBSTACLE, Server::BitField::TEAM1_UNIT | Server::BitField::TEAM2_UNIT 
+  // 			       | Server::BitField::TEAM1_BULLET | Server::BitField::TEAM2_BULLET | Server::BitField::PORTAL);
   
   // u = this->createUnit(b);
   // u->addPlayer(&this->createPlayer(0));
@@ -442,7 +442,10 @@ void	Server::World::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
     }
 }
 
-bool Server::World::unSerialize(msgpack::packer<msgpack::sbuffer>& packet) {return false;}
+bool Server::World::unSerialize(msgpack::packer<msgpack::sbuffer>&)
+{
+  return false;
+}
 
 int	Server::World::getClassId() const {return 0;}
 
@@ -531,7 +534,7 @@ void Server::World::fire(int idClient, GameData::CommandStruct::Fire arg)
   u->spell1(arg);
 }
 
-void Server::World::aimTo(int idClient, GameData::CommandStruct::Aim)
+void Server::World::aimTo(int, GameData::CommandStruct::Aim)
 {
 }
 

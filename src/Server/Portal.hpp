@@ -48,7 +48,7 @@ namespace Server
     void createMinion();
     void update(float elapsedMilliseconds);
     void serialize(msgpack::packer<msgpack::sbuffer>& packet) const;
-    bool unSerialize(msgpack::packer<msgpack::sbuffer>& packet) {return false;}
+    bool unSerialize(msgpack::packer<msgpack::sbuffer>&) {return false;}
     int	getClassId() const {return 0;}
   protected:
   

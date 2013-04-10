@@ -43,7 +43,7 @@ namespace GameData
       int y;
       int idUnit;
       
-      MSGPACK_DEFINE(x, y, idUnit);
+      MSGPACK_DEFINE(x, y, idUnit)
     };
 
     // AimTo not implemented
@@ -51,7 +51,7 @@ namespace GameData
     {
       int idUnit;
       
-      MSGPACK_DEFINE(idUnit);
+      MSGPACK_DEFINE(idUnit)
     };
     
     // MoveTo not implemented (fakes use of a Move)
@@ -62,7 +62,7 @@ namespace GameData
       int y;
       int idUnit;
       
-      MSGPACK_DEFINE(x, y, idUnit);
+      MSGPACK_DEFINE(x, y, idUnit)
     };
 
     // No args for Rotation* (yet?)
@@ -70,7 +70,7 @@ namespace GameData
     {
       int idUnit;
       
-      MSGPACK_DEFINE(idUnit);
+      MSGPACK_DEFINE(idUnit)
     };
 
     // No args for Shield (yet?)
@@ -78,7 +78,7 @@ namespace GameData
     {
       int idUnit;
       
-      MSGPACK_DEFINE(idUnit);
+      MSGPACK_DEFINE(idUnit)
     };
 
     // // No args for BePlayer (yet?)
@@ -93,7 +93,7 @@ namespace GameData
       std::string login;
       int type;
 
-      MSGPACK_DEFINE(login, type);
+      MSGPACK_DEFINE(login, type)
     };
 
   }

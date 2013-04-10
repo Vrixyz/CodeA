@@ -26,7 +26,7 @@ namespace GameData
     uint32_t	health;
     float	aimRotation;
 
-    MSGPACK_DEFINE(playersId, id, health, aimRotation);
+    MSGPACK_DEFINE(playersId, id, health, aimRotation)
   };
 }
 

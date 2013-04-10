@@ -48,7 +48,7 @@ bool	Server::Mage::belongsToPlayer(int idPlayer) const
 {
    for (std::list<uint32_t>::const_iterator it = _data.playersId.begin(); it != _data.playersId.end(); it++)
     {
-      if ((*it) == idPlayer)
+      if ((int)(*it) == idPlayer)
 	return true;
       return false;
     }
@@ -61,7 +61,7 @@ void	Server::Mage::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
   packet.pack(this->getPhysics());
 }
 
-void Server::Mage::moveTo(int x, int y)
+void Server::Mage::moveTo(int , int )
 {
 }
 
@@ -100,7 +100,7 @@ void Server::Mage::setRotateStop()
   rotation = 0.0;
 }
 
-void Server::Mage::spell1(const GameData::CommandStruct::Fire &arg)
+void Server::Mage::spell1(const GameData::CommandStruct::Fire &)
 {
   std::vector<float>::iterator fire = spellTimer.begin();
   if ((*fire) != 0)
@@ -151,7 +151,7 @@ void Server::Mage::spell1(const GameData::CommandStruct::Fire &arg)
   (*fire) = -1;
 }
 
-void Server::Mage::spell2(const GameData::CommandStruct::Shield arg)
+void Server::Mage::spell2(const GameData::CommandStruct::Shield)
 {
   std::vector<float>::iterator sh = this->spellTimer.end();
   std::cout<<*sh<<std::endl;
@@ -244,18 +244,18 @@ void Server::Mage::intraCollision(Object *o)
     this->intraCollisionUnit(o);
 }
 
-void Server::Mage::intraCollisionUnit(Object *o)
+void Server::Mage::intraCollisionUnit(Object *)
 {
   _data.health -= 1;
   std::cout<<"Unit:!:Collision with a unit and unit!"<<std::endl;
 }
 
-void Server::Mage::intraCollisionElement(Object *o)
+void Server::Mage::intraCollisionElement(Object *)
 {
   std::cout<<"Unit::Collision with a unit and element!"<<std::endl;
 }
 
-void Server::Mage::intraCollisionBullet(Object *o)
+void Server::Mage::intraCollisionBullet(Object *)
 {
   _data.health -= 2;
   std::cout<<"Unit::Collision with a unit and bullet!"<<std::endl;

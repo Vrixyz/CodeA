@@ -41,7 +41,7 @@ namespace Server
       void operator()(const boost::system::error_code& ec, std::size_t size)
       {
 	setHandler();
-	std::cout << "recvd smth of size : " << size << std::endl;
+	//	std::cout << "recvd smth of size : " << size << std::endl;
 	// FIXME: some errors might be less killing than others
 	if (ec != NULL)
 	  {

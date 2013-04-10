@@ -48,7 +48,7 @@ namespace MasterData
     std::string from;
     std::string msg;
     
-    MSGPACK_DEFINE(from, msg);
+    MSGPACK_DEFINE(from, msg)
   };
 
   struct	SendChat
@@ -57,7 +57,7 @@ namespace MasterData
       msg(_msg) {}
     std::string msg;
     
-    MSGPACK_DEFINE(msg);
+    MSGPACK_DEFINE(msg)
   };
 
   struct	ErrorMsg
@@ -66,7 +66,7 @@ namespace MasterData
       msg(_msg) {}
     std::string msg;
     
-    MSGPACK_DEFINE(msg);
+    MSGPACK_DEFINE(msg)
   };
 
   // END_GAME
@@ -100,7 +100,7 @@ namespace MasterData
     //    int		duree;
     //int		nbUnitKilled;
     
-    MSGPACK_DEFINE(login, win, r);
+    MSGPACK_DEFINE(login, win, r)
     };
 
 }

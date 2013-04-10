@@ -13,7 +13,7 @@ namespace MasterData
     std::string	login;
     std::string	pass;
     
-    MSGPACK_DEFINE(login, pass);
+    MSGPACK_DEFINE(login, pass)
   };
 
   //SYNTHAXE DE CO GAME SERVER
@@ -24,7 +24,7 @@ namespace MasterData
     int		port;
     std::string	name;
     
-    MSGPACK_DEFINE(port, name);
+    MSGPACK_DEFINE(port, name)
   };
 
   //SYNTHAXE DE REGISTER
@@ -35,7 +35,7 @@ namespace MasterData
     std::string	login;
     std::string	pass;
     
-    MSGPACK_DEFINE(login, pass);
+    MSGPACK_DEFINE(login, pass)
   };
 
   //ENVOI D'INFOS AU CLIENT SUR SON COMPTE(USEFULL POUR LE MOMENT)
@@ -45,7 +45,7 @@ namespace MasterData
       name(_name) {}
     std::string name;
     
-    MSGPACK_DEFINE(name);
+    MSGPACK_DEFINE(name)
   };
 
   // INFOS SERVEUR
@@ -56,7 +56,7 @@ namespace MasterData
     std::string ip;
     int		port;
 
-    MSGPACK_DEFINE(ip, port);
+    MSGPACK_DEFINE(ip, port)
   };
 
   // INFOS PLAYER
@@ -67,7 +67,7 @@ namespace MasterData
     std::string ip;
     std::string name;
     
-    MSGPACK_DEFINE(ip, name);
+    MSGPACK_DEFINE(ip, name)
   };
 }
 

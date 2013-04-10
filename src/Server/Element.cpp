@@ -56,7 +56,7 @@ void Server::Element::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
   packet.pack(this->getPhysics());
 }
 
-bool Server::Element::unSerialize(msgpack::packer<msgpack::sbuffer>& packet)
+bool Server::Element::unSerialize(msgpack::packer<msgpack::sbuffer>&)
 {
   return false;
 }
@@ -81,17 +81,17 @@ void Server::Element::intraCollision(Object *o)
     this->intraCollisionUnit(o);
 }
 
-void Server::Element::intraCollisionUnit(Object *o)
+void Server::Element::intraCollisionUnit(Object *)
 {
   std::cout<<"element::Collision with a Element and Unit!"<<std::endl;
 }
 
-void Server::Element::intraCollisionElement(Object *o)
+void Server::Element::intraCollisionElement(Object *)
 {
   std::cout<<"elemtn::Collision with a element and Element!"<<std::endl;
 }
 
-void Server::Element::intraCollisionBullet(Object *o)
+void Server::Element::intraCollisionBullet(Object *)
 {
   std::cout<<"element::Collision with a element and Bullet!"<<std::endl;
 }

@@ -25,7 +25,7 @@ namespace GameData
       int idPlayer;
       // we could send team, nickname, ip (if authorized), whatever.
       
-      MSGPACK_DEFINE(idPlayer);
+      MSGPACK_DEFINE(idPlayer)
     };
   }
 

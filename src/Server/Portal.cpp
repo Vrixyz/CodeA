@@ -43,7 +43,7 @@ void	Server::Portal::addPlayer(Player* p)
   _data.playersId.push_back(p->id);
 }
 
-void Server::Portal::moveTo(int x, int y)
+void Server::Portal::moveTo(int , int )
 {}
 
 
@@ -51,7 +51,7 @@ bool	Server::Portal::belongsToPlayer(int idPlayer) const
 {
    for (std::list<uint32_t>::const_iterator it = _data.playersId.begin(); it != _data.playersId.end(); it++)
     {
-      if ((*it) == idPlayer)
+      if ((int)(*it) == idPlayer)
 	return true;
       return false;
     }
@@ -65,7 +65,7 @@ void	Server::Portal::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
 }
 
 
-void Server::Portal::setMove(const GameData::CommandStruct::Move& arg)
+void Server::Portal::setMove(const GameData::CommandStruct::Move&)
 {
 }
 
@@ -81,11 +81,11 @@ void Server::Portal::setRotateStop()
 {
 }
 
-void Server::Portal::spell1(const GameData::CommandStruct::Fire &arg)
+void Server::Portal::spell1(const GameData::CommandStruct::Fire &)
 {
 }
 
-void Server::Portal::spell2(const GameData::CommandStruct::Shield arg)
+void Server::Portal::spell2(const GameData::CommandStruct::Shield)
 {
 }
 
@@ -132,17 +132,17 @@ void Server::Portal::intraCollision(Object *o)
     this->intraCollisionUnit(o);
 }
 
-void Server::Portal::intraCollisionUnit(Object *o)
+void Server::Portal::intraCollisionUnit(Object *)
 {
   std::cout<<"Unit:!:Collision with a unit and unit!"<<std::endl;
 }
 
-void Server::Portal::intraCollisionElement(Object *o)
+void Server::Portal::intraCollisionElement(Object *)
 {
   std::cout<<"Unit::Collision with a unit and element!"<<std::endl;
 }
 
-void Server::Portal::intraCollisionBullet(Object *o)
+void Server::Portal::intraCollisionBullet(Object *)
 {
   _data.health -= 2;
   std::cout<<"Unit::Collision with a unit and bullet!"<<std::endl;

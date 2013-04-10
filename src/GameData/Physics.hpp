@@ -25,14 +25,14 @@ namespace GameData
       Coord(float _x, float _y) : x(_x), y(_y) {}
       Coord() : x(0), y(0) {}
 
-      MSGPACK_DEFINE(x, y);
+      MSGPACK_DEFINE(x, y)
     };
     float	x;
     float	y;
     float	angle;
     std::list<Coord> vertices;
 
-    MSGPACK_DEFINE(x, y, vertices, angle);
+    MSGPACK_DEFINE(x, y, vertices, angle)
   };
 }
 

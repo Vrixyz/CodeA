@@ -120,25 +120,25 @@ void GameView::mousePressEvent(QMouseEvent *event)
     switch (event->button())
     {
     case Qt::LeftButton:
-        base = event->pos();
-        rubberBand->setGeometry(QRect(base, QSize()));
-        rubberBand->show();
-        break;
-
+      base = event->pos();
+      rubberBand->setGeometry(QRect(base, QSize()));
+      rubberBand->show();
+      break;
+      
     case Qt::RightButton:
-        GameData::CommandStruct::Move m;
-        for (std::list<unsigned int>::iterator it = n->game->idList.begin(); it !=  n->game->idList.end(); it++)
-        {
-            m.idUnit = *it;
-            m.x = event->pos().x() + sceneRect().x();
-            m.y = -(event->pos().y() + sceneRect().y());
-            packet.pack((int)GameData::Command::MoveTo);
-            packet.pack(m);
-            n->sendToServer(sbuf);
-            std::cout << "send moveTo " << m.x << " " << m.y << " id : " << m.idUnit << std::endl;
-            sbuf.clear();
-        }
-        break;
+      {
+	GameData::CommandStruct::MoveTo m;
+	m.idUnits = n->game->idList;
+	m.x = event->pos().x() + sceneRect().x();
+	m.y = -(event->pos().y() + sceneRect().y());
+	packet.pack((int)GameData::Command::MoveTo);
+	packet.pack(m);
+	n->sendToServer(sbuf);
+	std::cout << "send moveTo " << m.x << " " << m.y << std::endl;
+	sbuf.clear();
+      }
+      
+      break;
 
     default:
         std::cout << "nothing" << std::endl;

@@ -54,7 +54,15 @@ namespace GameData
       MSGPACK_DEFINE(idUnit)
     };
     
-    // MoveTo not implemented (fakes use of a Move)
+    // MoveTo :
+    struct MoveTo
+    {
+      int x;
+      int y;
+      std::list<unsigned int> idUnits;
+      
+      MSGPACK_DEFINE(x, y, idUnits)
+    };
 
     struct Move
     {

@@ -543,13 +543,14 @@ void Server::World::aimTo(int, GameData::CommandStruct::Aim)
 {
 }
 
-void Server::World::moveTo(int idClient, GameData::CommandStruct::Move arg)
+void Server::World::moveTo(int idClient, GameData::CommandStruct::MoveTo arg)
 {
-  IUnit* u = getUnit(arg.idUnit);
-  
-  if (u == NULL || u->belongsToPlayer(idClient) == false)
-    return;
-  u->moveTo(arg.x, arg.y);
+  for (std::list<unsigned int>::iterator it = arg.idUnits.begin(); it != arg.idUnits.end(); it++)
+    {
+      IUnit* u = getUnit(*it);
+      if (u != NULL && u->belongsToPlayer(idClient) == true)
+	u->moveTo(arg.x, arg.y);
+    }
 }
 
 void Server::World::rotateLeft(int idClient, GameData::CommandStruct::Rotate arg)

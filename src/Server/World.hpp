@@ -98,7 +98,7 @@ Communication<World>       communication;
     //fct handling command from clients
     void fire(int idClient, GameData::CommandStruct::Fire);
     void aimTo(int idClient, GameData::CommandStruct::Aim);
-    void moveTo(int idClient, GameData::CommandStruct::Move);
+    void moveTo(int idClient, GameData::CommandStruct::MoveTo);
     void rotateLeft(int idClient, GameData::CommandStruct::Rotate);
     void rotateRight(int idClient, GameData::CommandStruct::Rotate);
     void rotateStop(int idClient, GameData::CommandStruct::Rotate);

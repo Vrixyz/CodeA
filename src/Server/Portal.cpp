@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Thu Feb 21 10:56:20 2013 mathieu leurquin
-// Last update Wed Mar 27 11:17:13 2013 mathieu leurquin
+// Last update Wed Apr 10 10:58:28 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -100,7 +100,7 @@ void Server::Portal::createMinion()
     b = new  BitField(Server::BitField::TEAM2_UNIT, Server::BitField::TEAM1_BULLET | Server::BitField::TEAM1_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL | Server::BitField::TEAM2_UNIT | Server::BitField::TEAM1_SHIELD);
 
   b2Vec2 position = this->getBody()->GetPosition();
-  if (belongsToPlayer(0) == true)
+   if (_world.players.size() == 1)
     this->_world.createMinion(b, _world.players.front(), position.x, position.y, 0);
   else
     this->_world.createMinion(b, _world.players.back(), position.x, position.y, 1);
@@ -134,7 +134,16 @@ void Server::Portal::intraCollision(Object *o)
 
 void Server::Portal::intraCollisionUnit(Object *)
 {
-  std::cout<<"Unit:!:Collision with a unit and unit!"<<std::endl;
+  Minion *m;
+  if ((m = dynamic_cast<Minion*>(o)))
+    {
+      if (m->team != this->team)
+	{
+	  std::cout<<"Unit:!:Collision with a portal and minion enemie!"<<std::endl;
+	  _data.health -= 1;
+	}
+      std::cout<<"Unit:!:Collision with a portal and minion ami!"<<std::endl;
+    }
 }
 
 void Server::Portal::intraCollisionElement(Object *)

@@ -4,7 +4,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Tue Apr  2 18:17:23 2013 mathieu leurquin
+// Last update Wed Apr 10 10:59:04 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -256,7 +256,12 @@ Server::Minion *Server::World::createMinion(BitField *b, Player* p, float x, flo
 
 Server::Portal* Server::World::createPortal(BitField *b, Player* player)
 {
-  Server::Portal* p = new Server::Portal(*this);
+  Server::Portal* p;
+
+  if (players.size() == 1)
+    p = new Server::Portal(*this, 0);
+  else
+    p = new Server::Portal(*this, 1);
   
   p->setBody(b, rand() % 500 - 250, rand() % 500 - 250);
   if (p != NULL)

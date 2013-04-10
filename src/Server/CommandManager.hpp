@@ -186,14 +186,14 @@ void	Server::CommandManager<C, IdCom, IdClient>::interpretCommands()
       pac.reserve_buffer(size);
       memcpy(pac.buffer(), cmds[i].first->data(), size);
       pac.buffer_consumed(size);
-      if (pac.next(&result))
+      while (pac.next(&result))
 	{
 	  msgpack::object obj = result.get();
 	  obj.convert(&id);
+	  std::cout << "id received : " << id << std::endl;
+	  if (fcts[(IdCom)id])
+	    fcts[(IdCom)id]->call(caller, cmds[i].second, cmds[i].first);
 	}
-      std::cout << "id received : " << id << std::endl;
-      if (fcts[(IdCom)id])
-	fcts[(IdCom)id]->call(caller, cmds[i].second, cmds[i].first);
     }
   while (cmds.size() > 0)
     {

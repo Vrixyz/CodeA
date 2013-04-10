@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Thu Feb 21 10:56:20 2013 mathieu leurquin
-// Last update Wed Apr 10 10:58:28 2013 mathieu leurquin
+// Last update Wed yesApr 10 10:58:28 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -132,7 +132,7 @@ void Server::Portal::intraCollision(Object *o)
     this->intraCollisionUnit(o);
 }
 
-void Server::Portal::intraCollisionUnit(Object *)
+void Server::Portal::intraCollisionUnit(Object *o)
 {
   Minion *m;
   if ((m = dynamic_cast<Minion*>(o)))

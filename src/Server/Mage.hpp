@@ -53,7 +53,7 @@ namespace Server
     const GameData::Unit& getData() const {return _data;}
     virtual void update(float elapsedMilliseconds);
     virtual void serialize(msgpack::packer<msgpack::sbuffer>& packet) const;
-    virtual bool unSerialize(msgpack::packer<msgpack::sbuffer>& packet) {return false;}
+    virtual bool unSerialize(msgpack::packer<msgpack::sbuffer>&) {return false;}
     virtual int	getClassId() const {return 0;}
 
   protected:

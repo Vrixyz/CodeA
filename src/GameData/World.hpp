@@ -22,7 +22,7 @@ namespace GameData
     uint32_t	nbElement;
     uint32_t	nbBullet;
     
-    MSGPACK_DEFINE(nbUnit, nbElement, nbBullet);
+    MSGPACK_DEFINE(nbUnit, nbElement, nbBullet)
   };
 }
 

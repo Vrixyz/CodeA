@@ -22,7 +22,7 @@ namespace GameData
     int id;
     /// ? add life (for range or destroy while alive)
     
-    MSGPACK_DEFINE(damage, id);
+    MSGPACK_DEFINE(damage, id)
   };
 }
 

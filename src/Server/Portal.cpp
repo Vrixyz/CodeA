@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Thu Feb 21 10:56:20 2013 mathieu leurquin
-// Last update Wed Mar 27 11:17:13 2013 mathieu leurquin
+// Last update Wed yesApr 10 10:58:28 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -43,7 +43,7 @@ void	Server::Portal::addPlayer(Player* p)
   _data.playersId.push_back(p->id);
 }
 
-void Server::Portal::moveTo(int x, int y)
+void Server::Portal::moveTo(int , int )
 {}
 
 
@@ -51,7 +51,7 @@ bool	Server::Portal::belongsToPlayer(int idPlayer) const
 {
    for (std::list<uint32_t>::const_iterator it = _data.playersId.begin(); it != _data.playersId.end(); it++)
     {
-      if ((*it) == idPlayer)
+      if ((int)(*it) == idPlayer)
 	return true;
       return false;
     }
@@ -65,7 +65,7 @@ void	Server::Portal::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
 }
 
 
-void Server::Portal::setMove(const GameData::CommandStruct::Move& arg)
+void Server::Portal::setMove(const GameData::CommandStruct::Move&)
 {
 }
 
@@ -81,11 +81,11 @@ void Server::Portal::setRotateStop()
 {
 }
 
-void Server::Portal::spell1(const GameData::CommandStruct::Fire &arg)
+void Server::Portal::spell1(const GameData::CommandStruct::Fire &)
 {
 }
 
-void Server::Portal::spell2(const GameData::CommandStruct::Shield arg)
+void Server::Portal::spell2(const GameData::CommandStruct::Shield)
 {
 }
 
@@ -100,7 +100,7 @@ void Server::Portal::createMinion()
     b = new  BitField(Server::BitField::TEAM2_UNIT, Server::BitField::TEAM1_BULLET | Server::BitField::TEAM1_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL | Server::BitField::TEAM2_UNIT | Server::BitField::TEAM1_SHIELD);
 
   b2Vec2 position = this->getBody()->GetPosition();
-  if (belongsToPlayer(0) == true)
+   if (_world.players.size() == 1)
     this->_world.createMinion(b, _world.players.front(), position.x, position.y, 0);
   else
     this->_world.createMinion(b, _world.players.back(), position.x, position.y, 1);
@@ -134,15 +134,24 @@ void Server::Portal::intraCollision(Object *o)
 
 void Server::Portal::intraCollisionUnit(Object *o)
 {
-  std::cout<<"Unit:!:Collision with a unit and unit!"<<std::endl;
+  Minion *m;
+  if ((m = dynamic_cast<Minion*>(o)))
+    {
+      if (m->team != this->team)
+	{
+	  std::cout<<"Unit:!:Collision with a portal and minion enemie!"<<std::endl;
+	  _data.health -= 1;
+	}
+      std::cout<<"Unit:!:Collision with a portal and minion ami!"<<std::endl;
+    }
 }
 
-void Server::Portal::intraCollisionElement(Object *o)
+void Server::Portal::intraCollisionElement(Object *)
 {
   std::cout<<"Unit::Collision with a unit and element!"<<std::endl;
 }
 
-void Server::Portal::intraCollisionBullet(Object *o)
+void Server::Portal::intraCollisionBullet(Object *)
 {
   _data.health -= 2;
   std::cout<<"Unit::Collision with a unit and bullet!"<<std::endl;

@@ -27,7 +27,7 @@ namespace Server
     virtual b2Body* setBody(float angle, b2Vec2 position, BitField * b);
     /// TODO: implement these functions (or delete all serialized related stuff (nah..))
     virtual void serialize(msgpack::packer<msgpack::sbuffer>& packet) const;
-    virtual bool unSerialize(msgpack::packer<msgpack::sbuffer>& packet) {return false;}
+    virtual bool unSerialize(msgpack::packer<msgpack::sbuffer>&) {return false;}
     virtual int	getClassId() const {return 0;}
   private:
     void intraCollision(Object *o);

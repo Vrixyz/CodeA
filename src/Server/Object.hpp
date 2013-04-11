@@ -27,14 +27,14 @@ namespace Server
       {
 	Unit,
 	Element,
-	Bullet,
+	Bullet
       } Type;
     const int id;
 
     Type getType() const {return _type;}
     // void die() = 0;
 
-    virtual void update(float elapsedMilliseconds) {};
+    virtual void update(float) {};
 
     b2Body* getBody(){return _body;}
     void collision(Object *o)
@@ -70,17 +70,17 @@ namespace Server
     
   private:
     
-    void intraCollisionUnit(Object *o)
+    void intraCollisionUnit(Object *)
     {
       std::cout<<"object::Collision with a object and unit!"<<std::endl;
     }
     
-    void intraCollisionBullet(Object *o)
+    void intraCollisionBullet(Object *)
     {
       std::cout<<"oecbjt::Collision with a object and bullet!"<<std::endl;
     }
     
-    void intraCollisionElement(Object *o)
+    void intraCollisionElement(Object *)
     {
       std::cout<<"object::Collision with a object and element!"<<std::endl;
     }

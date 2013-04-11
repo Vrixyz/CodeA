@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 10:46:49 2012 thierry berger
-// Last update Tue Apr  2 18:09:46 2013 mathieu leurquin
+// Last update Wed Apr 10 10:58:28 2013 mathieu leurquin
 //
 
 #ifndef SERVER_WORLD_HPP
@@ -98,7 +98,7 @@ Communication<World>       communication;
     //fct handling command from clients
     void fire(int idClient, GameData::CommandStruct::Fire);
     void aimTo(int idClient, GameData::CommandStruct::Aim);
-    void moveTo(int idClient, GameData::CommandStruct::Move);
+    void moveTo(int idClient, GameData::CommandStruct::MoveTo);
     void rotateLeft(int idClient, GameData::CommandStruct::Rotate);
     void rotateRight(int idClient, GameData::CommandStruct::Rotate);
     void rotateStop(int idClient, GameData::CommandStruct::Rotate);

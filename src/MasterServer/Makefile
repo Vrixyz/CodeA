@@ -10,6 +10,7 @@ SRC			=	src/User.cpp \
 				src/Server_util.cpp \
 				src/Server_manage.cpp \
 				src/Server_command.cpp \
+				src/Server_succes.cpp \
 				src/Socket.cpp \
 				src/SQLManager.cpp \
 				src/GameServer.cpp \

@@ -23,7 +23,7 @@ namespace GameData
 
     Element(int _id, bool _walkable) : id(_id), walkable(_walkable) {};
 
-    MSGPACK_DEFINE(id, walkable);
+    MSGPACK_DEFINE(id, walkable)
   };
 }
 

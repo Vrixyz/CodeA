@@ -1,6 +1,7 @@
 #include "GamesWindow.h"
 #include "MyItemLi.h"
 #include "Define.h"
+#include "Achi.h"
 
 GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(parent, 0/*Qt::FramelessWindowHint*/)
 {
@@ -56,7 +57,8 @@ void    GamesWindow::setTabAndAll()
 
     createTabServers();
     createTabNews();
-    createTabSucces();
+    createTabSucces1();
+    createTabSucces2();
 
     _list = new QListWidget(_serversPage);
     _list->setGeometry(15, 122, 200, 200);
@@ -95,7 +97,7 @@ void    GamesWindow::sendMsg()
 void    GamesWindow::createTabNews()
 {
     _newsPage = new QWidget(_tab);
-    _tab->addTab(_newsPage, "        News        ");
+    _tab->addTab(_newsPage, "      News      ");
 }
 
 void    GamesWindow::createTabServers()
@@ -122,13 +124,75 @@ void    GamesWindow::createTabServers()
 
     _iServ = new QLabel("<font color=\"#e7d593\">Liste des serveurs :</font>", _serversPage);
     _iServ->setGeometry(52, 95, 150, 20);
-    _tab->addTab(_serversPage, "       Servers       ");
+    _tab->addTab(_serversPage, "     Servers     ");
 }
 
-void    GamesWindow::createTabSucces()
+void    GamesWindow::createTabSucces1()
 {
+    std::string tmpSucc;
+    std::string succ("11100110001100010000");
+    std::string nameImg;
+
     _succesPage = new QWidget(_tab);
-    _tab->addTab(_succesPage, "      Succes       ");
+    _tab->insertTab(3, _succesPage, "  Succes All  ");
+
+    for (int i = 0; i < 20; i++)
+    {
+        tmpSucc = "";
+        tmpSucc += "[" + achivDivers[i].name + "]\n\n";
+        tmpSucc += achivDivers[i].describe;
+        std::cout << "test2" << tmpSucc << std::endl;
+        nameImg = "img/allAchiv/divers/";
+        nameImg += intToString(i + 1);
+        nameImg += ".jpg";
+        _imgSucc1[i] = new QLabel(_succesPage);
+        _imgSucc1[i]->setPixmap(QPixmap(QString(nameImg.c_str())));
+        _imgSucc1[i]->setGeometry((24 + (80 * (i % 5))), 56 + ((i / 5) * 85), 60, 60);
+        _imgSucc1[i]->setToolTip(QString(tmpSucc.c_str()));
+    }
+    for (int i = 0; i < 20; i++)
+    {
+        _imgLock1[i] = new QLabel(_succesPage);
+        _imgLock1[i]->setPixmap(QPixmap("img/allAchiv/lock.png"));
+        _imgLock1[i]->setGeometry((24 + (80 * (i % 5))), 56 + ((i / 5) * 85), 60, 60);
+        _imgLock1[i]->setToolTip("Locked Achivement !");
+        if (succ[i] == '1')
+            _imgLock1[i]->hide();
+    }
+}
+
+void    GamesWindow::createTabSucces2()
+{
+    std::string tmpSucc;
+    std::string nameImg;
+    std::string succ("1010111100110001111011100");
+
+    _succesPage = new QWidget(_tab);
+    _tab->insertTab(3, _succesPage, " Succes Class ");
+
+    for (int i = 0; i < 25; i++)
+    {
+        tmpSucc = "";
+        tmpSucc += "[" + achivClass[i].name + "]\n\n";
+        tmpSucc += achivClass[i].describe;
+        std::cout << "test1" << tmpSucc << std::endl;
+        nameImg = "img/allAchiv/class/";
+        nameImg += intToString(i + 1);
+        nameImg += ".jpg";
+        _imgSucc2[i] = new QLabel(_succesPage);
+        _imgSucc2[i]->setPixmap(QPixmap(QString(nameImg.c_str())));
+        _imgSucc2[i]->setGeometry((24 + (80 * (i % 5))), 45 + ((i / 5) * 70), 60, 60);
+        _imgSucc2[i]->setToolTip(QString(tmpSucc.c_str()));
+    }
+    for (int i = 0; i < 25; i++)
+    {
+        _imgLock2[i] = new QLabel(_succesPage);
+        _imgLock2[i]->setPixmap(QPixmap("img/allAchiv/lock.png"));
+        _imgLock2[i]->setGeometry((24 + (80 * (i % 5))), 45 + ((i / 5) * 70), 60, 60);
+        _imgLock2[i]->setToolTip("Locked Achivement !");
+        if (succ[i] == '1')
+            _imgLock2[i]->hide();
+    }
 }
 
 void    GamesWindow::tryToMatchmaking()

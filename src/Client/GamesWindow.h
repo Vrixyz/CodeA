@@ -15,7 +15,8 @@ public:
     void setTabAndAll();
     void createTabNews();
     void createTabServers();
-    void createTabSucces();
+    void createTabSucces1();
+    void createTabSucces2();
     void RecvList(QByteArray res);
     void RecvChat(QByteArray res);
     void RecvError(QByteArray res);
@@ -41,6 +42,11 @@ private:
     QListWidget*        _list;
 
     QTabWidget*         _tab;
+
+    QLabel*             _imgSucc1[20];
+    QLabel*             _imgSucc2[25];
+    QLabel*             _imgLock1[20];
+    QLabel*             _imgLock2[25];
 
     QLabel*             _iServ;
     QLabel*             _iIp;

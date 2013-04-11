@@ -135,19 +135,29 @@ void Server::EndGame(GameServer *s, msgpack::sbuffer &sbuf)
   memcpy(pac.buffer(), sbuf.data(), sbuf.size());
   pac.buffer_consumed(sbuf.size());
   msgpack::unpacked result;
+  User *p;
   
   if (pac.next(&result)) 
     {
       while(pac.next(&result))
 	{
 	  MasterData::EndGame eg("", false, 0);
-	  result.get().convert(&eg);	  
+	  result.get().convert(&eg);
 	  std::cout << "FIN DE GAME DE " << eg.login;
+	  p = getPlayerByLog(eg.login);
+	  if (p != NULL)
+	    {
+	      addStat(p, eg);
+	      checkSucces(p);
+	      //PASTE SQL UPDATE HER
+
+	    }
 	  if (eg.win)
 	    std::cout << " VICTOIRE";
 	  else
 	    std::cout << " DEFAITE";
 	  std::cout << " EN TEMPS QUE " << eg.r << std::endl;
+	  
 	}
     }
   s->resetPlayer();

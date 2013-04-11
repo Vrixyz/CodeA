@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Fri Feb 22 10:41:33 2013 mathieu leurquin
-// Last update Wed Mar 27 11:20:15 2013 mathieu leurquin
+// Last update Wed Apr 10 10:48:10 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -51,7 +51,7 @@ bool	Server::Minion::belongsToPlayer(int idPlayer) const
 {
    for (std::list<uint32_t>::const_iterator it = _data.playersId.begin(); it != _data.playersId.end(); it++)
     {
-      if ((*it) == idPlayer)
+      if ((int)(*it) == idPlayer)
 	return true;
       return false;
     }
@@ -108,15 +108,15 @@ void Server::Minion::moveTo(int x, int y)
   current.y = y;
 }
 
-void Server::Minion::spell1(const GameData::CommandStruct::Fire &arg)
+void Server::Minion::spell1(const GameData::CommandStruct::Fire &)
 {
 }
 
-void Server::Minion::spell2(const GameData::CommandStruct::Shield arg)
+void Server::Minion::spell2(const GameData::CommandStruct::Shield)
 {
 }
 
-void Server::Minion::update(float elapsedMilliseconds)
+void Server::Minion::update(float)
 {
 
   //current.x = _world.units.front()->getBody()->GetPosition().x;
@@ -164,13 +164,13 @@ void Server::Minion::intraCollisionUnit(Object *o)
         std::cout<<"Unit:!:Collision with a minion and mage!"<<std::endl;
 }
 
-void Server::Minion::intraCollisionElement(Object *o)
+void Server::Minion::intraCollisionElement(Object *)
 {
   
   std::cout<<"Unit::Collision with a unit and element!"<<std::endl;
 }
 
-void Server::Minion::intraCollisionBullet(Object *o)
+void Server::Minion::intraCollisionBullet(Object *)
 {
   _data.health -= 2;
   std::cout<<"Unit::Collision with a unit and bullet!"<<std::endl;

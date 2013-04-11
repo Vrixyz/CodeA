@@ -69,17 +69,17 @@ void Server::Bullet::intraCollision(Object *o)
     this->intraCollisionUnit(o);
 }
 
-void Server::Bullet::intraCollisionUnit(Object *o)
+void Server::Bullet::intraCollisionUnit(Object *)
 {
   std::cout<<"Bullet::Collision with a bullet and unit!"<<std::endl;
 }
 
-void Server::Bullet::intraCollisionElement(Object *o)
+void Server::Bullet::intraCollisionElement(Object *)
 {
   std::cout<<"Bullet::Collision with a bullet and elemnt!"<<std::endl;
 }
 
-void Server::Bullet::intraCollisionBullet(Object *o)
+void Server::Bullet::intraCollisionBullet(Object *)
 {
   std::cout<<"Bullet::Collision with a bullet and bullet!"<<std::endl;
 }

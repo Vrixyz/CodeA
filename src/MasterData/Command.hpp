@@ -92,8 +92,9 @@ namespace MasterData
   //UNE PAR JOUEUR
   struct	EndGame
   {
-    EndGame(std::string _login, bool _win, int _r) :
+    EndGame(std::string _login = "" , bool _win = true, int _r = 0) :
       login(_login), win(_win), r(_r){}
+
     std::string login;
     bool	win;
     int		r;

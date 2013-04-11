@@ -99,8 +99,6 @@ void    GamesWindow::createTabNews()
 {
     _newsPage = new QWidget(_tab);
     _tab->addTab(_newsPage, "      News      ");
-
-    QWebView *view = new QWebView(_newsPage);
 }
 
 void    GamesWindow::createTabServers()

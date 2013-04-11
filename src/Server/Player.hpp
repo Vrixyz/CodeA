@@ -33,10 +33,10 @@ namespace Server
     int score;
     float time;
     
-    const GameData::CommandStruct::BePlayer& details;
+    GameData::CommandStruct::BePlayer& details;
     
 
-    Player(int playerId, const GameData::CommandStruct::BePlayer& d) : id(playerId), details(d) 
+    Player(int playerId, GameData::CommandStruct::BePlayer& d) : id(playerId), details(d) 
     {
       time = 0;
       score = 0;

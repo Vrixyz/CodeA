@@ -95,9 +95,9 @@ void Server::Portal::createMinion()
   BitField *b;
 
   if (_world.players.size() == 1)
-    b = new  BitField(Server::BitField::TEAM1_UNIT, Server::BitField::TEAM2_BULLET | Server::BitField::TEAM2_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL | Server::BitField::TEAM2_SHIELD);
+    b = new  BitField(Server::BitField::TEAM1_UNIT, Server::BitField::TEAM2_BULLET | Server::BitField::TEAM2_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL | Server::BitField::TEAM2_SHIELD | Server::BitField::TEAM1_UNIT);
   else
-    b = new  BitField(Server::BitField::TEAM2_UNIT, Server::BitField::TEAM1_BULLET | Server::BitField::TEAM1_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL | Server::BitField::TEAM2_UNIT | Server::BitField::TEAM1_SHIELD);
+    b = new  BitField(Server::BitField::TEAM2_UNIT, Server::BitField::TEAM1_BULLET | Server::BitField::TEAM1_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL | Server::BitField::TEAM2_UNIT | Server::BitField::TEAM1_SHIELD | Server::BitField::TEAM2_UNIT);
 
   b2Vec2 position = this->getBody()->GetPosition();
    if (_world.players.size() == 1)
@@ -142,7 +142,8 @@ void Server::Portal::intraCollisionUnit(Object *o)
 	  std::cout<<"Unit:!:Collision with a portal and minion enemie!"<<std::endl;
 	  _data.health -= 1;
 	}
-      std::cout<<"Unit:!:Collision with a portal and minion ami!"<<std::endl;
+      else
+	std::cout<<"Unit:!:Collision with a portal and minion ami!"<<std::endl;
     }
 }
 

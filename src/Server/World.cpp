@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define TIMER_END 50000
+#define TIMER_END 50
 #define DRAW 0
 #define CONTINU -1
 #define TEAM1_WIN 1
@@ -125,42 +125,50 @@ void	Server::World::run()
 	  int result = checkEnd();
 	  if ((result == TEAM1_WIN || result == TEAM2_WIN || result == DRAW) && check_on == true)
 	    {
-	      // std::cout<<"passs : "<< result<<"  :  "<< check_on<<std::endl;
-
+	      std::cout<<"FIIIIIIIINNNNNNNNNNN     passs : "<< result<<"  :  "<< check_on<<std::endl;
+	      
 	      msgpack::sbuffer sbuf;
 	      msgpack::packer<msgpack::sbuffer> packet(&sbuf);
 	      
-	      packet.pack((int)MasterData::Command::END_GAME);
+	      std::cout << "ENDGAME CMD? |" << (int)MasterData::Command::END_GAME_SERV << std::endl;
+	      packet.pack((int)MasterData::Command::END_GAME_SERV);
 	      MasterData::EndGame p1;
 	      MasterData::EndGame p2;
+	      
 	      if(result == TEAM2_WIN)
-		{
-		  p1.win = false;
-		  p2.win = true;
-		}
+	      	{
+	      	  p1.win = false;
+	      	  p2.win = true;
+	      	}
 	      else if(result == TEAM1_WIN)
-		{
-		  p1.win = true;
-		  p2.win = false;
-		}
+	      	{
+	      	  p1.win = true;
+	      	  p2.win = false;
+	      	}
 	      else
-		{
-		  p1.win = true;
-		  p2.win = true;
-		}
+	      	{
+	      	  p1.win = true;
+	      	  p2.win = true;
+	      	}
 
+	      std::cout<<"INF 1?"  << std::endl;
 	      Player* pl1 = players.front();
+	      std::cout<<"INF 2?|" << pl1 << std::endl;
 	      Player* pl2 = players.back();
+	      std::cout<<"INF 3?|"  << pl2 << std::endl;
 
+	      std::cout<< pl1->details << std::endl;
 	      p1.login = pl1->details.login;
 	      p1.r = pl1->details.type;
 
-	      p2.login = pl2->details.login;
+	     p2.login = pl2->details.login;
 	      p2.r = pl2->details.type;
 	      
 	      packet.pack(p1);
+	      std::cout<<"INF 4?"  << std::endl;
 	      packet.pack(p2);
-
+	      std::cout<<"INF 5?"  << std::endl;
+	      std::cout<<"SBUFF : "<< sbuf.size() << "|"<< sbuf.data() << "|" << sbuf.data()[0] << "|" <<std::endl;
 	      communication.sendToMaster(sbuf);
 	      break;
 	    }
@@ -185,7 +193,7 @@ void	Server::World::run()
     }  
 }
 
-Server::Player*	Server::World::createPlayer(int id, const GameData::CommandStruct::BePlayer& details)
+Server::Player*	Server::World::createPlayer(int id, GameData::CommandStruct::BePlayer& details)
 {
   Player* p = new Player(id, details);
 

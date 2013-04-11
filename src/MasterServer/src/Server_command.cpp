@@ -136,7 +136,8 @@ void Server::EndGame(GameServer *s, msgpack::sbuffer &sbuf)
   pac.buffer_consumed(sbuf.size());
   msgpack::unpacked result;
   User *p;
-  
+
+  std::cout << "END" << std::endl;  
   if (pac.next(&result)) 
     {
       while(pac.next(&result))

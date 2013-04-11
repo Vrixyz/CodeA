@@ -49,19 +49,28 @@ void    SuWindow::checkSu()
     std::cout << std::endl << "Passw : " << _passw2SuEdit->text().toUtf8().constData();
     std::cout << std::endl << "AMail : " << _mailEdit->text().toUtf8().constData() << std::endl;
 
-    _parent->getDataNet()->setNetwork(new Network(_parent->getIP(), _parent->getPort()));
-    _parent->getDataNet()->getNetwork()->connectToServer();
+    if (_passw1SuEdit->text() == _passw2SuEdit->text())
+    {
+        _parent->getDataNet()->setNetwork(new Network(_parent->getIP(), _parent->getPort()));
+        _parent->getDataNet()->getNetwork()->connectToServer();
 
-    msgpack::sbuffer sbuf;
-    msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+        msgpack::sbuffer sbuf;
+        msgpack::packer<msgpack::sbuffer> packet(&sbuf);
 
-    packet.pack((int)MasterData::Command::REGISTER_USER);
-    MasterData::RegClient cli(_loginSuEdit->text().toUtf8().constData(), _passw1SuEdit->text().toUtf8().constData());
-    packet.pack(cli);
+        packet.pack((int)MasterData::Command::REGISTER_USER);
+        MasterData::RegClient cli(_loginSuEdit->text().toUtf8().constData(), _passw1SuEdit->text().toUtf8().constData());
+        packet.pack(cli);
 
-    _parent->getDataNet()->getNetwork()->sendToServer(sbuf);
+        _parent->getDataNet()->getNetwork()->sendToServer(sbuf);
 
-    QObject::connect(_parent->getDataNet()->getNetwork()->getSock(), SIGNAL(readyRead()), this, SLOT(RecvInfosClient()));
+        QObject::connect(_parent->getDataNet()->getNetwork()->getSock(), SIGNAL(readyRead()), this, SLOT(RecvInfosClient()));
+    }
+    else
+    {
+        QMessageBox::warning(this, tr("Erreur"), tr("Les mots de passe ne correspondent pas."));
+        _passw1SuEdit->clear();
+        _passw2SuEdit->clear();
+    }
 }
 
 void    SuWindow::creatFields4SuPage()
@@ -129,25 +138,26 @@ void    SuWindow::RecvInfosClient()
         int idData;
         result.get().convert(&idData);
         if (idData == MasterData::Command::INFOS_CLIENT)
-	  {
+        {
             MasterData::InfosClient info("");
             pac.next(&result);
             result.get().convert(&info);
             std::cout << "CONNEXION DONE de " << info.name << std::endl;
             _parent->getDataNet()->getNetwork()->getSock()->disconnect();
             _parent->setGamesWindow();
-	  }
+        }
         else if (idData == MasterData::Command::ERROR)
-	  {
-	    MasterData::ErrorMsg err("");
+        {
+            MasterData::ErrorMsg err("");
             pac.next(&result);
             result.get().convert(&err);
+            QMessageBox::warning(this, tr("Erreur"), tr("Master non conforme"));
             std::cerr << "Erreur connexion : " << err.msg << std::endl;
-	  }
-	else
-	  {
-	    QMessageBox::warning(this, tr("Erreur"), tr("Master non conforme"));
-	    exit(0);
-	  }
+        }
+        else
+        {
+            QMessageBox::warning(this, tr("Erreur"), tr("Master non conforme"));
+            exit(0);
+        }
     }
 }

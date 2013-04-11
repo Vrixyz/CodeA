@@ -47,4 +47,5 @@ HEADERS +=      GamesWindow.h \
                 game.h \
                 mage.h \
                 unit.h \
-                nm.h
+                nm.h \
+    Achi.h

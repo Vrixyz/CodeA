@@ -94,6 +94,7 @@ namespace MasterData
   {
     EndGame(std::string _login = "noob", bool _win = false, int _r = 1) :
       login(_login), win(_win), r(_r){}
+
     std::string login;
     bool	win;
     int		r;

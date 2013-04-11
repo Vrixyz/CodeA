@@ -27,6 +27,18 @@ GameServer* Server::getServById(int id)
   return NULL;
 }
 
+User* Server::getPlayerByLog(std::string log)
+{
+  std::list<User *>::iterator			it;
+  unsigned int					i;
+  int						cmd;
+
+  for (i = 0, it = _users.begin(); i < _users.size(); i++, it++)
+    if ((*it)->getName() == log)
+      return *it;
+  return NULL;
+}
+
 void Server::resetIG(GameServer *s)
 {
   std::list<User *>::iterator		it;

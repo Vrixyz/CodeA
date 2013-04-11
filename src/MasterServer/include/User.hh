@@ -4,6 +4,8 @@
 #include <iostream>
 #include "Socket.hh"
 #include "GameServer.hh"
+#include "../../MasterData/Command.hpp"
+#include "../../GameData/Command.hpp"
 
 class User
 {
@@ -25,6 +27,7 @@ public:
   int		games_played;
   int		games_played_1;
   int		games_played_2;
+  std::string	succes;
 private:
   Socket*	_soc;
   std::string	_login;
@@ -32,4 +35,5 @@ private:
   GameServer*	_game;
 };
 
+void		addStat(User*, MasterData::EndGame);
 #endif

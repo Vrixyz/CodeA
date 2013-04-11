@@ -51,6 +51,7 @@ class Server
   // FONCTION UTILITAIRE (Serveur_utile.cpp)
   int	isCo(std::string);
   GameServer* getServById(int id);
+  User* getPlayerByLog(std::string log);
   void	resetIG(GameServer *s);
   void	DelUser(User *);
   void	DelGameServer(GameServer *);
@@ -62,6 +63,11 @@ class Server
   void	BroadcastMsg(User *, msgpack::sbuffer&);
   void	JoinServer(User* u, msgpack::sbuffer&);
   void	EndGame(GameServer *s, msgpack::sbuffer &sbuf);
+
+  // FONCTION POUR LES SUCCES (Server_succes.cpp)
+  void	checkSucces(User *);
+  void	checkSucces_1(User *);
+
 
  protected:
   SQLManager*			_sql;

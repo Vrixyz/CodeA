@@ -3,6 +3,7 @@
 #include "Define.h"
 #include "Achi.h"
 
+
 GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(parent, 0/*Qt::FramelessWindowHint*/)
 {
     msgpack::sbuffer sbuf;
@@ -305,6 +306,9 @@ void	GamesWindow::RecvChat(QByteArray res)
         pac.next(&result);
         result.get().convert(&recv);
         _readChat->insertPlainText(QString(recv.from.data()) + ": " + QString(recv.msg.data()) + "\n");
+        QTextCursor c = _readChat->textCursor();
+        c.movePosition(QTextCursor::End);
+        _readChat->setTextCursor(c);
     }
 }
 

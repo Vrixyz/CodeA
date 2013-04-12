@@ -211,7 +211,7 @@ void Server::Mage::update(float elapsedMilliseconds)
     }
   // //shiled, fire finish ?
 
-  if ((*fire) > 3000)
+  if ((*fire) > 1000)
     {
       std::cout<<"destroy it fire"<<std::endl;
       _world.addBulletToDestroy(_world.getBullet(this->id));

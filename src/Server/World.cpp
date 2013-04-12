@@ -4,7 +4,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Wed Apr 10 10:59:04 2013 mathieu leurquin
+// Last update Fri Apr 12 11:26:37 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -157,7 +157,7 @@ void	Server::World::run()
 	      Player* pl2 = players.back();
 	      std::cout<<"INF 3?|"  << pl2 << std::endl;
 
-	      std::cout<< pl1->details << std::endl;
+	      // std::cout<< pl1->details << std::endl;
 	      p1.login = pl1->details.login;
 	      p1.r = pl1->details.type;
 
@@ -281,7 +281,7 @@ Server::Portal* Server::World::createPortal(BitField *b, Player* player)
 Server::Element* Server::World::createElement(bool walkable, float width, float height, BitField *b, int idU)
 {
   Server::Element* e = new Element(*this, walkable, idU);
-  e->setBody(b, width, height);
+  // e->setBody(b, width, height);
   elements.push_back(e);  
   return e;
 }

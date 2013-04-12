@@ -3,6 +3,7 @@
 #include "Define.h"
 #include "Achi.h"
 
+#include <QtWebKit/QWebView>
 
 GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(parent, 0/*Qt::FramelessWindowHint*/)
 {
@@ -46,7 +47,7 @@ void    GamesWindow::setTabAndAll()
 {
     _tab = new QTabWidget(this);
 
-    _tab->setGeometry(50, 77, 425, 400);
+    _tab->setGeometry(50, 77, 430, 400);
     _tab->setStyleSheet(" QTabWidget::pane {"
                         " border-top: px solid #000000;"
                         " position: absolute;"
@@ -58,8 +59,7 @@ void    GamesWindow::setTabAndAll()
 
     createTabServers();
     createTabNews();
-    createTabSucces1();
-    createTabSucces2();
+    createTabSucces();
 
     _list = new QListWidget(_serversPage);
     _list->setGeometry(15, 122, 200, 200);
@@ -83,6 +83,32 @@ void    GamesWindow::setTabAndAll()
     QObject::connect(_writeChat, SIGNAL(returnPressed()), this, SLOT(sendMsg()));
 }
 
+void    GamesWindow::createTabSucces()
+{
+    /* !!!!!!!!!!!!!!!!!!!!!!!! */
+    /* !!!!!!!!!!!!!!!!!!!!!!!! */
+    /* !!!!!!!!!!!!!!!!!!!!!!!! */
+    /* !!!!!!!!!!!!!!!!!!!!!!!! */
+    /* !!!!!!!!   ICI   !!!!!!! */
+    /* !!!!!!!!!!!!!!!!!!!!!!!! */
+    /* !!!!!!!!!!!!!!!!!!!!!!!! */
+    /* !!!!!!!!!!!!!!!!!!!!!!!! */
+    /* !!!!!!!!!!!!!!!!!!!!!!!! */
+    /* REMPLACE DAT SUCC STRING PAR LA BONNE */
+    std::string succ("101011110011000111101100011100100001010101010");
+    std::string succ1("");
+    std::string succ2("");
+
+    for (int i = 0; i < 25; i++)
+    {
+        if (i < 20)
+            succ1 += succ[i];
+        succ2 += succ[i + 20];
+    }
+    createTabSucces1(succ1);
+    createTabSucces2(succ2);
+}
+
 void    GamesWindow::sendMsg()
 {
     msgpack::sbuffer sbuf;
@@ -99,6 +125,11 @@ void    GamesWindow::createTabNews()
 {
     _newsPage = new QWidget(_tab);
     _tab->addTab(_newsPage, "      News      ");
+
+    QWebView *view = new QWebView(_newsPage);
+    view->setGeometry(1,34,428,359);
+    view->load(QUrl("https://google.fr/"));
+    view->show();
 }
 
 void    GamesWindow::createTabServers()
@@ -128,10 +159,9 @@ void    GamesWindow::createTabServers()
     _tab->addTab(_serversPage, "     Servers     ");
 }
 
-void    GamesWindow::createTabSucces1()
+void    GamesWindow::createTabSucces1(std::string succ)
 {
     std::string tmpSucc;
-    std::string succ("11100110001100010000");
     std::string nameImg;
 
     _succesPage = new QWidget(_tab);
@@ -162,11 +192,10 @@ void    GamesWindow::createTabSucces1()
     }
 }
 
-void    GamesWindow::createTabSucces2()
+void    GamesWindow::createTabSucces2(std::string succ)
 {
     std::string tmpSucc;
     std::string nameImg;
-    std::string succ("1010111100110001111011100");
 
     _succesPage = new QWidget(_tab);
     _tab->insertTab(3, _succesPage, " Succes Class ");

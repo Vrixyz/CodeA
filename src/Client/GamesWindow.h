@@ -15,8 +15,9 @@ public:
     void setTabAndAll();
     void createTabNews();
     void createTabServers();
-    void createTabSucces1();
-    void createTabSucces2();
+    void createTabSucces();
+    void createTabSucces1(std::string);
+    void createTabSucces2(std::string);
     void RecvList(QByteArray res);
     void RecvChat(QByteArray res);
     void RecvError(QByteArray res);

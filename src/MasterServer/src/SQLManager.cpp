@@ -123,6 +123,7 @@ User	*SQLManager::returnStats(sqlite3_stmt *stmt, std::string login)
   toRet->games_played = sqlite3_column_int(stmt, 5);
   toRet->games_played_1 = sqlite3_column_int(stmt, 6);
   toRet->games_played_2 = sqlite3_column_int(stmt, 7);
+  toRet->succes = std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 8)));
   return (toRet);
 }
 

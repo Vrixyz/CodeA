@@ -1,3 +1,4 @@
+#include "./../include/SQLManager.hh"
 #include "./../include/Client.hh"
 #include "./../include/Define.hh"
 #include "./../include/Server.hh"
@@ -169,9 +170,7 @@ void Server::EndGame(GameServer *s, msgpack::sbuffer &sbuf)
 	    {
 	      addStat(p, eg);
 	      checkSucces(p);
-
-	      
-
+	      _sql->modifElem(p);
 	      sendSucces(p);
 	    }
 	  if (eg.win)

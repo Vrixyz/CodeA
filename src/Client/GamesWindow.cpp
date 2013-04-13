@@ -5,10 +5,16 @@
 
 #include <QtWebKit/QWebView>
 
+void	GamesWindow::SendCMD(int cmd)
+{
+  msgpack::sbuffer sbuf;
+  msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+  packet.pack(cmd);
+  _parent->getDataNet()->getNetwork()->sendToServer(sbuf);
+}
+
 GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(parent, 0/*Qt::FramelessWindowHint*/)
 {
-    msgpack::sbuffer sbuf;
-    msgpack::packer<msgpack::sbuffer> packet(&sbuf);
 
     _parent = parent;
     setFixedSize(size_x, size_y);
@@ -20,9 +26,7 @@ GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(par
 
     setTabAndAll();
 
-    packet.pack((int)MasterData::Command::ASK_SERVER_LIST);
-
-    _parent->getDataNet()->getNetwork()->sendToServer(sbuf);
+    SendCMD((int)MasterData::Command::ASK_SERVER_LIST);
 
     QObject::connect(_parent->getDataNet()->getNetwork()->getSock(), SIGNAL(readyRead()), this, SLOT(RecvData()));
     QObject::connect(_list, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(tryToCoGame()));
@@ -37,10 +41,7 @@ GamesWindow::~GamesWindow()
 
 void    GamesWindow::refreshServ()
 {
-  msgpack::sbuffer sbuf;
-  msgpack::packer<msgpack::sbuffer> packet(&sbuf);
-  packet.pack((int)MasterData::Command::ASK_SERVER_LIST);
-  _parent->getDataNet()->getNetwork()->sendToServer(sbuf);
+  SendCMD((int)MasterData::Command::ASK_SUCCES);
 }
 
 void    GamesWindow::setTabAndAll()
@@ -89,6 +90,7 @@ void    GamesWindow::RecvSucces(QByteArray res)
   msgpack::unpacked result;
   msgpack::unpacker pac;
 
+  std::cout << "RECV_SUCCES" << std::endl;
   pac.reserve_buffer(res.length());
   memcpy(pac.buffer(), res.data(), res.length());
   pac.buffer_consumed(res.length());
@@ -173,7 +175,6 @@ void    GamesWindow::createTabSucces1(std::string succ)
         tmpSucc = "";
         tmpSucc += "[" + achivDivers[i].name + "]\n\n";
         tmpSucc += achivDivers[i].describe;
-        std::cout << "test2" << tmpSucc << std::endl;
         nameImg = "img/allAchiv/divers/";
         nameImg += intToString(i + 1);
         nameImg += ".jpg";
@@ -206,7 +207,6 @@ void    GamesWindow::createTabSucces2(std::string succ)
         tmpSucc = "";
         tmpSucc += "[" + achivClass[i].name + "]\n\n";
         tmpSucc += achivClass[i].describe;
-        std::cout << "test1" << tmpSucc << std::endl;
         nameImg = "img/allAchiv/class/";
         nameImg += intToString(i + 1);
         nameImg += ".jpg";
@@ -352,7 +352,7 @@ void    GamesWindow::RecvData()
     pac.reserve_buffer(res.length());
     memcpy(pac.buffer(), res.data(), res.length());
     pac.buffer_consumed(res.length());
-    std::cout << "RECV_DATA" << std::endl;
+    std::cout << "RECV_DATA size" << res.length() << std::endl;
     if (pac.next(&result))
     {
         int idData;

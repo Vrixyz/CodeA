@@ -30,7 +30,6 @@ void	Server::CheckCoUser(Socket *soc, msgpack::sbuffer &sbuf)
 	      _unknown.remove(soc);
 	      std::cout << "SUCCES DE LA CONNEXION" << std::endl;
 	      sendCoSucces(u);
-	      sendSucces(u);
 	      return; 
 	    }
 	  else

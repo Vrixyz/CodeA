@@ -11,6 +11,7 @@ public:
 
     GamesWindow(int, int, MyWindow*);
     ~GamesWindow();
+    void SendCMD(int cmd);
     void addToList(int, std::string);
     void setTabAndAll();
     void createTabNews();

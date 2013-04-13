@@ -16,12 +16,11 @@ void Server::SendServToAll()
 
 void Server::SendServList(Socket* soc)
 {
-  //SEGFAULT RANDOM ARRIVER 2 FOIS DANS CETTE FONCTION FAIRE DES TEST POUR LE TROUVER
+  std::cout << "CMD: LIST SERV SEND" << std::endl;
   GameServer *					s;
   std::list<GameServer *>::iterator		it;
   unsigned int					i;
 
-  std::cout << "Liste send" << std::endl;
   msgpack::sbuffer sbuf;
   msgpack::packer<msgpack::sbuffer> packet(&sbuf);
   
@@ -38,6 +37,7 @@ void Server::SendServList(Socket* soc)
 
 void	Server::sendCoSucces(User *u)
 {
+  std::cout << "CMD: CO SUCCES" << std::endl;
   msgpack::sbuffer sbuf;
   msgpack::packer<msgpack::sbuffer> packet(&sbuf);
   MasterData::InfosClient ic(u->getName());
@@ -49,6 +49,7 @@ void	Server::sendCoSucces(User *u)
 
 void	Server::sendSucces(User *u)
 {
+  std::cout << "CMD: SEND SUCCES" << std::endl;
   msgpack::sbuffer sbuf;
   msgpack::packer<msgpack::sbuffer> packet(&sbuf);
   MasterData::RecvSucces  recv(u->succes);
@@ -67,6 +68,8 @@ void	Server::sendFailure(Socket *soc, std::string msg)
   packet.pack((int)MasterData::Command::ERROR);
   packet.pack(err);
   soc->sendToServer(sbuf);
+
+  std::cout << "CMD: SEND FAILURE" << std::endl;
 }
 
 void Server::BroadcastMsg(User* u, msgpack::sbuffer &sbuf)
@@ -97,6 +100,7 @@ void Server::BroadcastMsg(User* u, msgpack::sbuffer &sbuf)
 	    (*it)->getSoc()->sendToServer(buf);
 	}
     }    
+  std::cout << "CMD: BROADCAST" << std::endl;
 }
 
 void Server::JoinServer(User* u, msgpack::sbuffer &sbuf)
@@ -113,7 +117,6 @@ void Server::JoinServer(User* u, msgpack::sbuffer &sbuf)
   
   if (pac.next(&result))
     {
-      std::cout << "RECEPTION SERV" << std::endl;
       pac.next(&result);
       int idServ;
       result.get().convert(&idServ);
@@ -125,19 +128,12 @@ void Server::JoinServer(User* u, msgpack::sbuffer &sbuf)
 	}
       else
 	{
-	  std::cout << "ENVOI DE DATA DE CLIENT AU GAME SERVER" << std::endl; 
-
 	  msgpack::sbuffer buf1;
 	  msgpack::packer<msgpack::sbuffer> packet1(&buf1);
 	  MasterData::InfosPlayer player(u->getSoc()->getIP(), u->getName());  
 	  packet1.pack((int)MasterData::Command::PLAYER_JOIN);
 	  packet1.pack(player);
-	  std::cout << "taille envoyee : "<< s->getSoc()->sendToServer(buf1) << std::endl;
-	  
 
-	  std::cout << "ip : " << player.ip << ", name: " << player.name << std::endl;
-
-	  std::cout << "ENVOI DE DATA DE CO AU CLIENT" << std::endl; 
 	  msgpack::sbuffer buf2;
 	  msgpack::packer<msgpack::sbuffer> packet2(&buf2);
 	  MasterData::InfosServer serv(s->getSoc()->getIP(), s->getPort());  

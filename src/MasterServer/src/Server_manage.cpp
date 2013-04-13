@@ -13,7 +13,6 @@ void Server::ManageUser()
     if (FD_ISSET((*it)->getSoc()->getFD(), &_readfds))
       {
 	msgpack::sbuffer sbuf;
-	std::cout << "USER " << (*it)->getName() << std::endl;
 	(*it)->getSoc()->RecvString(sbuf);
 	
 	msgpack::unpacker pac;
@@ -32,8 +31,10 @@ void Server::ManageUser()
 	    switch(idCmd)
 	      {
 	      case MasterData::Command::ASK_SERVER_LIST:
+		SendServList((*it)->getSoc());
+		break;
+	      case MasterData::Command::ASK_SUCCES:
 		sendSucces((*it));
-		//		SendServList((*it)->getSoc());
 		break;
 	      case MasterData::Command::SEND_CHAT:
 		BroadcastMsg(*it, sbuf);

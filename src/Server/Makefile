@@ -32,7 +32,7 @@ OBJ_SR	=	$(SRC_SR:.cpp=.o)
 
 LIBS	=	-lboost_system -lmsgpack -lBox2D -lboost_thread -lpthread -lm
 
-CXXFLAGS=	-Wall -Wextra -ansi -Wpedantic -g
+CXXFLAGS=	-Wall -Wextra -ansi -g
 
 CC	=	g++
 

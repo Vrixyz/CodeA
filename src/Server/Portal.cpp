@@ -115,7 +115,7 @@ void Server::Portal::update(float elapsedMilliseconds)
     }
   pop += elapsedMilliseconds;
   
-  if (pop >= 10000)
+  if (pop >= 30000)
     {
       this->createMinion();
       pop = 0;

@@ -223,15 +223,15 @@ void Server::Unit::intraCollision(Object *o)
 
 void Server::Unit::intraCollisionUnit(Object *o)
 {
-  std::cout<<"Unit:!:Collision with a unit and unit!"<<std::endl;
+  //  std::cout<<"Unit:!:Collision with a unit and unit!"<<std::endl;
 }
 
 void Server::Unit::intraCollisionElement(Object *o)
 {
-  std::cout<<"Unit::Collision with a unit and element!"<<std::endl;
+  //  std::cout<<"Unit::Collision with a unit and element!"<<std::endl;
 }
 
 void Server::Unit::intraCollisionBullet(Object *o)
 {
-  std::cout<<"Unit::Collision with a unit and bullet!"<<std::endl;
+  //  std::cout<<"Unit::Collision with a unit and bullet!"<<std::endl;
 }

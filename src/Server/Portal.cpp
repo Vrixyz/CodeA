@@ -139,21 +139,21 @@ void Server::Portal::intraCollisionUnit(Object *o)
     {
       if (m->team != this->team)
 	{
-	  std::cout<<"Unit:!:Collision with a portal and minion enemie!"<<std::endl;
+	  //	  std::cout<<"Unit:!:Collision with a portal and minion enemie!"<<std::endl;
 	  _data.health -= 1;
 	}
-      else
-	std::cout<<"Unit:!:Collision with a portal and minion ami!"<<std::endl;
+      //      else
+	//	std::cout<<"Unit:!:Collision with a portal and minion ami!"<<std::endl;
     }
 }
 
 void Server::Portal::intraCollisionElement(Object *)
 {
-  std::cout<<"Unit::Collision with a unit and element!"<<std::endl;
+  //  std::cout<<"Unit::Collision with a unit and element!"<<std::endl;
 }
 
 void Server::Portal::intraCollisionBullet(Object *)
 {
   _data.health -= 2;
-  std::cout<<"Unit::Collision with a unit and bullet!"<<std::endl;
+  //std::cout<<"Unit::Collision with a unit and bullet!"<<std::endl;
 }

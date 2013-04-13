@@ -20,7 +20,7 @@ Network *Store::getNetwork(void)
 
 void Store::setLogin(std::string login)
 {
-    login = _login;
+    _login = login;
 }
 
 std::string Store::getLogin(void)

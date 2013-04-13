@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 17:53:20 2012 thierry berger
-// Last update Mon Mar  4 15:57:00 2013 mathieu leurquin
+// Last update Fri Apr 12 11:27:16 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -34,11 +34,14 @@ b2Body*	Server::Element::setBody(BitField *b, float width, float height, int x, 
   eBDef.position.Set(x, y);
   this->_body = _world._physicWorld.CreateBody(&eBDef);
 
-  b2PolygonShape elementShape;
-  elementShape.SetAsBox(width, height);
+  b2CircleShape circleShape;
+  circleShape.m_p.Set(x, y); //position, relative to body position
+  circleShape.m_radius = 12.5;
+  // b2PolygonShape elementShape;
+  // elementShape.SetAsBox(width, height);
 
   b2FixtureDef fDef;
-  fDef.shape = &elementShape;
+  fDef.shape = &circleShape;
 
   fDef.filter.categoryBits = b->what;
   fDef.filter.maskBits = b->collide;

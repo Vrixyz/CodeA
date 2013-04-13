@@ -4,7 +4,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Wed Apr 10 10:59:04 2013 mathieu leurquin
+// Last update Fri Apr 12 11:26:37 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -94,6 +94,45 @@ void	Server::World::init(int masterPort, char* masterIp, int, int)
   communication.setCommandManager(_commandManager);
 }
 
+void	Server::World::end(int result)
+{
+  msgpack::sbuffer sbuf;
+  msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+  
+  packet.pack((int)MasterData::Command::END_GAME_SERV);
+  MasterData::EndGame p1;
+  MasterData::EndGame p2;
+  
+  if(result == TEAM2_WIN)
+    {
+      p1.win = false;
+      p2.win = true;
+    }
+  else if(result == TEAM1_WIN)
+    {
+      p1.win = true;
+      p2.win = false;
+    }
+  else
+    {
+      p1.win = true;
+      p2.win = true;
+    }
+  //GET PLAYER
+  Player* pl1 = players.front();
+  Player* pl2 = players.back();
+  //SET P1
+  p1.login = pl1->details.login;
+  p1.r = pl1->details.type;
+  //SETP2
+  p2.login = pl2->details.login;
+  p2.r = pl2->details.type;
+  //PACK
+  packet.pack(p1);
+  packet.pack(p2);
+  communication.sendToMaster(sbuf);
+}
+
 void	Server::World::run()
 {
   b2Timer timer;
@@ -125,44 +164,7 @@ void	Server::World::run()
 	  int result = checkEnd();
 	  if ((result == TEAM1_WIN || result == TEAM2_WIN || result == DRAW) && check_on == true)
 	    {
-	      // std::cout<<"passs : "<< result<<"  :  "<< check_on<<std::endl;
-
-	      msgpack::sbuffer sbuf;
-	      msgpack::packer<msgpack::sbuffer> packet(&sbuf);
-	      
-	      packet.pack((int)MasterData::Command::END_GAME);
-	      MasterData::EndGame p1;
-	      MasterData::EndGame p2;
-	      if(result == TEAM2_WIN)
-		{
-		  p1.win = false;
-		  p2.win = true;
-		}
-	      else if(result == TEAM1_WIN)
-		{
-		  p1.win = true;
-		  p2.win = false;
-		}
-	      else
-		{
-		  p1.win = true;
-		  p2.win = true;
-		}
-
-	      Player* pl1 = players.front();
-	      Player* pl2 = players.back();
-
-	      p1.login = pl1->details.login;
-	      p1.r = pl1->details.type;
-
-	      p2.login = pl2->details.login;
-	      p2.r = pl2->details.type;
-	      
-	      packet.pack(p1);
-	      packet.pack(p2);
-
-	      communication.sendToMaster(sbuf);
-	      break;
+	      end(result);
 	    }
 	  sendUpdatesToClients();
 	  
@@ -185,7 +187,7 @@ void	Server::World::run()
     }  
 }
 
-Server::Player*	Server::World::createPlayer(int id, const GameData::CommandStruct::BePlayer& details)
+Server::Player*	Server::World::createPlayer(int id, GameData::CommandStruct::BePlayer& details)
 {
   Player* p = new Player(id, details);
 
@@ -273,7 +275,7 @@ Server::Portal* Server::World::createPortal(BitField *b, Player* player)
 Server::Element* Server::World::createElement(bool walkable, float width, float height, BitField *b, int idU)
 {
   Server::Element* e = new Element(*this, walkable, idU);
-  e->setBody(b, width, height);
+  // e->setBody(b, width, height);
   elements.push_back(e);  
   return e;
 }
@@ -601,6 +603,7 @@ void Server::World::askMove(int idClient, GameData::CommandStruct::Move arg)
 
 void	Server::World::addPlayer(int idClient, GameData::CommandStruct::BePlayer arg)
 {
+  std::cout << "LOGIN?:" << arg.login << " TYPE?:" << arg.type << std::endl;
   std::list<Player*>::const_iterator it;
   // TODO: check if there's room for a new player
   for (it = players.begin(); it != players.end(); it++)

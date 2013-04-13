@@ -12,6 +12,7 @@
 # define SERVER_PLAYER_HPP
 
 #include <list>
+#include <iostream>
 #include <Box2D/Box2D.h>
 
 #include "../GameData/Command.hpp"
@@ -33,13 +34,15 @@ namespace Server
     int score;
     float time;
     
-    const GameData::CommandStruct::BePlayer& details;
+    GameData::CommandStruct::BePlayer details;
     
 
-    Player(int playerId, const GameData::CommandStruct::BePlayer& d) : id(playerId), details(d) 
+    Player(int playerId, GameData::CommandStruct::BePlayer d) : id(playerId) 
     {
       time = 0;
       score = 0;
+      details = d;
+      std::cout << "LOG?|" << d.login << std::endl;
     }
     virtual ~Player() {}
 

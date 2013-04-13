@@ -13,7 +13,6 @@ void Server::ManageUser()
     if (FD_ISSET((*it)->getSoc()->getFD(), &_readfds))
       {
 	msgpack::sbuffer sbuf;
-	std::cout << "USER " << (*it)->getName() << std::endl;
 	(*it)->getSoc()->RecvString(sbuf);
 	
 	msgpack::unpacker pac;
@@ -33,6 +32,9 @@ void Server::ManageUser()
 	      {
 	      case MasterData::Command::ASK_SERVER_LIST:
 		SendServList((*it)->getSoc());
+		break;
+	      case MasterData::Command::ASK_SUCCES:
+		sendSucces((*it));
 		break;
 	      case MasterData::Command::SEND_CHAT:
 		BroadcastMsg(*it, sbuf);
@@ -59,14 +61,14 @@ void Server::ManageGameServer()
     if (FD_ISSET((*it)->getSoc()->getFD(), &_readfds))
       {	
 	msgpack::sbuffer sbuf;
+	std::cout << "GET A MESSAGE?" << std::endl;
 	(*it)->getSoc()->RecvString(sbuf);
-
 	if (sbuf.size() == 0)
 	  {
 	    DelGameServer(*it);
+	    SendServToAll();
 	    break;
 	  }
-	
 	msgpack::unpacker pac;
 	pac.reserve_buffer(sbuf.size());
 	memcpy(pac.buffer(), sbuf.data(), sbuf.size());
@@ -77,9 +79,10 @@ void Server::ManageGameServer()
 	  {
 	    int idCmd;
 	    result.get().convert(&idCmd);
+	    std::cout << idCmd << "|" << MasterData::Command::END_GAME_SERV << std::endl; 
 	    switch(idCmd)
 	      {
-	      case MasterData::Command::ENDGAME:
+	      case MasterData::Command::END_GAME_SERV:
 		EndGame((*it), sbuf);
 		break;
 	      default:

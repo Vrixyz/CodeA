@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 13:21:11 2012 thierry berger
-// Last update Wed Mar  6 11:35:27 2013 mathieu leurquin
+// Last update Fri Apr 12 11:25:19 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -170,7 +170,7 @@ void Server::Mage::spell2(const GameData::CommandStruct::Shield)
     // Server::Element *e = new Server::Element(*this, (int)elements.size(), true, this->id);
   
   e->setBody(shield, 50, 50,  position.x, position.y);
-  e->getBody()->SetTransform(position, this->getBody()->GetAngle());
+  //e->getBody()->SetTransform(position, this->getBody()->GetAngle());
   //  _world.elements.push_back(e); 
   (*sh) = -1;
 }
@@ -211,7 +211,7 @@ void Server::Mage::update(float elapsedMilliseconds)
     }
   // //shiled, fire finish ?
 
-  if ((*fire) > 3000)
+  if ((*fire) > 1000)
     {
       std::cout<<"destroy it fire"<<std::endl;
       _world.addBulletToDestroy(_world.getBullet(this->id));
@@ -247,16 +247,16 @@ void Server::Mage::intraCollision(Object *o)
 void Server::Mage::intraCollisionUnit(Object *)
 {
   _data.health -= 1;
-  std::cout<<"Unit:!:Collision with a unit and unit!"<<std::endl;
+  //  std::cout<<"Unit:!:Collision with a unit and unit!"<<std::endl;
 }
 
 void Server::Mage::intraCollisionElement(Object *)
 {
-  std::cout<<"Unit::Collision with a unit and element!"<<std::endl;
+  //  std::cout<<"Unit::Collision with a unit and element!"<<std::endl;
 }
 
 void Server::Mage::intraCollisionBullet(Object *)
 {
   _data.health -= 2;
-  std::cout<<"Unit::Collision with a unit and bullet!"<<std::endl;
+  //  std::cout<<"Unit::Collision with a unit and bullet!"<<std::endl;
 }

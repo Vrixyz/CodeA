@@ -79,7 +79,6 @@ void    AccWindow::RecvInfosClient()
     msgpack::unpacker pac;
 
     res = _parent->getDataNet()->getNetwork()->ReceiveFromServer();
-    std::cout << "INFO SIZE " << res.length() << std::endl;
 
     pac.reserve_buffer(res.length());
     memcpy(pac.buffer(), res.data(), res.length());

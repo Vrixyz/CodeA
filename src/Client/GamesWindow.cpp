@@ -3,11 +3,18 @@
 #include "Define.h"
 #include "Achi.h"
 
+#include <QtWebKit/QWebView>
+
+void	GamesWindow::SendCMD(int cmd)
+{
+  msgpack::sbuffer sbuf;
+  msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+  packet.pack(cmd);
+  _parent->getDataNet()->getNetwork()->sendToServer(sbuf);
+}
 
 GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(parent, 0/*Qt::FramelessWindowHint*/)
 {
-    msgpack::sbuffer sbuf;
-    msgpack::packer<msgpack::sbuffer> packet(&sbuf);
 
     _parent = parent;
     setFixedSize(size_x, size_y);
@@ -19,9 +26,7 @@ GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(par
 
     setTabAndAll();
 
-    packet.pack((int)MasterData::Command::ASK_SERVER_LIST);
-
-    _parent->getDataNet()->getNetwork()->sendToServer(sbuf);
+    SendCMD((int)MasterData::Command::ASK_SERVER_LIST);
 
     QObject::connect(_parent->getDataNet()->getNetwork()->getSock(), SIGNAL(readyRead()), this, SLOT(RecvData()));
     QObject::connect(_list, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(tryToCoGame()));
@@ -36,17 +41,14 @@ GamesWindow::~GamesWindow()
 
 void    GamesWindow::refreshServ()
 {
-  msgpack::sbuffer sbuf;
-  msgpack::packer<msgpack::sbuffer> packet(&sbuf);
-  packet.pack((int)MasterData::Command::ASK_SERVER_LIST);
-  _parent->getDataNet()->getNetwork()->sendToServer(sbuf);
+  SendCMD((int)MasterData::Command::ASK_SUCCES);
 }
 
 void    GamesWindow::setTabAndAll()
 {
     _tab = new QTabWidget(this);
 
-    _tab->setGeometry(50, 77, 425, 400);
+    _tab->setGeometry(50, 77, 430, 400);
     _tab->setStyleSheet(" QTabWidget::pane {"
                         " border-top: px solid #000000;"
                         " position: absolute;"
@@ -58,8 +60,6 @@ void    GamesWindow::setTabAndAll()
 
     createTabServers();
     createTabNews();
-    createTabSucces1();
-    createTabSucces2();
 
     _list = new QListWidget(_serversPage);
     _list->setGeometry(15, 122, 200, 200);
@@ -83,6 +83,35 @@ void    GamesWindow::setTabAndAll()
     QObject::connect(_writeChat, SIGNAL(returnPressed()), this, SLOT(sendMsg()));
 }
 
+void    GamesWindow::RecvSucces(QByteArray res)
+{
+  std::string succ1("");
+  std::string succ2("");
+  msgpack::unpacked result;
+  msgpack::unpacker pac;
+
+  std::cout << "RECV_SUCCES" << std::endl;
+  pac.reserve_buffer(res.length());
+  memcpy(pac.buffer(), res.data(), res.length());
+  pac.buffer_consumed(res.length());
+  if (pac.next(&result))
+    {
+      MasterData::RecvSucces recv("");
+      pac.next(&result);
+      result.get().convert(&recv);
+      std::string succ(recv.succes);
+
+      for (int i = 0; i < 25; i++)
+	{
+	  if (i < 20)
+            succ1 += succ[i];
+	  succ2 += succ[i + 20];
+	}
+      createTabSucces1(succ1);
+      createTabSucces2(succ2);
+    }
+}
+
 void    GamesWindow::sendMsg()
 {
     msgpack::sbuffer sbuf;
@@ -99,6 +128,11 @@ void    GamesWindow::createTabNews()
 {
     _newsPage = new QWidget(_tab);
     _tab->addTab(_newsPage, "      News      ");
+
+    QWebView *view = new QWebView(_newsPage);
+    view->setGeometry(1,34,428,359);
+    view->load(QUrl("https://google.fr/"));
+    view->show();
 }
 
 void    GamesWindow::createTabServers()
@@ -128,10 +162,9 @@ void    GamesWindow::createTabServers()
     _tab->addTab(_serversPage, "     Servers     ");
 }
 
-void    GamesWindow::createTabSucces1()
+void    GamesWindow::createTabSucces1(std::string succ)
 {
     std::string tmpSucc;
-    std::string succ("11100110001100010000");
     std::string nameImg;
 
     _succesPage = new QWidget(_tab);
@@ -142,7 +175,6 @@ void    GamesWindow::createTabSucces1()
         tmpSucc = "";
         tmpSucc += "[" + achivDivers[i].name + "]\n\n";
         tmpSucc += achivDivers[i].describe;
-        std::cout << "test2" << tmpSucc << std::endl;
         nameImg = "img/allAchiv/divers/";
         nameImg += intToString(i + 1);
         nameImg += ".jpg";
@@ -162,11 +194,10 @@ void    GamesWindow::createTabSucces1()
     }
 }
 
-void    GamesWindow::createTabSucces2()
+void    GamesWindow::createTabSucces2(std::string succ)
 {
     std::string tmpSucc;
     std::string nameImg;
-    std::string succ("1010111100110001111011100");
 
     _succesPage = new QWidget(_tab);
     _tab->insertTab(3, _succesPage, " Succes Class ");
@@ -176,7 +207,6 @@ void    GamesWindow::createTabSucces2()
         tmpSucc = "";
         tmpSucc += "[" + achivClass[i].name + "]\n\n";
         tmpSucc += achivClass[i].describe;
-        std::cout << "test1" << tmpSucc << std::endl;
         nameImg = "img/allAchiv/class/";
         nameImg += intToString(i + 1);
         nameImg += ".jpg";
@@ -322,7 +352,7 @@ void    GamesWindow::RecvData()
     pac.reserve_buffer(res.length());
     memcpy(pac.buffer(), res.data(), res.length());
     pac.buffer_consumed(res.length());
-    std::cout << "RECV_DATA" << std::endl;
+    std::cout << "RECV_DATA size" << res.length() << std::endl;
     if (pac.next(&result))
     {
         int idData;
@@ -340,6 +370,9 @@ void    GamesWindow::RecvData()
             break;
         case MasterData::Command::ERROR:
             RecvError(res);
+            break;
+        case MasterData::Command::SUCCES:
+            RecvSucces(res);
             break;
         default:
             std::cerr << "Command inconnu" << std::endl;

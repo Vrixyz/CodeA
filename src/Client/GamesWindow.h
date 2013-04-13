@@ -11,16 +11,18 @@ public:
 
     GamesWindow(int, int, MyWindow*);
     ~GamesWindow();
+    void SendCMD(int cmd);
     void addToList(int, std::string);
     void setTabAndAll();
     void createTabNews();
     void createTabServers();
-    void createTabSucces1();
-    void createTabSucces2();
+    void createTabSucces1(std::string);
+    void createTabSucces2(std::string);
     void RecvList(QByteArray res);
     void RecvChat(QByteArray res);
     void RecvError(QByteArray res);
     void RecvServer(QByteArray res);
+    void RecvSucces(QByteArray res);
 
 public slots:
 

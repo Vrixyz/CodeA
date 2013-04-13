@@ -94,6 +94,7 @@ void	Server::AddServer(Socket *soc, msgpack::sbuffer &sbuf)
 	  _server.push_back(s);
 	  _unknown.remove(soc);
 	  std::cout << "SUCCES DE L'AJOUT D'UN SERVER" << std::endl;
+	  SendServToAll();
 	  return; 
 	}
     }

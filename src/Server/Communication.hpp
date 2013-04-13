@@ -192,6 +192,7 @@ bool Server::Communication<C>::sendToMaster(const msgpack::sbuffer& packedInform
       boost::asio::write(master->socket(), boost::asio::buffer(packedInformation.data(), packedInformation.size()), ignored_error);
       if (ignored_error)
 	{
+	  std::cout << "TEST MASTER?" << std::endl;
 	  /// FIXME: some errors might be more or less killing than others.
 	  // std::cout<<"prepare to erase..."<<std::endl;
 	  exit(-42); // FIXME: that's ugly.

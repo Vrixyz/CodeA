@@ -64,7 +64,7 @@ int Socket::RecvString(msgpack::sbuffer &buff)
     }
   if (buff.size() > 0)
     nbRead = buff.size();
-  std::cout << _socket << ": " << "SIZE RECU " << nbRead << std::endl;
+  std::cout << "RECV:" << nbRead << std::endl;
   return nbRead;
 }
 
@@ -91,5 +91,6 @@ int Socket::sendToServer(const msgpack::sbuffer& cmd)
   int ret;
 
   ret = write(_socket, cmd.data(), cmd.size());
+  std::cout << "SEND:" << cmd.size() << std::endl;
   return ret;
 }

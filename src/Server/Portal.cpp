@@ -95,9 +95,9 @@ void Server::Portal::createMinion()
   BitField *b;
 
   if (_world.players.size() == 1)
-    b = new  BitField(Server::BitField::TEAM1_UNIT, Server::BitField::TEAM2_BULLET | Server::BitField::TEAM2_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL | Server::BitField::TEAM2_SHIELD);
+    b = new  BitField(Server::BitField::TEAM1_UNIT, Server::BitField::TEAM2_BULLET | Server::BitField::TEAM2_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL | Server::BitField::TEAM2_SHIELD | Server::BitField::TEAM1_UNIT);
   else
-    b = new  BitField(Server::BitField::TEAM2_UNIT, Server::BitField::TEAM1_BULLET | Server::BitField::TEAM1_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL | Server::BitField::TEAM2_UNIT | Server::BitField::TEAM1_SHIELD);
+    b = new  BitField(Server::BitField::TEAM2_UNIT, Server::BitField::TEAM1_BULLET | Server::BitField::TEAM1_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL | Server::BitField::TEAM2_UNIT | Server::BitField::TEAM1_SHIELD | Server::BitField::TEAM2_UNIT);
 
   b2Vec2 position = this->getBody()->GetPosition();
    if (_world.players.size() == 1)
@@ -115,7 +115,7 @@ void Server::Portal::update(float elapsedMilliseconds)
     }
   pop += elapsedMilliseconds;
   
-  if (pop >= 10000)
+  if (pop >= 30000)
     {
       this->createMinion();
       pop = 0;
@@ -139,20 +139,21 @@ void Server::Portal::intraCollisionUnit(Object *o)
     {
       if (m->team != this->team)
 	{
-	  std::cout<<"Unit:!:Collision with a portal and minion enemie!"<<std::endl;
+	  //	  std::cout<<"Unit:!:Collision with a portal and minion enemie!"<<std::endl;
 	  _data.health -= 1;
 	}
-      std::cout<<"Unit:!:Collision with a portal and minion ami!"<<std::endl;
+      //      else
+	//	std::cout<<"Unit:!:Collision with a portal and minion ami!"<<std::endl;
     }
 }
 
 void Server::Portal::intraCollisionElement(Object *)
 {
-  std::cout<<"Unit::Collision with a unit and element!"<<std::endl;
+  //  std::cout<<"Unit::Collision with a unit and element!"<<std::endl;
 }
 
 void Server::Portal::intraCollisionBullet(Object *)
 {
   _data.health -= 2;
-  std::cout<<"Unit::Collision with a unit and bullet!"<<std::endl;
+  //std::cout<<"Unit::Collision with a unit and bullet!"<<std::endl;
 }

@@ -16,6 +16,7 @@ public:
     void setTabAndAll();
     void createTabNews();
     void createTabServers();
+    void createTabSucces();
     void createTabSucces1(std::string);
     void createTabSucces2(std::string);
     void RecvList(QByteArray res);
@@ -23,6 +24,7 @@ public:
     void RecvError(QByteArray res);
     void RecvServer(QByteArray res);
     void RecvSucces(QByteArray res);
+    void UpdateAllSucces();
 
 public slots:
 
@@ -56,11 +58,15 @@ private:
 
     QWidget*            _newsPage;
     QWidget*            _serversPage;
-    QWidget*            _succesPage;
+    QWidget*            _succesPage1;
+    QWidget*            _succesPage2;
 
     QTextEdit*          _readChat;
 
     QLineEdit*          _writeChat;
+
+    std::string         _succ1;
+    std::string         _succ2;
 
 };
 

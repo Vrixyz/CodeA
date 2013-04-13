@@ -52,7 +52,8 @@ int	SQLManager::createUsersTable()
   requet0 += "games_win_2 int(10),";
   requet0 += "games_played int(10),";
   requet0 += "games_played_1 int(10),";
-  requet0 += "games_played_2 int(10)";
+  requet0 += "games_played_2 int(10),";
+  requet0 += "succes varchar(100)";
   requet0 += ");";
 
   if (sqlite3_exec(_db, requet0.c_str(), 0, 0, &zErrMsg) != SQLITE_OK)
@@ -71,7 +72,7 @@ int	SQLManager::insertElem(std::string name, std::string pass)
   sqlite3_stmt	*stmt;
 
   ret = 1;
-  req = "INSERT INTO user values(?, ?, 0, 0, 0, 0, 0, 0);";
+  req = "INSERT INTO user values(?, ?, 0, 0, 0, 0, 0, 0, \"000000000000000000000000000000000000000000000\");";
   stmt = NULL;
   if (sqlite3_prepare_v2(this->_db, req.c_str(), req.size(), &stmt, NULL) != SQLITE_OK)
     {
@@ -138,7 +139,8 @@ int	SQLManager::modifElem(User* toEdit)
   req += " games_win_2 = ?,";
   req += " games_played = ?,";
   req += " games_played_1 = ?,";
-  req += " games_played_2 = ?";
+  req += " games_played_2 = ?,";
+  req += " succes = ?";
   req += " WHERE login = ?;";
   stmt = NULL;
   if (sqlite3_prepare_v2(this->_db, req.c_str(), req.size(), &stmt, NULL) != SQLITE_OK)
@@ -152,7 +154,8 @@ int	SQLManager::modifElem(User* toEdit)
   sqlite3_bind_int(stmt, 4, toEdit->games_played);
   sqlite3_bind_int(stmt, 5, toEdit->games_played_1);
   sqlite3_bind_int(stmt, 6, toEdit->games_played_2);
-  sqlite3_bind_text(stmt, 7, toEdit->getName().c_str(), toEdit->getName().size(), NULL);
+  sqlite3_bind_text(stmt, 7, toEdit->succes.c_str(), toEdit->succes.size(), NULL);
+  sqlite3_bind_text(stmt, 8, toEdit->getName().c_str(), toEdit->getName().size(), NULL);
   ret = sqlite3_step(stmt);
   if (ret != SQLITE_ROW && ret != SQLITE_DONE && ret != SQLITE_OK)
     ret = -1;

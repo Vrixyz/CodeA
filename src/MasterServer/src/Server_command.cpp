@@ -169,7 +169,8 @@ void Server::EndGame(GameServer *s, msgpack::sbuffer &sbuf)
 	    {
 	      addStat(p, eg);
 	      checkSucces(p);
-	      //PASTE SQL UPDATE HER
+
+	      
 
 	      sendSucces(p);
 	    }

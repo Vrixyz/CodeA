@@ -23,7 +23,9 @@ Game::Game(const std::string &ip, unsigned int port, const std::string &type, My
         player.type = GameData::CommandStruct::BePlayer::INVOKER;
     else
         player.type = GameData::CommandStruct::BePlayer::MAGE;
-    player.login = "osella";
+    std::cout << "LOGIN????:" << w->getDataNet()->getLogin() << std::endl;
+    player.login = "toto";
+   std::cout << "LOGIN????P2:" << player.login << std::endl;
     packet.pack(player);
     n->sendToServer(sbuf);
     view->setScene(scene);

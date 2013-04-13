@@ -2,6 +2,18 @@
 #include "./../include/Define.hh"
 #include "./../include/Server.hh"
 
+void Server::SendServToAll()
+{
+  std::list<User *>::iterator		it;
+  unsigned int				i;
+
+  for (i = 0, it = _users.begin(); i < _users.size(); i++, it++)
+    {
+      if ((*it)->isInGame() == false)
+	SendServList((*it)->getSoc());
+    }
+}
+
 void Server::SendServList(Socket* soc)
 {
   //SEGFAULT RANDOM ARRIVER 2 FOIS DANS CETTE FONCTION FAIRE DES TEST POUR LE TROUVER
@@ -32,6 +44,17 @@ void	Server::sendCoSucces(User *u)
   
   packet.pack((int)MasterData::Command::INFOS_CLIENT);
   packet.pack(ic);
+  u->getSoc()->sendToServer(sbuf);
+}
+
+void	Server::sendSucces(User *u)
+{
+  msgpack::sbuffer sbuf;
+  msgpack::packer<msgpack::sbuffer> packet(&sbuf);
+  MasterData::RecvSucces  recv(u->succes);
+  
+  packet.pack((int)MasterData::Command::SUCCES);
+  packet.pack(recv);
   u->getSoc()->sendToServer(sbuf);
 }
 
@@ -152,13 +175,13 @@ void Server::EndGame(GameServer *s, msgpack::sbuffer &sbuf)
 	      checkSucces(p);
 	      //PASTE SQL UPDATE HER
 
+	      sendSucces(p);
 	    }
 	  if (eg.win)
 	    std::cout << " VICTOIRE";
 	  else
 	    std::cout << " DEFAITE";
 	  std::cout << " EN TEMPS QUE " << eg.r << std::endl;
-	  
 	}
     }
   s->resetPlayer();

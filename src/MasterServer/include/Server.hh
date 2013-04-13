@@ -57,8 +57,10 @@ public:
   void	DelGameServer(GameServer *);
 
   // FONCTION POUR LES COMMANDE (Server_Command.cpp)
+  void	SendServToAll();
   void	SendServList(Socket *);
   void	sendCoSucces(User *);
+  void	sendSucces(User *);
   void	sendFailure(Socket *, std::string);
   void	BroadcastMsg(User *, msgpack::sbuffer&);
   void	JoinServer(User* u, msgpack::sbuffer&);

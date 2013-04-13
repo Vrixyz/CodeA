@@ -247,16 +247,16 @@ void Server::Mage::intraCollision(Object *o)
 void Server::Mage::intraCollisionUnit(Object *)
 {
   _data.health -= 1;
-  std::cout<<"Unit:!:Collision with a unit and unit!"<<std::endl;
+  //  std::cout<<"Unit:!:Collision with a unit and unit!"<<std::endl;
 }
 
 void Server::Mage::intraCollisionElement(Object *)
 {
-  std::cout<<"Unit::Collision with a unit and element!"<<std::endl;
+  //  std::cout<<"Unit::Collision with a unit and element!"<<std::endl;
 }
 
 void Server::Mage::intraCollisionBullet(Object *)
 {
   _data.health -= 2;
-  std::cout<<"Unit::Collision with a unit and bullet!"<<std::endl;
+  //  std::cout<<"Unit::Collision with a unit and bullet!"<<std::endl;
 }

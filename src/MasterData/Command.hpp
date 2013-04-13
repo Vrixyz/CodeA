@@ -36,6 +36,7 @@ namespace MasterData
 	END_GAME = 12,		// COMMANDE CONFIRmANT LA FIN DE PARTI 
 	END_GAME_SERV = 13,	// SERVEUR INFORMANT LE MASTER D'une FIN DE PARTIT SUIVIT PAR DES STRUCTURE DE RESUMER POUR LES DEUX CLIENT
 	PLAYER_JOIN = 14,	// COMMANDE D'AJOUT A UN SERVEUR
+	SUCCES = 15,
 	ERROR = -1
       } Id;
   }
@@ -49,6 +50,16 @@ namespace MasterData
     
     MSGPACK_DEFINE(from, msg)
   };
+
+  struct	RecvSucces
+  {
+    RecvSucces(std::string _succes) :
+      succes(_succes){}
+    std::string succes;
+    
+    MSGPACK_DEFINE(succes)
+  };
+
 
   struct	SendChat
   {

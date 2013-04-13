@@ -59,7 +59,6 @@ void    GamesWindow::setTabAndAll()
 
     createTabServers();
     createTabNews();
-    createTabSucces();
 
     _list = new QListWidget(_serversPage);
     _list->setGeometry(15, 122, 200, 200);
@@ -83,30 +82,32 @@ void    GamesWindow::setTabAndAll()
     QObject::connect(_writeChat, SIGNAL(returnPressed()), this, SLOT(sendMsg()));
 }
 
-void    GamesWindow::createTabSucces()
+void    GamesWindow::RecvSucces(QByteArray res)
 {
-    /* !!!!!!!!!!!!!!!!!!!!!!!! */
-    /* !!!!!!!!!!!!!!!!!!!!!!!! */
-    /* !!!!!!!!!!!!!!!!!!!!!!!! */
-    /* !!!!!!!!!!!!!!!!!!!!!!!! */
-    /* !!!!!!!!   ICI   !!!!!!! */
-    /* !!!!!!!!!!!!!!!!!!!!!!!! */
-    /* !!!!!!!!!!!!!!!!!!!!!!!! */
-    /* !!!!!!!!!!!!!!!!!!!!!!!! */
-    /* !!!!!!!!!!!!!!!!!!!!!!!! */
-    /* REMPLACE DAT SUCC STRING PAR LA BONNE */
-    std::string succ("101011110011000111101100011100100001010101010");
-    std::string succ1("");
-    std::string succ2("");
+  std::string succ1("");
+  std::string succ2("");
+  msgpack::unpacked result;
+  msgpack::unpacker pac;
 
-    for (int i = 0; i < 25; i++)
+  pac.reserve_buffer(res.length());
+  memcpy(pac.buffer(), res.data(), res.length());
+  pac.buffer_consumed(res.length());
+  if (pac.next(&result))
     {
-        if (i < 20)
+      MasterData::RecvSucces recv("");
+      pac.next(&result);
+      result.get().convert(&recv);
+      std::string succ(recv.succes);
+
+      for (int i = 0; i < 25; i++)
+	{
+	  if (i < 20)
             succ1 += succ[i];
-        succ2 += succ[i + 20];
+	  succ2 += succ[i + 20];
+	}
+      createTabSucces1(succ1);
+      createTabSucces2(succ2);
     }
-    createTabSucces1(succ1);
-    createTabSucces2(succ2);
 }
 
 void    GamesWindow::sendMsg()
@@ -369,6 +370,9 @@ void    GamesWindow::RecvData()
             break;
         case MasterData::Command::ERROR:
             RecvError(res);
+            break;
+        case MasterData::Command::SUCCES:
+            RecvSucces(res);
             break;
         default:
             std::cerr << "Command inconnu" << std::endl;

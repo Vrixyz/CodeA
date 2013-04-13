@@ -70,6 +70,7 @@ Communication<World>       communication;
     }
     ~World();
     void init(int masterPort, char* masterIp, int width, int height);
+    void end(int);
     void run();
     void handleContact(b2Body object1, b2Body object2);
     Player* createPlayer(int id, GameData::CommandStruct::BePlayer& details);

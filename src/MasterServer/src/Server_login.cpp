@@ -30,6 +30,7 @@ void	Server::CheckCoUser(Socket *soc, msgpack::sbuffer &sbuf)
 	      _unknown.remove(soc);
 	      std::cout << "SUCCES DE LA CONNEXION" << std::endl;
 	      sendCoSucces(u);
+	      sendSucces(u);
 	      return; 
 	    }
 	  else
@@ -94,6 +95,7 @@ void	Server::AddServer(Socket *soc, msgpack::sbuffer &sbuf)
 	  _server.push_back(s);
 	  _unknown.remove(soc);
 	  std::cout << "SUCCES DE L'AJOUT D'UN SERVER" << std::endl;
+	  SendServToAll();
 	  return; 
 	}
     }

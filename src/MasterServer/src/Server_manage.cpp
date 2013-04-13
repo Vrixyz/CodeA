@@ -64,6 +64,7 @@ void Server::ManageGameServer()
 	if (sbuf.size() == 0)
 	  {
 	    DelGameServer(*it);
+	    SendServToAll();
 	    break;
 	  }
 	msgpack::unpacker pac;

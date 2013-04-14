@@ -8,7 +8,7 @@ QT       += core gui network webkit
 
 LIBS = -lmsgpack
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets webkitwidgets
 
 TARGET = client_test
 TEMPLATE = app
@@ -30,7 +30,9 @@ SOURCES +=      GamesWindow.cpp \
                 game.cpp \
                 mage.cpp \
                 unit.cpp \
-                nm.cpp
+                nm.cpp  \
+                HudShooter.cpp \
+                hudrts.cpp
 
 HEADERS +=      GamesWindow.h \
                 ClassWindow.h \
@@ -48,4 +50,7 @@ HEADERS +=      GamesWindow.h \
                 mage.h \
                 unit.h \
                 nm.h \
-    Achi.h
+                Achi.h \
+                HudShooter.h \
+                hudrts.h
+

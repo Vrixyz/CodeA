@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 17:53:20 2012 thierry berger
-// Last update Fri Apr 12 11:27:16 2013 mathieu leurquin
+// Last update Sun Apr 14 12:58:14 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -35,8 +35,8 @@ b2Body*	Server::Element::setBody(BitField *b, float width, float height, int x, 
   this->_body = _world._physicWorld.CreateBody(&eBDef);
 
   b2CircleShape circleShape;
-  circleShape.m_p.Set(x, y); //position, relative to body position
-  circleShape.m_radius = 12.5;
+  //circleShape.m_p.Set(0, 0); //position, relative to body position
+  circleShape.m_radius = 25;
   // b2PolygonShape elementShape;
   // elementShape.SetAsBox(width, height);
 

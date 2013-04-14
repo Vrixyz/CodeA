@@ -4,7 +4,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Wed Sep 12 14:49:21 2012 thierry berger
-// Last update Fri Apr 12 11:26:37 2013 mathieu leurquin
+// Last update Sun Apr 14 12:47:47 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -621,9 +621,9 @@ void	Server::World::addPlayer(int idClient, GameData::CommandStruct::BePlayer ar
     {
 
       if (players.size() == 1)
-	b = new  BitField(Server::BitField::TEAM1_UNIT, Server::BitField::TEAM2_BULLET | Server::BitField::TEAM2_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL);
+	b = new  BitField(Server::BitField::TEAM1_UNIT, Server::BitField::TEAM2_BULLET | Server::BitField::TEAM2_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL | Server::BitField::TEAM2_SHIELD);
       else
-	b = new  BitField(Server::BitField::TEAM2_UNIT, Server::BitField::TEAM1_BULLET | Server::BitField::TEAM1_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL);
+	b = new  BitField(Server::BitField::TEAM2_UNIT, Server::BitField::TEAM1_BULLET | Server::BitField::TEAM1_UNIT | Server::BitField::OBSTACLE | Server::BitField::PORTAL | Server::BitField::TEAM1_SHIELD);
       createMage(b, p);
       std::cout<<"team1"<<std::endl;      
     }

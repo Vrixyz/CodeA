@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Fri Feb 22 10:41:33 2013 mathieu leurquin
-// Last update Wed Apr 10 10:48:10 2013 mathieu leurquin
+// Last update Sun Apr 14 12:24:58 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -67,8 +67,9 @@ void	Server::Minion::serialize(msgpack::packer<msgpack::sbuffer>& packet) const
 void Server::Minion::move()
 {
    // TEST FOR MOVE WITH MOUSE
-  
-  _body->ApplyLinearImpulse(b2Vec2((this->current.x - this->getBody()->GetPosition().x), (this->current.y - this->getBody()->GetPosition().y)), _body->GetWorldCenter());
+
+  if (this->current.x != this->getBody()->GetPosition().x && this->current.y != this->getBody()->GetPosition().y)
+    _body->ApplyLinearImpulse(b2Vec2((this->current.x - this->getBody()->GetPosition().x), (this->current.y - this->getBody()->GetPosition().y)), _body->GetWorldCenter());
   // float impulseX;
   // float impulseY;
   // b2Vec2 actualLinearVelocity;

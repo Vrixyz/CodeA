@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 13:21:11 2012 thierry berger
-// Last update Sun Apr 14 11:46:28 2013 mathieu leurquin
+// Last update Sun Apr 14 13:08:09 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -160,12 +160,17 @@ void Server::Mage::spell2(const GameData::CommandStruct::Shield)
   //check friendly or not
   BitField *shield;
   if (this->id == 0)
-    shield = new BitField(Server::BitField::TEAM1_SHIELD, Server::BitField::OBSTACLE | Server::BitField::TEAM2_BULLET | Server::BitField::TEAM2_UNIT);
+    {
+      shield = new BitField(Server::BitField::TEAM1_SHIELD, Server::BitField::OBSTACLE | Server::BitField::TEAM2_BULLET | Server::BitField::TEAM2_UNIT);
+      std::cout<<"shield team 1"<<std::endl;
+    }
   else
-    shield = new BitField(Server::BitField::TEAM2_SHIELD, Server::BitField::OBSTACLE | Server::BitField::TEAM1_BULLET | Server::BitField::TEAM1_UNIT);
-  
+    {
+      shield = new BitField(Server::BitField::TEAM2_SHIELD, Server::BitField::OBSTACLE | Server::BitField::TEAM1_BULLET | Server::BitField::TEAM1_UNIT);
+      std::cout<<"shield team 2"<<std::endl;
+    }
   b2Vec2 position = this->getBody()->GetPosition();
-  Server::Element* e = new Server::Element(_world, false, this->id);
+  Server::Element* e = new Server::Element(_world, true, this->id);
     // Server::Element *e = new Server::Element(*this, (int)elements.size(), true, this->id);
 
   e->setBody(shield, 50, 50,  position.x, position.y);
@@ -211,7 +216,7 @@ void Server::Mage::update(float elapsedMilliseconds)
     }
   // //shiled, fire finish ?
 
-  if ((*fire) > 1000)
+  if ((*fire) > 2000)
     {
       std::cout<<"destroy it fire"<<std::endl;
       _world.addBulletToDestroy(_world.getBullet(this->id));
@@ -252,7 +257,7 @@ void Server::Mage::intraCollisionUnit(Object *)
 
 void Server::Mage::intraCollisionElement(Object *)
 {
-  //  std::cout<<"Unit::Collision with a unit and element!"<<std::endl;
+   std::cout<<"Unit::Collision with a unit and boubou!"<<std::endl;
 }
 
 void Server::Mage::intraCollisionBullet(Object *)

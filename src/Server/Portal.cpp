@@ -5,7 +5,7 @@
 // Login   <leurqu_m@epitech.net>
 // 
 // Started on  Thu Feb 21 10:56:20 2013 mathieu leurquin
-// Last update Wed yesApr 10 10:58:28 2013 mathieu leurquin
+// Last update Sun Apr 14 12:38:58 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -108,6 +108,8 @@ void Server::Portal::createMinion()
 
 void Server::Portal::update(float elapsedMilliseconds)
 {
+  static int i = 0;
+
   if (_data.health <= 0)
     {
       _world.addUnitToDestroy(this);
@@ -115,9 +117,9 @@ void Server::Portal::update(float elapsedMilliseconds)
     }
   pop += elapsedMilliseconds;
   
-  if (pop >= 30000)
-    {
+  if (pop >= 30000 || (pop == elapsedMilliseconds && i == 0))   {
       this->createMinion();
+      i++;
       pop = 0;
     }
 }

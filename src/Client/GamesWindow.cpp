@@ -115,8 +115,8 @@ void    GamesWindow::RecvSucces(QByteArray res)
         for (int i = 0; i < 25; i++)
         {
             if (i < 20)
-                _succ1 += succ[i];
-            _succ2 += succ[i + 20];
+                _succ1 += succ[i + 20];
+            _succ2 += succ[i];
         }
         UpdateAllSucces();
     }

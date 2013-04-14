@@ -168,6 +168,7 @@ void Server::EndGame(GameServer *s, msgpack::sbuffer &sbuf)
 	  p = getPlayerByLog(eg.login);
 	  if (p != NULL)
 	    {
+	      std::cout << "KIWIIIIIIIIIIIIIIIIIIIII" << std::endl;
 	      addStat(p, eg);
 	      checkSucces(p);
 	      _sql->modifElem(p);

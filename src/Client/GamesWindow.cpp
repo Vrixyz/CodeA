@@ -63,7 +63,7 @@ void    GamesWindow::setTabAndAll()
     createTabSucces();
 
     _list = new QListWidget(_serversPage);
-    _list->setGeometry(15, 122, 200, 200);
+    _list->setGeometry(15, 122, 400, 200);
 
     QPalette Pal(palette());
     Pal.setColor(QPalette::Background, Qt::white);
@@ -149,21 +149,15 @@ void    GamesWindow::createTabServers()
 {
     _serversPage = new QWidget(_tab);
 
-    _match = new QPushButton("", _serversPage);
-    _match->setFont(QFont("", 12, 0));
-    _match->setGeometry(15, 42, 200, 50);
-    _match->setStyleSheet("QWidget { background-image: url(img/matchmaking02.png); border: 0px; }");
-    _match->setDefault(0);
-
     _join = new QPushButton("", _serversPage);
     _join->setFont(QFont("", 12, 0));
-    _join->setGeometry(15, 335, 200, 50);
+    _join->setGeometry(115, 335, 200, 50);
     _join->setStyleSheet("QWidget { background-image: url(img/join02.png); border: 0px; }");
     _join->setDefault(0);
 
     _refresh = new QPushButton("", _serversPage);
     _refresh->setFont(QFont("", 12, 0));
-    _refresh->setGeometry(218, 42, 200, 50);
+    _refresh->setGeometry(118, 42, 200, 50);
     _refresh->setStyleSheet("QWidget { background-image: url(img/refresh02.png); border: 0px; }");
     _refresh->setDefault(0);
 

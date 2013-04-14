@@ -8,7 +8,7 @@ AccWindow::AccWindow(int size_x, int size_y, MyWindow *parent) : QDialog(parent,
     this->move(600, 250);
 
     setObjectName("accwin");
-    setStyleSheet("#accwin { background-image: url(img/bg-test.png); }");
+    setStyleSheet("#accwin { background-image: url(img/bg-test2.png); }");
 
     setCoPage();
 }

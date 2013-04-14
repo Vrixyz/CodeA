@@ -19,8 +19,8 @@ ClassWindow::~ClassWindow()
 
 void    ClassWindow::buildButtons()
 {
-    _class1 = new QPushButton("Class1", this);
-    _class2 = new QPushButton("Class2", this);
+    _class1 = new QPushButton("", this);
+    _class2 = new QPushButton("", this);
 
     _back = new QPushButton("", this);
     _back->setFont(QFont("", 12, 0));
@@ -28,6 +28,8 @@ void    ClassWindow::buildButtons()
 
     _class1->setGeometry(35, 50, 160, 180);
     _class2->setGeometry(205, 50, 160, 180);
+    _class1->setStyleSheet("QWidget { background-image: url(img/invo_but.png); border: 0px; }");
+    _class2->setStyleSheet("QWidget { background-image: url(img/mage_bu.png); border: 0px; }");
     _back->setGeometry(115, 270, 170, 80);
 
     _class1->setAutoDefault(0);

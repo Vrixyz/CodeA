@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 13:21:11 2012 thierry berger
-// Last update Sun Apr 14 13:08:09 2013 mathieu leurquin
+// Last update Sun Apr 14 21:13:43 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -155,8 +155,8 @@ void Server::Mage::spell2(const GameData::CommandStruct::Shield)
 {
   std::vector<float>::iterator sh = this->spellTimer.end();
   std::cout<<*sh<<std::endl;
-  // if ((*sh) != 0)
-  //   return;
+  if ((*sh) != 0)
+    return;
   //check friendly or not
   BitField *shield;
   if (this->id == 0)

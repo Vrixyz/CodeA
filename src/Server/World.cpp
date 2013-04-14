@@ -181,6 +181,7 @@ void	Server::World::run()
 	  destroyUnit();
 	  destroyBullet();
 	  destroyElement();
+	  exit(0);
  	}
       // FIXME: think more about that sleep.
       usleep(500);

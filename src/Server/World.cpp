@@ -165,6 +165,7 @@ void	Server::World::run()
 	  if ((result == TEAM1_WIN || result == TEAM2_WIN || result == DRAW) && check_on == true)
 	    {
 	      end(result);
+	       exit(0);
 	    }
 	  sendUpdatesToClients();
 	  
@@ -181,7 +182,6 @@ void	Server::World::run()
 	  destroyUnit();
 	  destroyBullet();
 	  destroyElement();
-	  exit(0);
  	}
       // FIXME: think more about that sleep.
       usleep(500);

@@ -165,6 +165,7 @@ void	Server::World::run()
 	  if ((result == TEAM1_WIN || result == TEAM2_WIN || result == DRAW) && check_on == true)
 	    {
 	      end(result);
+	       exit(0);
 	    }
 	  sendUpdatesToClients();
 	  

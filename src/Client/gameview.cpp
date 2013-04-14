@@ -117,86 +117,90 @@ void GameView::mousePressEvent(QMouseEvent *event)
 {
     msgpack::sbuffer sbuf;
     msgpack::packer<msgpack::sbuffer> packet(&sbuf);
-    switch (event->button())
+    if (n->game->isRTS)
     {
-    case Qt::LeftButton:
-      base = event->pos();
-      rubberBand->setGeometry(QRect(base, QSize()));
-      rubberBand->show();
-      break;
-      
-    case Qt::RightButton:
-      {
-	GameData::CommandStruct::MoveTo m;
-	m.idUnits = n->game->idList;
-	m.x = event->pos().x() + sceneRect().x();
-	m.y = -(event->pos().y() + sceneRect().y());
-	packet.pack((int)GameData::Command::MoveTo);
-	packet.pack(m);
-	n->sendToServer(sbuf);
-	std::cout << "send moveTo " << m.x << " " << m.y << std::endl;
-	sbuf.clear();
-      }
-      
-      break;
+        switch (event->button())
+        {
+        case Qt::LeftButton:
+            base = event->pos();
+            rubberBand->setGeometry(QRect(base, QSize()));
+            rubberBand->show();
+            break;
 
-    default:
-        std::cout << "nothing" << std::endl;
-        break;
+        case Qt::RightButton:
+        {
+            GameData::CommandStruct::MoveTo m;
+            m.idUnits = n->game->idList;
+            m.x = event->pos().x() + sceneRect().x();
+            m.y = -(event->pos().y() + sceneRect().y());
+            packet.pack((int)GameData::Command::MoveTo);
+            packet.pack(m);
+            n->sendToServer(sbuf);
+            std::cout << "send moveTo " << m.x << " " << m.y << std::endl;
+            sbuf.clear();
+            break;
+        }
+
+        default:
+            std::cout << "nothing" << std::endl;
+            break;
+        }
     }
 }
 
 void GameView::mouseReleaseEvent(QMouseEvent *event)
 {
-    switch (event->button())
+    if (n->game->isRTS)
     {
-    case Qt::LeftButton:
-    {
-        n->game->idList.clear();
-        QGraphicsItem *item;
-        QRectF *rect = new QRectF(rubberBand->geometry().x() + sceneRect().x(), rubberBand->geometry().y() + sceneRect().y(), rubberBand->width(), rubberBand->height());
-        std::cout << "Rectangle de selection " << rect->x() << " " << rect->y() << std::endl;
-        rubberBand->hide();
-        QList<QGraphicsItem *> list = this->n->game->scene->items(*rect);
-        std::cout << "Il se passe quelque chose ! " << list.size() << std::endl;
-        for (int i = 0; i < list.length(); i++)
+        switch (event->button())
         {
-            item = list.at(i);
-            std::cout << "item pos => x : " << item->x() << " y : " << item->y() << std::endl;
-            switch (list.at(i)->type())
+        case Qt::LeftButton:
+        {
+            n->game->idList.clear();
+            QGraphicsItem *item;
+            QRectF *rect = new QRectF(rubberBand->geometry().x() + sceneRect().x(), rubberBand->geometry().y() + sceneRect().y(), rubberBand->width(), rubberBand->height());
+            std::cout << "Rectangle de selection " << rect->x() << " " << rect->y() << std::endl;
+            rubberBand->hide();
+            QList<QGraphicsItem *> list = this->n->game->scene->items(*rect);
+            std::cout << "Il se passe quelque chose ! " << list.size() << std::endl;
+            for (int i = 0; i < list.length(); i++)
             {
-            case Bullet::Type:
-                Bullet *bullet;
-                bullet = static_cast<Bullet *>(item);
-                n->game->idList.push_back(bullet->bullet.id);
-                std::cout << "Bullet" << std::endl;
-                break;
+                item = list.at(i);
+                std::cout << "item pos => x : " << item->x() << " y : " << item->y() << std::endl;
+                switch (list.at(i)->type())
+                {
+                case Bullet::Type:
+                    Bullet *bullet;
+                    bullet = static_cast<Bullet *>(item);
+                    n->game->idList.push_back(bullet->bullet.id);
+                    std::cout << "Bullet" << std::endl;
+                    break;
 
-            case Element::Type:
-                Element *element;
-                element = static_cast<Element *>(item);
-                n->game->idList.push_back(element->elem.id);
-                std::cout << "Element" << std::endl;
-                break;
+                case Element::Type:
+                    Element *element;
+                    element = static_cast<Element *>(item);
+                    n->game->idList.push_back(element->elem.id);
+                    std::cout << "Element" << std::endl;
+                    break;
 
-            case Unit::Type:
-                Unit *unit;
-                unit = static_cast<Unit *>(item);
-                n->game->idList.push_back(unit->unit.id);
-                std::cout << "Unit" << std::endl;
-                break;
+                case Unit::Type:
+                    Unit *unit;
+                    unit = static_cast<Unit *>(item);
+                    n->game->idList.push_back(unit->unit.id);
+                    std::cout << "Unit" << std::endl;
+                    break;
 
-            default:
-                std::cout << "whatever" << std::endl;
-                break;
+                default:
+                    std::cout << "whatever" << std::endl;
+                    break;
+                }
             }
+            break;
         }
-        break;
-    }
 
-    default:
-        std::cout << "whatever" << std::endl;
-        break;
+        default:
+            break;
+        }
     }
 }
 
@@ -311,7 +315,7 @@ void GameView::viewMove()
     yucoef = (int)(round(1. / (yucoef / (this->height() * 0.1)))) % 10;
     xrcoef = (int)(round(1. / ((this->width() * 0.1) / xrcoef * 0.1))) % 10;
     ydcoef = (int)(round(1. / ((this->height() * 0.1) / ydcoef * 0.1))) % 10;
-//    std::cout << "coeff x : " << xlcoef << " " << xrcoef << " coeff y : " << yucoef << " " << ydcoef << std::endl;
+    //    std::cout << "coeff x : " << xlcoef << " " << xrcoef << " coeff y : " << yucoef << " " << ydcoef << std::endl;
     if (mouse.x() < (this->width() * 0.1))
         this->setSceneRect(this->sceneRect().x() - xlcoef, this->sceneRect().y(), this->width(), this->height());
     if (mouse.x() > (this->width() * 0.9))

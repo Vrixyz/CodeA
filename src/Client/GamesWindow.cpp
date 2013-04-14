@@ -131,7 +131,7 @@ void    GamesWindow::createTabNews()
 
     QWebView *view = new QWebView(_newsPage);
     view->setGeometry(1,34,428,359);
-    view->load(QUrl("https://google.fr/"));
+    view->load(QUrl("http://gamecodea.wordpress.com/"));
     view->show();
 }
 

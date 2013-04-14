@@ -1,11 +1,17 @@
 #include "unit.h"
 
-Unit::Unit(GameData::Unit _unit, GameData::Physics _physics, QGraphicsScene *_scene) : unit(_unit), physics(_physics), scene(_scene)
+Unit::Unit(GameData::Unit _unit, GameData::Physics _physics, QGraphicsScene *_scene) : unit(_unit), physics(_physics), scene(_scene), exist(true)
+{
+}
+
+Unit::~Unit()
 {
 }
 
 void Unit::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    option = option;
+    widget = widget;
     QPolygonF poly;
     GameData::Physics::Coord c;
     for (std::list<GameData::Physics::Coord>::iterator ite = physics.vertices.begin(); ite != physics.vertices.end(); ite++) {
@@ -16,6 +22,7 @@ void Unit::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     this->setRotation(physics.angle);
     this->setPos(physics.x * 1, physics.y * -1);
     painter->drawPolygon(poly);
+    update(bound);
 }
 
 void Unit::Draw()

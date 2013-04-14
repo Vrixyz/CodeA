@@ -36,6 +36,8 @@
 #include "bullet.h"
 #include "unit.h"
 #include "MyWindow.h"
+#include "hudrts.h"
+#include "HudShooter.h"
 
 class GameView;
 class Element;
@@ -60,6 +62,8 @@ public:
     std::list<Unit *> u;
     std::list<unsigned int> idList;
     GameView *view;
+    HudShooter *huds;
+    HudRts *hudr;
     Nm *n;
     QGraphicsScene *scene;
     MyWindow *win;

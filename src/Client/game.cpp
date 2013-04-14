@@ -10,6 +10,16 @@ Game::Game(const std::string &ip, unsigned int port, const std::string &type, My
     selectedUnit = -1;
     scene = new QGraphicsScene(0, 0, 800, 600);
     view = new GameView(w);
+    if (isRTS)
+    {
+        hudr = new HudRts(w);
+        hudr->show();
+    }
+    else
+    {
+        huds =  new HudShooter(w);
+        huds->show();
+    }
     std::cout << "You just started a new game" << std::endl;
     n = new Nm(QString(ip.c_str()), port, this);
     view->bindNet(n);
@@ -28,6 +38,11 @@ Game::Game(const std::string &ip, unsigned int port, const std::string &type, My
    std::cout << "LOGIN????P2:" << player.login << std::endl;
     packet.pack(player);
     n->sendToServer(sbuf);
+    //    De quoi vous faire un petit repaire
+    //     QLine ly(0, -300, 0, 300);
+    //     QLine lx(-400, 0, 400, 0);
+    //     scene->addLine(lx);
+    //     scene->addLine(ly);
     view->setScene(scene);
     view->show();
 }
@@ -49,11 +64,6 @@ GameData::World Game::getWorld() {
 }
 
 void Game::drawWorld() {
-    //    De quoi vous faire un petit repaire
-     QLine ly(0, -300, 0, 300);
-     QLine lx(-400, 0, 400, 0);
-     scene->addLine(lx);
-     scene->addLine(ly);
     view->viewMove();
     for (std::list<Unit *>::iterator it = u.begin(); it != u.end(); it++) // units physics loop
         if ((*it)->unit.id == selectedUnit && isRTS == false)

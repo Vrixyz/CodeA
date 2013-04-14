@@ -22,12 +22,13 @@ public:
     void sendToServer(const msgpack::sbuffer&);
     void updateWorld(QByteArray);
     void updatePlayerDefinition(QByteArray line);
-    bool elemExist(Element *);
-    void updateElem(Element *);
-    bool unitExist(Unit *);
-    void updateUnit(Unit *);
-    bool bulletExist(Bullet *);
-    void updateBullet(Bullet *);
+    bool updateElem(Element *);
+    bool updateUnit(Unit *);
+    bool updateBullet(Bullet *);
+    void deleteElem();
+    void deleteUnit();
+    void deleteBullet();
+    void resetAll();
     Game *game;
 public slots:
     void ReceiveFromServer();

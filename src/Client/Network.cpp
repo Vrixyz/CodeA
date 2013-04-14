@@ -10,7 +10,7 @@ Network::Network(QString h, int p)
 
 void    Network::SocError()
 {
-    std::cout << "Cannot connect !" << std::endl;
+    std::cout << "Cannot connect on ip : " << this->host.toStdString() << " Port : " << this->port << " !" << std::endl;
     exit (0);
 }
 

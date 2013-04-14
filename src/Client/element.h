@@ -7,6 +7,7 @@ class Element : public QGraphicsItem
 {
 public:
     Element(GameData::Element , GameData::Physics, QGraphicsScene *);
+    ~Element();
     void Draw();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     QRectF boundingRect() const;
@@ -14,6 +15,7 @@ public:
     GameData::Physics physics;
     QGraphicsScene *scene;
     QRectF bound;
+    bool exist;
     int type() const;
     enum {
         Type = UserType + 2

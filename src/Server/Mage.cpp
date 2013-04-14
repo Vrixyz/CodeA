@@ -5,7 +5,7 @@
 // Login   <berger_t@epitech.net>
 // 
 // Started on  Thu Sep 13 13:21:11 2012 thierry berger
-// Last update Fri Apr 12 11:25:19 2013 mathieu leurquin
+// Last update Sun Apr 14 11:46:28 2013 mathieu leurquin
 //
 
 #include "World.hpp"
@@ -165,13 +165,13 @@ void Server::Mage::spell2(const GameData::CommandStruct::Shield)
     shield = new BitField(Server::BitField::TEAM2_SHIELD, Server::BitField::OBSTACLE | Server::BitField::TEAM1_BULLET | Server::BitField::TEAM1_UNIT);
   
   b2Vec2 position = this->getBody()->GetPosition();
-  
-  Server::Element *e = _world.createElement(true, (float)50, (float)50, shield, this->id);
+  Server::Element* e = new Server::Element(_world, false, this->id);
     // Server::Element *e = new Server::Element(*this, (int)elements.size(), true, this->id);
-  
+
   e->setBody(shield, 50, 50,  position.x, position.y);
   //e->getBody()->SetTransform(position, this->getBody()->GetAngle());
   //  _world.elements.push_back(e); 
+  _world.elements.push_back(e);  
   (*sh) = -1;
 }
 

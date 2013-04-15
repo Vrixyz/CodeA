@@ -31,7 +31,6 @@ GamesWindow::GamesWindow(int size_x, int size_y, MyWindow *parent) : QDialog(par
     QObject::connect(_parent->getDataNet()->getNetwork()->getSock(), SIGNAL(readyRead()), this, SLOT(RecvData()));
     QObject::connect(_list, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(tryToCoGame()));
     QObject::connect(_join, SIGNAL(clicked()), this, SLOT(tryToCoGame()));
-    QObject::connect(_match, SIGNAL(clicked()), this, SLOT(tryToMatchmaking()));
     QObject::connect(_refresh, SIGNAL(clicked()), this, SLOT(refreshServ()));
 }
 

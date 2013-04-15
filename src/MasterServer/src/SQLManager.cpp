@@ -133,8 +133,6 @@ int	SQLManager::modifElem(User* toEdit)
   int		ret;
   sqlite3_stmt	*stmt;
 
-  std::cout << "MODIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIF" << std::endl;
-
   ret = 1;
   req = "UPDATE user SET";
   req += " games_win = ?,";

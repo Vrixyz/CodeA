@@ -29,7 +29,7 @@ namespace Server
     float rotation;
     int team;
     Minion(World& world, int _team) : IUnit(world), current(0, 0), rotation(0){
-      _data.health = 1;
+      _data.health = 2;
       team = _team;
     }
     virtual ~Minion() {}

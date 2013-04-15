@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define TIMER_END 50000
+#define TIMER_END 300000
 #define DRAW 0
 #define CONTINU -1
 #define TEAM1_WIN 1
@@ -107,14 +107,17 @@ void	Server::World::end(int result)
     {
       p1.win = false;
       p2.win = true;
+      std::cout << "TEAM2" << std::endl;
     }
   else if(result == TEAM1_WIN)
     {
       p1.win = true;
       p2.win = false;
+      std::cout << "TEAM1" << std::endl;
     }
   else
     {
+      std::cout << "DRAW" << std::endl;
       p1.win = true;
       p2.win = true;
     }

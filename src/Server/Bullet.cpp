@@ -81,5 +81,5 @@ void Server::Bullet::intraCollisionElement(Object *)
 
 void Server::Bullet::intraCollisionBullet(Object *)
 {
-  std::cout<<"Bullet::Collision with a bullet and bullet!"<<std::endl;
+    std::cout<<"Bullet::Collision with a bullet and bullet!"<<std::endl;
 }

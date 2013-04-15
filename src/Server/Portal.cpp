@@ -142,7 +142,7 @@ void Server::Portal::intraCollisionUnit(Object *o)
       if (m->team != this->team)
 	{
 	  //	  std::cout<<"Unit:!:Collision with a portal and minion enemie!"<<std::endl;
-	  _data.health -= 1;
+	  _data.health -= 2;
 	}
       //      else
 	//	std::cout<<"Unit:!:Collision with a portal and minion ami!"<<std::endl;

@@ -49,7 +49,13 @@ void    SuWindow::checkSu()
     std::cout << std::endl << "Passw : " << _passw2SuEdit->text().toUtf8().constData();
     std::cout << std::endl << "AMail : " << _mailEdit->text().toUtf8().constData() << std::endl;
 
-    if (_passw1SuEdit->text() == _passw2SuEdit->text())
+    if ((_passw1SuEdit->text().size() == 0) || (_passw2SuEdit->text().size() == 0) || (_mailEdit->text().size() == 0) || (_loginSuEdit->text().size() == 0))
+      {
+        QMessageBox::warning(this, tr("Erreur"), tr("Tous les champs ne sont pas remplis."));
+        _passw1SuEdit->clear();
+        _passw2SuEdit->clear();
+      }
+    else if (_passw1SuEdit->text() == _passw2SuEdit->text())
     {
         _parent->getDataNet()->setNetwork(new Network(_parent->getIP(), _parent->getPort()));
         _parent->getDataNet()->getNetwork()->connectToServer();

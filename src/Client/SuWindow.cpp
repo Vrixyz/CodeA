@@ -150,6 +150,7 @@ void    SuWindow::RecvInfosClient()
             result.get().convert(&info);
             std::cout << "CONNEXION DONE de " << info.name << std::endl;
             _parent->getDataNet()->getNetwork()->getSock()->disconnect();
+            _parent->getDataNet()->setLogin(info.name);
             _parent->setGamesWindow();
         }
         else if (idData == MasterData::Command::ERROR)

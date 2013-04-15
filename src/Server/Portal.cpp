@@ -117,7 +117,7 @@ void Server::Portal::update(float elapsedMilliseconds)
     }
   pop += elapsedMilliseconds;
   
-  if (pop >= 30000 || (pop == elapsedMilliseconds && i == 0))   {
+  if (pop >= 10000 || (pop == elapsedMilliseconds && i == 0))   {
       this->createMinion();
       i++;
       pop = 0;
@@ -142,7 +142,7 @@ void Server::Portal::intraCollisionUnit(Object *o)
       if (m->team != this->team)
 	{
 	  //	  std::cout<<"Unit:!:Collision with a portal and minion enemie!"<<std::endl;
-	  _data.health -= 1;
+	  _data.health -= 2;
 	}
       //      else
 	//	std::cout<<"Unit:!:Collision with a portal and minion ami!"<<std::endl;

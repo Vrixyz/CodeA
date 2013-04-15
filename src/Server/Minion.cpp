@@ -160,7 +160,7 @@ void Server::Minion::intraCollisionUnit(Object *o)
       if (m->team != this->team)
 	{
 	  //	  std::cout<<"Minion:!:Collision with a mininon and minion enemie!"<<std::endl;
-	  _data.health -= 1;
+	  _data.health -= 2;
 	}
       //      else
 	//	std::cout<<"Minion:!:Collision with a mininon and minion ami!"<<std::endl;
@@ -170,14 +170,14 @@ void Server::Minion::intraCollisionUnit(Object *o)
     {
       //        std::cout<<"Minion:!:Collision with a minion and mage!"<<std::endl;
 	//A REVOIR
-	_data.health -= 1;
+	_data.health -= 2;
     }
   else if ((p = dynamic_cast<Portal*>(o)))
     {
       if (p->team != this->team)
 	{
 	  //	  std::cout<<"Minion:!:Collision with a portal and minion enemie!"<<std::endl;
-	  _data.health -= 1;
+	  _data.health -= 2;
 	}
       //      else
 	//	std::cout<<"Minion:!:Collision with a portal and minion ami!"<<std::endl;

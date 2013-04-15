@@ -29,7 +29,7 @@ namespace Server
     int team;
     Portal(World& world, int _team) : IUnit(world), current(0, 0){
       pop = 0;
-      _data.health = 5;
+      _data.health = 6;
       team = _team;
     }
     virtual ~Portal() {}

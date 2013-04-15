@@ -186,6 +186,7 @@ void Server::Mage::update(float elapsedMilliseconds)
   // if (curVel.x != current.x && curVel.y != current.y)
   if (_data.health <= 0)
     {
+      std::cout<<"t mort"<<std::endl;
       _world.addUnitToDestroy(this);
       return;
     }
@@ -251,7 +252,7 @@ void Server::Mage::intraCollision(Object *o)
 
 void Server::Mage::intraCollisionUnit(Object *)
 {
-  _data.health -= 1;
+  _data.health -= 2;
   //  std::cout<<"Unit:!:Collision with a unit and unit!"<<std::endl;
 }
 
@@ -263,5 +264,5 @@ void Server::Mage::intraCollisionElement(Object *)
 void Server::Mage::intraCollisionBullet(Object *)
 {
   _data.health -= 2;
-  //  std::cout<<"Unit::Collision with a unit and bullet!"<<std::endl;
+  std::cout<<"Unit::Collision with a mage and bullet! "<<_data.health<<std::endl;
 }

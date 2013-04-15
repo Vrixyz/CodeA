@@ -14,6 +14,7 @@ GameView::GameView(QWidget *parent) : QGraphicsView(parent)
     setInteractive(true);
     setSceneRect(QRectF(-400, -300, 800, 600));
     rubberBand = new QRubberBand(QRubberBand::Rectangle, this);
+    this->setFocus();
 }
 
 void GameView::mouseMoveEvent(QMouseEvent *e)
@@ -259,7 +260,7 @@ void GameView::keyPressEvent(QKeyEvent *e) {
     {
         switch (e->key()) {
         case Qt::Key_Escape:
-            delete this->n->game;
+            this->n->game->win->endGame();
             break;
         }
     }
@@ -315,7 +316,7 @@ void GameView::viewMove()
     yucoef = (int)(round(1. / (yucoef / (this->height() * 0.1)))) % 10;
     xrcoef = (int)(round(1. / ((this->width() * 0.1) / xrcoef * 0.1))) % 10;
     ydcoef = (int)(round(1. / ((this->height() * 0.1) / ydcoef * 0.1))) % 10;
-    //    std::cout << "coeff x : " << xlcoef << " " << xrcoef << " coeff y : " << yucoef << " " << ydcoef << std::endl;
+//    std::cout << "coeff x : " << xlcoef << " " << xrcoef << " coeff y : " << yucoef << " " << ydcoef << std::endl;
     if (mouse.x() < (this->width() * 0.1))
         this->setSceneRect(this->sceneRect().x() - xlcoef, this->sceneRect().y(), this->width(), this->height());
     if (mouse.x() > (this->width() * 0.9))

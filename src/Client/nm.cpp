@@ -67,7 +67,9 @@ void    Nm::ReceiveFromServer()
 void    Nm::SocError()
 {
     std::cout << "Cannot connect on ip : " << this->host.toStdString() << " Port : " << this->port << " !" << std::endl;
-    exit (0);
+    soc.disconnectFromHost();
+    soc.close();
+    delete game;
 }
 
 void    Nm::updatePlayerDefinition(QByteArray line)

@@ -37,9 +37,6 @@ public:
     int         decalageBarreY;
     int         numOnglet;
     QString     tmp;
-
-protected:
-    void        mousePressEvent(QMouseEvent *event);
 };
 
 #endif // HUDRTS_H

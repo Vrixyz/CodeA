@@ -30,13 +30,13 @@ public:
     void deleteBullet();
     void resetAll();
     Game *game;
+    QTcpSocket soc;
 public slots:
     void ReceiveFromServer();
     void SocError();
 private:
     int port;
     QString host;
-    QTcpSocket soc;
 };
 
 #endif // NM_H

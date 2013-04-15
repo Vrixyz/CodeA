@@ -23,9 +23,9 @@ HudShooter::HudShooter(QWidget *parent) :
     manaDepartEnnemis = 100;
     cpt = 0;
 
-    setGeometry(440, 225, 800, 600);
+    setGeometry(0, 0, 800, 600);
     setFixedSize(800, 600);
-
+    setFocusPolicy(Qt::NoFocus);
     createMinimap();
     createScore();
     createInfoPerso();
@@ -37,7 +37,7 @@ void    HudShooter::createMinimap()
 {
     labelMiniMap = new QLabel(this);
     labelMiniMap->setGeometry(0, 350, 250, 250);
-    labelMiniMap->setPixmap(QPixmap("/home/tarik/HUD_PFA/mini_map.png"));
+    labelMiniMap->setPixmap(QPixmap("./img/mini_map.png"));
 
 }
 
@@ -53,15 +53,15 @@ void    HudShooter::createScore()
 
     imgKill = new QLabel(labelScore);
     imgKill->setGeometry(0, 0, 25, 25);
-    imgKill->setPixmap(QPixmap("/home/tarik/HUD_PFA/epeeKill.png"));
+    imgKill->setPixmap(QPixmap("./img/epeeKill.png"));
 
     imgAssist = new QLabel(labelScore);
     imgAssist->setGeometry(100, 0, 25, 25);
-    imgAssist->setPixmap(QPixmap("/home/tarik/HUD_PFA/assist.png"));
+    imgAssist->setPixmap(QPixmap("./img/assist.png"));
 
     imgDeath = new QLabel(labelScore);
     imgDeath->setGeometry(200, 0, 25, 25);
-    imgDeath->setPixmap(QPixmap("/home/tarik/HUD_PFA/teteMort.png"));
+    imgDeath->setPixmap(QPixmap("./img/teteMort.png"));
 
     labelNbrKill = new QLabel(labelScore);
     labelNbrKill->setGeometry(30, 0, 40, 25);
@@ -85,7 +85,7 @@ void    HudShooter::createInfoPerso()
 
     labelInfoPerso = new QLabel(this);
     labelInfoPerso->setGeometry(650, 450, 150, 150);
-    labelInfoPerso->setPixmap(QPixmap("/home/tarik/HUD_PFA/grass.png"));
+    labelInfoPerso->setPixmap(QPixmap("./img/grass.png"));
     labelInfoPerso->setPalette(fontInfoPerso);
 
     labelAttackPerso = new QLabel(labelInfoPerso);
@@ -153,7 +153,7 @@ void    HudShooter::createInfoEnnemis()
     labelInfoEnnemis->setGeometry(0, 0, 200, 50);
     labelImgEnnemis = new QLabel(labelInfoEnnemis);
     labelImgEnnemis->setGeometry(0, 0, 150, 50);
-    labelImgEnnemis->setPixmap(QPixmap("/home/tarik/HUD_PFA/minionbasicmelee.png"));
+    labelImgEnnemis->setPixmap(QPixmap("./img/minionbasicmelee.png"));
 
     barreVieEnnemis = new QProgressBar(labelInfoEnnemis);
     barreVieEnnemis->setGeometry(50, 0, 150,25);
@@ -168,15 +168,6 @@ void    HudShooter::createInfoEnnemis()
     tmpManaEnnemis = QString::number(manaDepartEnnemis);
     concatManaEnnemis = "Mana: " + tmpManaEnnemis + "/ 100";
     barreManaEnnemis->setFormat(concatManaEnnemis);
-}
-
-void    HudShooter::mousePressEvent(QMouseEvent *event)
-{
-    qDebug() << "mouse event";
-    clickInfoPerso(event);
-    clickLifeMana();
-    clickScore();
-    clickEnnemisInfo();
 }
 
 void    HudShooter::clickInfoPerso(QMouseEvent *event)

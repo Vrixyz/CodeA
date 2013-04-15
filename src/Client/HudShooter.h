@@ -92,8 +92,6 @@ public:
     QString     concatVieEnnemis;
     QString     tmpManaEnnemis;
     QString     concatManaEnnemis;
-protected:
-    void        mousePressEvent(QMouseEvent *event);
 };
 
 #endif // HUDSHOOTER_H

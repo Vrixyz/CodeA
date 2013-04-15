@@ -34,7 +34,7 @@ namespace Server
       spellTimer.push_back(0);
       // timer used for shield
       spellTimer.push_back(0);
-      this->_data.health = 30;
+      this->_data.health = 5;
     }
     virtual ~Mage() {}
 

@@ -131,6 +131,8 @@ void	Server::World::end(int result)
   packet.pack(p1);
   packet.pack(p2);
   communication.sendToMaster(sbuf);
+  usleep(100);
+  exit(0);
 }
 
 void	Server::World::run()

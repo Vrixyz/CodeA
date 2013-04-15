@@ -154,10 +154,10 @@ void Server::Mage::spell1(const GameData::CommandStruct::Fire &)
 void Server::Mage::spell2(const GameData::CommandStruct::Shield)
 {
   std::vector<float>::iterator sh = this->spellTimer.end();
-  std::cout<<*sh<<std::endl;
-  if ((*sh) != 0)
-    return;
-  //check friendly or not
+  // std::cout<<*sh<<std::endl;
+  // if ((*sh) != 0)
+  //   return;
+  //  check friendly or not
   BitField *shield;
   if (this->id == 0)
     {

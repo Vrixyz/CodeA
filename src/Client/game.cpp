@@ -36,7 +36,7 @@ Game::Game(const std::string &ip, unsigned int port, const std::string &type, My
     else
         player.type = GameData::CommandStruct::BePlayer::MAGE;
     std::cout << "LOGIN????:" << w->getDataNet()->getLogin() << std::endl;
-    player.login = "toto";
+    player.login = w->getDataNet()->getLogin();
     std::cout << "LOGIN????P2:" << player.login << std::endl;
     packet.pack(player);
     n->sendToServer(sbuf);
